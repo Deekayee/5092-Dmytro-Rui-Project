@@ -53,10 +53,8 @@ void salesMenu()
             cout << "Products" << endl;
             limh();
             // show products
-            limh();
-            // give option to buy, checkout or cancel
             break;
-        case 2:
+        case 2: // TODO
             salesMenu = false;
             break;
         default:
@@ -76,7 +74,7 @@ void productsMenu() // TODO
     do
     {
         clearConsole();
-        // function to show products as selectable options, when selected, show more details and give option to add to cart, checkout or cancel
+        // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
         limh();
 
         cin >> productsOpt;
