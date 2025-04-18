@@ -7,7 +7,7 @@ int main()
     // vars
     bool run = true;
     int opt;
-    // add classes here ClassName something
+    // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
     do
@@ -27,17 +27,20 @@ int main()
         switch (opt)
         {
         case 1:
-            //show products, give an option to buy and checkout or cancel
+            // show products, give an option to buy and checkout or cancel
             salesMenu();
             break;
         case 2:
-            //show stock, give an option to add or remove and cancel
+            // show stock, give an option to add or remove and cancel
+            stockMenu();
             break;
         case 3:
+            // exit
             clearConsole();
             run = false;
             break;
         default:
+            // user is a bit slow, what can we do
             cout << "Invalid input, try again." << endl;
             pause();
             break;
