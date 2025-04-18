@@ -88,3 +88,9 @@ void stockMenu() // TODO
 {
     //show stock, give an option to add or remove and cancel
 }
+
+// Write file function
+void writeToFile() // TODO
+{
+    
+}
