@@ -5,6 +5,7 @@
 #include <cctype> // will need this for character validations
 #include <algorithm> // will need this for sorting and searching
 #include <cstdlib>  // for clearing the console
+#include <vector>
 
 #include "shopClasses.h" // my classes
 using namespace std;
@@ -92,7 +93,7 @@ void stockMenu() // TODO
 // Write file function
 // gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
 // file format (?): <stockId,productName,quantity,costWithoutTax\n>
-void writeToFile(string filename, const vector<Stock> &stock) // TODO
+void writeToFile(string filename, const vector<Stock> &stock) // TODO #1
 {
     fstream file(filename, ios::app);
     if (file.is_open())
