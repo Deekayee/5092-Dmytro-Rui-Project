@@ -8,7 +8,14 @@ int main()
     bool run = true;
     int opt;
     // add classes (when checking out, so the time stamps are correct) ClassName something
-
+    
+    //Testing file reading
+    //uncomment to check results
+    /*
+    vector <Stock> ItemStock_test = readFromFile("stockList_test.txt");
+    printingTester(ItemStock_test);
+    cin.ignore();
+    */
     // main loop
     do
     {

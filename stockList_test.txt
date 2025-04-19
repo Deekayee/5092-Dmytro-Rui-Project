@@ -1,0 +1,33 @@
+/*
+ * This file defines a collection of stock items, where each item follows a specific format.
+ * The format of each item is as follows:
+ * // file format: 
+ *                  stockId,productName,quantity,costWithoutTax\n
+ *
+ * - `stockId`: A unique identifier for the stock item.
+ * - `productName`: The name or label of the product.
+ * - `quantity`: The number of units available for the product.
+ * - `costWithoutTax`: The cost of the product excluding tax.
+ *
+ * The items are stored in a structured format and are used for inventory management, data processing,
+ * or display in a user interface. Each item is represented as a single line in the file, with fields
+ * separated by commas and ending with a newline character.
+ *
+ * Ensure that all items conform to the expected format to maintain consistency and avoid errors.
+ */
+001,DSLR Camera Body - Falcon X1000,5,899.99
+002,Lens 50mm f/1.8 Prime,10,199.50
+003,Tripod - Carbon Fiber 60in,12,120.00
+004,Camera Backpack - Weatherproof,8,89.99
+005,SD Card 128GB UHS-I,20,34.75
+006,External Flash - Speedlite Pro,6,159.95
+007,Camera Battery Pack - X1000 Series,15,49.99
+008,Wireless Remote Shutter Release,18,24.99
+009,UV Filter 58mm,25,12.50
+010,Camera Cleaning Kit,30,9.99
+011,Lens Hood 50mm,14,15.00
+012,Mirrorless Camera Body - Nova Z5,4,1149.00
+013,Lens 18-135mm Zoom,7,299.00
+014,Microphone - Shotgun Mount,10,79.95
+015,Studio Light Kit - Twin Softboxes,3,229.99
+016,Camera Strap - Leather Classic,22,27.50
