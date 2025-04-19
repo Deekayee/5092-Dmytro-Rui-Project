@@ -91,6 +91,7 @@ void stockMenu() // TODO
 
 // Write file function
 // gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
+// file format (?): <stockId,productName,quantity,costWithoutTax\n>
 void writeToFile(string filename, const vector<Stock> &stock) // TODO
 {
     fstream file(filename, ios::app);
