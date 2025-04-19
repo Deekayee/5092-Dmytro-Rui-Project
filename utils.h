@@ -90,7 +90,20 @@ void stockMenu() // TODO
 }
 
 // Write file function
-void writeToFile() // TODO
+// gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
+void writeToFile(string filename, const vector<Stock> &stock) // TODO
 {
-    
+    fstream file(filename, ios::app);
+    if (file.is_open())
+    {
+        for (const Stock &s : stock)
+        {
+            file << s.stockId << "," << s.productName << "," << s.quantity << "," << s.costWithoutTax << endl;
+        }
+        file.close();
+    }
+    else
+    {
+        cout << "Error opening file." << endl;
+    }
 }
