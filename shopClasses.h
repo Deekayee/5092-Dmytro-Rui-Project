@@ -1,8 +1,9 @@
 #include <iostream>
 #include <string>  // for string
-#include <ctime> // for time
+#include <ctime>   // for time
 #include <sstream> // for stringstream
 #include <iomanip> // for setw
+#include <vector>  // for vectors
 using namespace std;
 
 class Stock
@@ -10,31 +11,23 @@ class Stock
 public:
     int stockId;
     int quantity;
-    double costWithoutTax;
+    double costValue;
     string productName;
 
-    double getCostWithTax(double taxRatePercent) const
+    double getSaleValue() const
     {
-        return costWithoutTax * (1 + taxRatePercent / 100.0);
+        return costValue * 0.3;
     }
 };
 
-class Receipt
+class CartItem
 {
 public:
-    int receiptId;
-    int clientId;
-    string productName;
+    int stockId;
     int quantity;
     double costWithoutTax;
     double taxRatePercent;
-    double paymentAmount;
-    string date;
-
-    Receipt()
-    {
-        date = getCurrentDateTime();
-    }
+    string productName;
 
     double getCostWithTax() const
     {
@@ -45,6 +38,36 @@ public:
     {
         return getCostWithTax() * quantity;
     }
+};
+
+class Receipt
+{
+public:
+    int receiptId;
+    int clientId;
+    double paymentAmount;
+    string date;
+    vector<CartItem> items;
+
+    Receipt()
+    {
+        date = getCurrentDateTime();
+    }
+
+    void addItem(const CartItem &item)
+    {
+        items.push_back(item);
+    }
+
+    double getTotalCost() const
+    {
+        double total = 0;
+        for (const auto &item : items)
+        {
+            total += item.getTotalCost();
+        }
+        return total;
+    }
 
     double getChange() const
     {
@@ -52,7 +75,7 @@ public:
     }
 
 private:
-string getCurrentDateTime() // for example: "2025-04-18 14:32"
+    string getCurrentDateTime()
     {
         time_t now = time(nullptr);
         tm *ltm = localtime(&now);
