@@ -1,11 +1,11 @@
 #include <iostream>
-#include <string> // will need this for the string class
-#include <fstream> // will need this for file handling
-#include <sstream> // will need this for string stream 
-#include <cctype> // will need this for character validations
+#include <string>    // will need this for the string class
+#include <fstream>   // will need this for file handling
+#include <sstream>   // will need this for string stream
+#include <cctype>    // will need this for character validations
 #include <algorithm> // will need this for sorting and searching
-#include <cstdlib>  // for clearing the console
-#include <vector> // will need for stock vector list
+#include <cstdlib>   // for clearing the console
+#include <vector>    // will need for stock vector list
 
 #include "shopClasses.h" // my classes
 using namespace std;
@@ -87,11 +87,12 @@ void productsMenu() // TODO
 // Stock Menu
 void stockMenu() // TODO
 {
-    //show stock, give an option to add or remove and cancel
+    // show stock, give an option to add or remove and cancel
 }
 
 /*Sorting Criteria for stock vector*/
 // Sort by Id
+/*
 bool lambdaId(const Stock &a, const Stock &b)
 {
     return a.stockId < b.stockId;
@@ -141,7 +142,7 @@ vector<Stock> readFromFile(string filename)
 
             stockItems.push_back(item); // Add the complete item to the list
         }
-        
+
     }else cout << "Error opening file." << endl;
 
     file.close();
@@ -154,7 +155,7 @@ vector<Stock> readFromFile(string filename)
 void printingTester(vector <Stock> list)
 {
     for (Stock item : list)
-    {   
+    {
     //  Item ID n -> item name
 
         cout << "Item ID " << item.stockId << " -> " << item.productName << endl
@@ -162,25 +163,65 @@ void printingTester(vector <Stock> list)
         << "            |-" << item.costWithoutTax << endl;
         limh();
     }
-    
 }
+*/
 
 // Write file function
 // gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
 // file format: stockId,productName,quantity,costWithoutTax\n
-void writeToFile(string filename, const vector<Stock> &stock) // TODO #1
+void writeToFile(string filename, const const string &line) // TODO #1
 {
     fstream file(filename, ios::app);
     if (file.is_open())
     {
-        for (const Stock &s : stock)
-        {
-            file << s.stockId << "," << s.productName << "," << s.quantity << "," << s.costWithoutTax << endl;
-        }
-        file.close();
+        file << line << endl;
     }
     else
     {
         cout << "Error opening file." << endl;
     }
+}
+
+void createStockFile(const string &filename)
+{
+    if (!ifstream(filename)) // if the file doesn't exist, we create it
+    {
+        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
+    }
+    ofstream file(filename, ios::app);
+}
+
+void addPurchaseToStock() // TODO
+{
+    Stock item;
+    string line, filename = "stockList.csv";
+    char confirm;
+
+    clearConsole();
+    cout << "Register a purchase: " << endl;
+    do
+    {
+        limh();
+        cout << "Item ID: "; // this will change, as we want autoincrement ids
+        cin >> item.stockId;
+        cin.ignore();
+
+        cout << "Product Name: ";
+        getline(cin, item.productName);
+
+        cout << "Quantity: ";
+        cin >> item.quantity;
+        cin.ignore();
+
+        cout << "Cost Value: ";
+        cin >> item.costValue;
+        cin.ignore();
+
+        // write to file here
+
+        cout << "Do you want to register another item? (y/n): ";
+        cin >> confirm;
+        confirm = tolower(confirm);
+        cin.ignore();
+    } while (confirm == 'y');
 }
