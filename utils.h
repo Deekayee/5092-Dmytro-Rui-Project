@@ -166,10 +166,12 @@ void printingTester(vector <Stock> list)
 }
 */
 
-// Write file function
-// gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
+// Write line to file function
+// I kinda like the idea of using a vect to store temporary data of stuff happening in the store, then storing
+// it in the csv file once everything is done, this way data is available more readily in vector for usr
+// maybe create getLine() function, for converting data from our stock structure into a string?
 // file format: stockId,productName,quantity,costWithoutTax\n
-void writeToFile(string filename, const const string &line) // TODO #1
+void writeToFile(string filename, const string &line) // TODO #1
 {
     fstream file(filename, ios::app);
     if (file.is_open())
@@ -180,7 +182,10 @@ void writeToFile(string filename, const const string &line) // TODO #1
     {
         cout << "Error opening file." << endl;
     }
+    //shouldnt we close file at some point?
 }
+
+
 
 void createStockFile(const string &filename)
 {
