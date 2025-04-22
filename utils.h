@@ -63,29 +63,111 @@ void clearConsole() // clear the console
 #endif
 }
 
-void pause() // pause the console
+void writeToFile(string filename, const string &line) // TODO #1
 {
-    cout << "Press enter to continue...";
-    cin.ignore();
+    fstream file(filename, ios::app);
+    if (file.is_open())
+    {
+        file << line << endl;
+    }
+    else
+    {
+        cout << "Error opening file." << endl;
+    }
+}
+
+void createStockFile(const string &filename)
+{
+    if (!ifstream(filename)) // if the file doesn't exist, we create it
+    {
+        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
+    }
+    ofstream file(filename, ios::app);
+}
+
+void addPurchaseToStock() // TODO
+{
+    Stock item;
+    string line, filename = "stockList.csv";
+    char confirm;
+
+    clearConsole();
+    cout << "Register a purchase: " << endl;
+    do
+    {
+        limh();
+        cout << "Item ID: "; // this will change, as we want autoincrement ids
+        cin >> item.stockId;
+        cin.ignore();
+
+        cout << "Product Name: ";
+        getline(cin, item.productName);
+
+        cout << "Quantity: ";
+        cin >> item.quantity;
+        cin.ignore();
+
+        cout << "Cost Value: ";
+        cin >> item.costValue;
+        cin.ignore();
+
+        // write to file here
+        line = to_string(item.stockId) + ", " + item.productName + ", " + to_string(item.quantity) + ", " + to_string(item.costValue);
+        writeToFile(filename, line);
+
+        cout << "Do you want to register another item? (y/n): ";
+        cin >> confirm;
+        confirm = tolower(confirm);
+        cin.ignore();
+    } while (confirm == 'y');
+}
+
+void readStockFile() // TODO
+{
+    // vars
+    string line;
+
+    // open file
+    clearConsole();
+    cout << "Stock: " << endl;
+    limh();
+    ifstream fr("stockList.csv");
+    if (fr.is_open())
+    {
+        while (getline(fr, line))
+        {
+            cout << line << endl;
+        }
+        fr.close();
+    }
+    else
+    {
+        cout << "Unable to open file";
+    }
+    limh();
+    system("pause");
 }
 
 // Sales Menu
 void salesMenu()
 {
     bool salesMenu = true;
+    string input;
     int salesOpt;
     do
     {
-        clearConsole();
-        cout << "Sales Menu" << endl;
-        limh();
-        cout << "1. Show Products" << endl;
-        limh();
-        cout << "2. Go Back" << endl;
-        limh();
-        cout << "Option: ";
-        cin >> salesOpt;
-        cin.ignore();
+        do
+        {
+            clearConsole();
+            cout << "Sales Menu" << endl;
+            limh();
+            cout << "1. Show Products" << endl;
+            limh();
+            cout << "2. Go Back" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, salesOpt));
 
         switch (salesOpt)
         {
@@ -93,8 +175,9 @@ void salesMenu()
             cout << "Products" << endl;
             limh();
             // show products
+            readStockFile();
             break;
-        case 2: // TODO
+        case 2:
             salesMenu = false;
             break;
         default:
@@ -208,59 +291,3 @@ void printingTester(vector <Stock> list)
 // Write file function
 // gotta decide how to handle the data, save it in a vector and then write it to the file or update the file directly
 // file format: stockId,productName,quantity,costWithoutTax\n
-void writeToFile(string filename, const const string &line) // TODO #1
-{
-    fstream file(filename, ios::app);
-    if (file.is_open())
-    {
-        file << line << endl;
-    }
-    else
-    {
-        cout << "Error opening file." << endl;
-    }
-}
-
-void createStockFile(const string &filename)
-{
-    if (!ifstream(filename)) // if the file doesn't exist, we create it
-    {
-        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
-    }
-    ofstream file(filename, ios::app);
-}
-
-void addPurchaseToStock() // TODO
-{
-    Stock item;
-    string line, filename = "stockList.csv";
-    char confirm;
-
-    clearConsole();
-    cout << "Register a purchase: " << endl;
-    do
-    {
-        limh();
-        cout << "Item ID: "; // this will change, as we want autoincrement ids
-        cin >> item.stockId;
-        cin.ignore();
-
-        cout << "Product Name: ";
-        getline(cin, item.productName);
-
-        cout << "Quantity: ";
-        cin >> item.quantity;
-        cin.ignore();
-
-        cout << "Cost Value: ";
-        cin >> item.costValue;
-        cin.ignore();
-
-        // write to file here
-
-        cout << "Do you want to register another item? (y/n): ";
-        cin >> confirm;
-        confirm = tolower(confirm);
-        cin.ignore();
-    } while (confirm == 'y');
-}
