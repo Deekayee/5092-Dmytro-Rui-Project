@@ -76,6 +76,11 @@ void writeToFile(string filename, const string &line) // TODO #1
     }
 }
 
+//  Will use to make changes in stockList.csv
+void changeLineFile(string filename, const string &line, const string &field)
+{
+}
+
 void createStockFile(const string &filename)
 {
     if (!ifstream(filename)) // if the file doesn't exist, we create it
@@ -147,6 +152,64 @@ void readStockFile() // TODO
     limh();
     system("pause");
 }
+
+Stock findProduct()
+{
+    // Get the id to search for
+    int id;
+    clearConsole();
+    cout << "Finding a Product by ID" << endl;
+    limh();
+    cout << "Enter the ID of the product you want to find: ";
+    cin >> id;
+    
+    // Read the stockList.csv file and search for the item
+    bool found = 0;
+    ifstream fr("stockList.csv");
+    if (fr.is_open())
+    {
+        string line;
+        string number;
+        Stock st;
+        //vector<Stock> items;
+        while (getline(fr, line))
+        {
+            stringstream ss(line);
+            getline(ss, number, ',');
+            st.stockId = stoi(number);          //  int conversion
+            getline(ss, st.productName, ',');
+            getline(ss, number, ',');
+            st.quantity = stoi(number);         //  int conversion
+            getline(ss, number, ',');
+            st.costValue = stod(number);        //  double conversion
+            if(st.stockId == id)
+            {
+                found = 1;
+                break;
+            }
+        }
+        fr.close();
+        if (found)  return st;
+        else 
+        {
+            cout << "No matching ID found" << endl;
+            return Stock {-1,0,0,0};
+        }
+        // Search for the Item by ID
+        /*for (Stock product : items)
+        {
+            product.stockId == id;
+        }*/
+        
+    }
+    else
+    {
+        cout << "Unable to open file" << endl;
+        limh();
+    }
+    system("pause");
+}
+
 
 // Sales Menu
 void salesMenu()
