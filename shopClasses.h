@@ -16,7 +16,7 @@ public:
 
     double getSaleValue() const
     {
-        return costValue * 0.3;
+        return costValue * 1.3;
     }
 };
 
