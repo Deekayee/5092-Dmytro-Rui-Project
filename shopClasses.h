@@ -14,9 +14,12 @@ public:
     double costValue;
     string productName;
 
+    Stock() : stockId(0), quantity(0), costValue(0.0), productName("") {}
+
     double getSaleValue() const
     {
-        return costValue * 1.3;
+        const double taxRate = 0.3;
+        return costValue * (1 + taxRate);
     }
 };
 
@@ -25,18 +28,30 @@ class CartItem
 public:
     int stockId;
     int quantity;
-    double costWithoutTax;
+    double saleWithoutTax;
     double taxRatePercent;
     string productName;
 
-    double getCostWithTax() const
+    CartItem() : stockId(0), quantity(0), saleWithoutTax(0.0), taxRatePercent(0.0), productName("") {}
+
+    // Custom constructor that derives data from a Stock object
+    CartItem(const Stock &stock, int qty, double taxRate = 23.0) // default tax is 23%
     {
-        return costWithoutTax * (1 + taxRatePercent / 100.0);
+        stockId = stock.stockId;
+        productName = stock.productName;
+        quantity = qty;
+        taxRatePercent = taxRate;
+        saleWithoutTax = stock.getSaleValue(); // fetch from stock method
     }
 
-    double getTotalCost() const
+    double getSaleWithTax() const
     {
-        return getCostWithTax() * quantity;
+        return saleWithoutTax * (1 + taxRatePercent / 100.0);
+    }
+
+    double getTotalItemSellValue() const
+    {
+        return getSaleWithTax() * quantity;
     }
 };
 
@@ -51,7 +66,20 @@ public:
 
     Receipt()
     {
+        receiptId = 0;
+        clientId = 0;
+        paymentAmount = 0.0;
         date = getCurrentDateTime();
+    }
+
+    // New constructor to auto-create Receipt from a cart
+    Receipt(const vector<CartItem> &cart, double payment, int receiptID, int clientID)
+    {
+        receiptId = receiptID;
+        clientId = clientID;
+        paymentAmount = payment;
+        date = getCurrentDateTime();
+        items = cart; // simple copy of all cart items
     }
 
     void addItem(const CartItem &item)
@@ -64,7 +92,7 @@ public:
         double total = 0;
         for (const auto &item : items)
         {
-            total += item.getTotalCost();
+            total += item.getTotalItemSellValue();
         }
         return total;
     }
@@ -88,3 +116,75 @@ private:
         return ss.str();
     }
 };
+
+// TODO
+// Separate this into documentation file afterwards
+
+/*
+How this works:
+
+Stock myCamera;
+myCamera.stockId = 1;
+myCamera.productName = "Sony A6000";
+myCamera.quantity = 10;
+myCamera.costValue = 500.0;
+
+CartItem cartItem(myCamera, 2); // buying 2 units with 23% tax
+
+cout << "Item total with tax: " << cartItem.getTotalItemSellValue() << endl;
+
+-------------------------------------------------------------------------------------
+for Receipt:
+
+vector<CartItem> cart;
+// Assume cart is filled with CartItem objects
+
+double userPayment = 1300.0;
+int newReceiptId = 1;
+int newClientId = 1;
+
+Receipt receipt(cart, userPayment, newReceiptId, newClientId);
+
+cout << "Receipt total: " << receipt.getTotalCost() << endl;
+cout << "Change to give: " << receipt.getChange() << endl;
+
+-------------------------------------------------------------------------------------
+Added autoincrementation
+
+Stock camera;
+camera.productName = "Canon M50";
+camera.quantity = 5;
+camera.costValue = 600.0;
+
+CartItem item(camera, 2); // 2 units of this stock
+
+vector<CartItem> cart = { item };
+
+Receipt receipt(cart, 1500.0); // only need to pass cart and payment
+
+cout << "Receipt ID: " << receipt.receiptId << ", Client ID: " << receipt.clientId << endl;
+
+-------------------------------------------------------------------------------------
+vector<Stock> inventory;
+
+// Adding some stock entries
+Stock cam1;
+cam1.productName = "Canon M50";
+cam1.quantity = 5;
+cam1.costValue = 600.0;
+
+Stock cam2;
+cam2.productName = "Sony A6000";
+cam2.quantity = 3;
+cam2.costValue = 500.0;
+
+inventory.push_back(cam1);
+inventory.push_back(cam2);
+
+// Display stock
+for (const auto& item : inventory) {
+    cout << "ID: " << item.stockId << ", Product: " << item.productName
+         << ", Qty: " << item.quantity << ", Sale Value: " << item.getSaleValue() << endl;
+}
+
+*/
