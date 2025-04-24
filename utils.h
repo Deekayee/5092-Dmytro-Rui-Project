@@ -127,6 +127,11 @@ void addPurchaseToStock() // TODO
     } while (confirm == 'y');
 }
 
+//  need for stock menu: remove item (MY HOMEWORK)
+void removePurchaseFromStock(){
+    return;
+}
+
 void readStockFile() // TODO
 {
     // vars
@@ -294,7 +299,7 @@ void stockMenu() // TODO
         switch (productsOpt)
         {
         case 1:
-            /* show stock function */
+            readStockFile();
             break;
         case 2:
             addPurchaseToStock();
