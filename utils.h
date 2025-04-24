@@ -153,7 +153,8 @@ void readStockFile() // TODO
     system("pause");
 }
 
-Stock findProduct()
+//  returns pointer to <Stock>, nullptr if none found
+Stock* findProduct()
 {
     // Get the id to search for
     int id;
@@ -170,19 +171,19 @@ Stock findProduct()
     {
         string line;
         string number;
-        Stock st;
+        Stock *st;
         //vector<Stock> items;
         while (getline(fr, line))
         {
             stringstream ss(line);
             getline(ss, number, ',');
-            st.stockId = stoi(number);          //  int conversion
-            getline(ss, st.productName, ',');
+            st->stockId = stoi(number);          //  int conversion
+            getline(ss, st->productName, ',');
             getline(ss, number, ',');
-            st.quantity = stoi(number);         //  int conversion
+            st->quantity = stoi(number);         //  int conversion
             getline(ss, number, ',');
-            st.costValue = stod(number);        //  double conversion
-            if(st.stockId == id)
+            st->costValue = stod(number);        //  double conversion
+            if(st->stockId == id)
             {
                 found = 1;
                 break;
@@ -193,13 +194,8 @@ Stock findProduct()
         else 
         {
             cout << "No matching ID found" << endl;
-            return Stock {-1,0,0,0};
+            return nullptr;
         }
-        // Search for the Item by ID
-        /*for (Stock product : items)
-        {
-            product.stockId == id;
-        }*/
         
     }
     else
