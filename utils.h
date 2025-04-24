@@ -127,6 +127,11 @@ void addPurchaseToStock() // TODO
     } while (confirm == 'y');
 }
 
+//  need for stock menu: remove item (MY HOMEWORK)
+void removePurchaseFromStock(){
+    return;
+}
+
 void readStockFile() // TODO
 {
     // vars
@@ -268,6 +273,53 @@ void productsMenu() // TODO
 // Stock Menu
 void stockMenu() // TODO
 {
+    bool stockMenu = true;
+    string input;
+    int productsOpt;
+
+    do
+    {
+        do
+        {
+            clearConsole();
+            cout << "Stock Menu" << endl;
+            limh();
+            cout << "1. Show Stock" << endl;
+            limh();
+            cout << "2. Add to Stock" << endl;
+            limh();
+            cout << "3. Remove from Stock" << endl;
+            limh();
+            cout << "4. Go Back" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, productsOpt));
+
+        switch (productsOpt)
+        {
+        case 1:
+            readStockFile();
+            break;
+        case 2:
+            addPurchaseToStock();
+            break;
+        
+        case 3:
+            /* removePurchaseFromStock() */
+            break;
+        case 4:
+            stockMenu = false;
+            break;
+        
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+        
+    } while (stockMenu);
+    
     // show stock, give an option to add or remove and cancel
 }
 
