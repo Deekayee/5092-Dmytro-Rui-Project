@@ -8,13 +8,21 @@ using namespace std;
 
 class Stock
 {
-public:
+public: //private this and do gets and sets, do a to_string 
     int stockId;
     int quantity;
     double costValue;
     string productName;
 
     Stock() : stockId(0), quantity(0), costValue(0.0), productName("") {}
+
+    Stock(int id, string name, int qty, double price)
+    {
+        stockId = id;
+        productName = name;
+        quantity = qty;
+        costValue = price;
+    }
 
     double getSaleValue() const
     {
