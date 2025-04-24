@@ -294,20 +294,22 @@ void stockMenu() // TODO
         switch (productsOpt)
         {
         case 1:
-            /* code */
+            /* show stock function */
             break;
         case 2:
-            /* code */
+            addPurchaseToStock();
             break;
         
         case 3:
-            /* code */
+            /* removePurchaseFromStock() */
             break;
         case 4:
-            productsMenu = false;
+            stockMenu = false;
             break;
         
         default:
+            cout << "Invalid input, try again." << endl;
+            pause();
             break;
         }
         
