@@ -8,12 +8,13 @@ using namespace std;
 
 class Stock
 {
-public: //private this and do gets and sets, do a to_string 
+private: // private this and do gets and sets, do a to_string
     int stockId;
     int quantity;
     double costValue;
     string productName;
 
+public:
     Stock() : stockId(0), quantity(0), costValue(0.0), productName("") {}
 
     Stock(int id, string name, int qty, double price)
@@ -24,11 +25,23 @@ public: //private this and do gets and sets, do a to_string
         costValue = price;
     }
 
-    double getSaleValue() const
+    int getStockId() const { return stockId; }
+    int getQuantity() const { return quantity; }
+    double getCostValue() const { return costValue; }
+    string getProductName() const { return productName; }
+
+        double getSaleValue() const
     {
         const double taxRate = 0.3;
         return costValue * (1 + taxRate);
     }
+
+    void setStockId(int id) { stockId = id; }
+    void setQuantity(int qty) { quantity = qty; }
+    void setCostValue(double price) { costValue = price; }  
+    void setProductName(string name) { productName = name; }
+
+
 };
 
 class CartItem
