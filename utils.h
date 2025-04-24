@@ -268,6 +268,51 @@ void productsMenu() // TODO
 // Stock Menu
 void stockMenu() // TODO
 {
+    bool stockMenu = true;
+    string input;
+    int productsOpt;
+
+    do
+    {
+        do
+        {
+            clearConsole();
+            cout << "Stock Menu" << endl;
+            limh();
+            cout << "1. Show Stock" << endl;
+            limh();
+            cout << "2. Add to Stock" << endl;
+            limh();
+            cout << "3. Remove from Stock" << endl;
+            limh();
+            cout << "4. Go Back" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, productsOpt));
+
+        switch (productsOpt)
+        {
+        case 1:
+            /* code */
+            break;
+        case 2:
+            /* code */
+            break;
+        
+        case 3:
+            /* code */
+            break;
+        case 4:
+            productsMenu = false;
+            break;
+        
+        default:
+            break;
+        }
+        
+    } while (stockMenu);
+    
     // show stock, give an option to add or remove and cancel
 }
 
