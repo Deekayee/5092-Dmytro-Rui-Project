@@ -30,7 +30,7 @@ public:
     double getCostValue() const { return costValue; }
     string getProductName() const { return productName; }
 
-        double getSaleValue() const
+    double getSaleValue() const
     {
         const double taxRate = 0.3;
         return costValue * (1 + taxRate);
@@ -38,28 +38,29 @@ public:
 
     void setStockId(int id) { stockId = id; }
     void setQuantity(int qty) { quantity = qty; }
-    void setCostValue(double price) { costValue = price; }  
+    void setCostValue(double price) { costValue = price; }
     void setProductName(string name) { productName = name; }
-
-
 };
 
 class CartItem
 {
-public:
+private:
     int stockId;
     int quantity;
     double saleWithoutTax;
     double taxRatePercent;
     string productName;
 
+public:
     CartItem() : stockId(0), quantity(0), saleWithoutTax(0.0), taxRatePercent(0.0), productName("") {}
+
+    // cart item another constructor
 
     // Custom constructor that derives data from a Stock object
     CartItem(const Stock &stock, int qty, double taxRate = 23.0) // default tax is 23%
     {
-        stockId = stock.stockId;
-        productName = stock.productName;
+        stockId = stock.getStockId();
+        productName = stock.getProductName();
         quantity = qty;
         taxRatePercent = taxRate;
         saleWithoutTax = stock.getSaleValue(); // fetch from stock method
