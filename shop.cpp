@@ -6,11 +6,11 @@ using namespace std;
 
 void test()
 {
-    Stock testStock(12,"TESTE",1,0.0);
-    string testString = testStock.toString();
-    cout << testString;
-    cin.ignore();
-    return;
+    // Stock testStock(12,"TESTE",1,2.50);
+    // string testString = testStock.toString();
+    // cout << testString;
+    // cin.ignore();
+    // return;
 }
 
 int main()
@@ -19,7 +19,7 @@ int main()
     bool run = true;
     int opt;
     string input;
-    test();
+    //test();
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
