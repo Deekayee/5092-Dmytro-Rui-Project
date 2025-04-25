@@ -2,6 +2,7 @@
 #include <string>
 #include <cctype>
 #include "utils.h"
+#include "menu.h"
 using namespace std;
 
 void test()

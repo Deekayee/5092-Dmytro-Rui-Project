@@ -1,67 +1,17 @@
+#pragma once    //  compiler only sees this lib file once
 #include <iostream>
 #include <string>    // will need this for the string class
 #include <fstream>   // will need this for file handling
 #include <sstream>   // will need this for string stream
-#include <cctype>    // will need this for character validations
 #include <algorithm> // will need this for sorting and searching
-#include <cstdlib>   // for clearing the console
 #include <vector>    // will need for stock vector list
 
 #include "shopClasses.h" // my classes
 using namespace std;
+void clearConsole();
+void limh();
+void pause();
 
-void pause() // pause the console
-{
-    cout << "Press enter to continue...";
-    cin.ignore();
-}
-
-bool validateMenuInput(const string &input, int &opt)
-{
-    // Check if the string is entirely digits
-    for (char ch : input)
-    {
-        if (!isdigit(ch))
-        {
-            cout << "Please enter a number" << endl;
-            pause();
-            return false;
-        }
-    }
-
-    // catch exceptions
-    try
-    {
-        opt = stoi(input);
-    }
-    catch (const std::out_of_range &)
-    {
-        cout << "Number is too large. Please enter a smaller number." << endl;
-        pause();
-        return false;
-    }
-    catch (const std::invalid_argument &)
-    {
-        cout << "Invalid input. Please enter numbers only." << endl;
-        pause();
-        return false;
-    }
-    return true;
-}
-
-void limh() // horizontal line
-{
-    cout << "----------------------------------------" << endl;
-}
-
-void clearConsole() // clear the console
-{
-#ifdef _WIN32
-    system("cls"); // For Windows
-#else
-    system("clear"); // For Linux and macOS
-#endif
-}
 
 void writeToFile(string filename, const string &line) // TODO #1
 {
@@ -124,23 +74,20 @@ void addPurchaseToStock()
         // need search function for stock verification purposes
         writeToFile(filename, line.str());
 
-//         cout << "Do you want to register another item? (y/n): ";
-//         cin >> confirm;
-//         confirm = tolower(confirm);
-//         cin.ignore();
-//     } while (confirm == 'y');
-// }
+        cout << "Do you want to register another item? (y/n): ";
+        cin >> confirm;
+        confirm = tolower(confirm);
+        cin.ignore();
+    } while (confirm == 'y');
+}
 
-//  return true if item found, false if no item found
-//  will we use vectors after all?
-bool searchForItem();
 
 //  need for stock menu: remove item (MY HOMEWORK)
 void removePurchaseFromStock(){
     return;
 }
 
-void readStockFile() // TODO
+void printStockFile() // TODO
 {
     // vars
     string line;
@@ -167,162 +114,163 @@ void readStockFile() // TODO
 }
 
 //  returns pointer to <Stock>, nullptr if none found
-Stock* findProduct()
-{
-    // Get the id to search for
-    int id;
-    clearConsole();
-    cout << "Finding a Product by ID" << endl;
-    limh();
-    cout << "Enter the ID of the product you want to find: ";
-    cin >> id;
+// needs rework
+// Stock* findProduct()
+// {
+//     // Get the id to search for
+//     int id;
+//     clearConsole();
+//     cout << "Finding a Product by ID" << endl;
+//     limh();
+//     cout << "Enter the ID of the product you want to find: ";
+//     cin >> id;
     
-    // Read the stockList.csv file and search for the item
-    bool found = 0;
-    ifstream fr("stockList.csv");
-    if (fr.is_open())
-    {
-        string line;
-        string tmp;
-        Stock st;
-        //vector<Stock> items;
-        while (getline(fr, line))
-        {
-            st.fromString(line);
-            if(st.getStockId() == id)
-            {
-                found = 1;
-                break;
-            }
-        }
-        fr.close();
-        if (found)  return &st;
-        else 
-        {
-            cout << "No matching ID found" << endl;
-            return nullptr;
-        }
+//     // Read the stockList.csv file and search for the item
+//     bool found = 0;
+//     ifstream fr("stockList.csv");
+//     if (fr.is_open())
+//     {
+//         string line;
+//         string tmp;
+//         Stock st;
+//         //vector<Stock> items;
+//         while (getline(fr, line))
+//         {
+//             st.fromString(line);
+//             if(st.getStockId() == id)
+//             {
+//                 found = 1;
+//                 break;
+//             }
+//         }
+//         fr.close();
+//         if (found)  return &st;
+//         else 
+//         {
+//             cout << "No matching ID found" << endl;
+//             return nullptr;
+//         }
         
-    }
-    else
-    {
-        cout << "Unable to open file" << endl;
-        limh();
-    }
-    system("pause");
-}
+//     }
+//     else
+//     {
+//         cout << "Unable to open file" << endl;
+//         limh();
+//     }
+//     system("pause");
+// }
 
 
-// Sales Menu
-void salesMenu()
-{
-    bool salesMenu = true;
-    string input;
-    int salesOpt;
-    do
-    {
-        do
-        {
-            clearConsole();
-            cout << "Sales Menu" << endl;
-            limh();
-            cout << "1. Show Products" << endl;
-            limh();
-            cout << "2. Go Back" << endl;
-            limh();
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, salesOpt));
+// // Sales Menu
+// void salesMenu()
+// {
+//     bool salesMenu = true;
+//     string input;
+//     int salesOpt;
+//     do
+//     {
+//         do
+//         {
+//             clearConsole();
+//             cout << "Sales Menu" << endl;
+//             limh();
+//             cout << "1. Show Products" << endl;
+//             limh();
+//             cout << "2. Go Back" << endl;
+//             limh();
+//             cout << "Option: ";
+//             getline(cin, input);
+//         } while (!validateMenuInput(input, salesOpt));
 
-        switch (salesOpt)
-        {
-        case 1:
-            cout << "Products" << endl;
-            limh();
-            // show products
-            readStockFile();
-            break;
-        case 2:
-            salesMenu = false;
-            break;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
+//         switch (salesOpt)
+//         {
+//         case 1:
+//             cout << "Products" << endl;
+//             limh();
+//             // show products
+//             printStockFile();
+//             break;
+//         case 2:
+//             salesMenu = false;
+//             break;
+//         default:
+//             cout << "Invalid input, try again." << endl;
+//             pause();
+//             break;
+//         }
 
-    } while (salesMenu);
-}
+//     } while (salesMenu);
+// }
 
-// Products Menu
-void productsMenu() // TODO
-{
-    bool productsMenu = true;
-    int productsOpt;
-    do
-    {
-        clearConsole();
-        // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
-        limh();
+// // Products Menu
+// void productsMenu() // TODO
+// {
+//     bool productsMenu = true;
+//     int productsOpt;
+//     do
+//     {
+//         clearConsole();
+//         // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
+//         limh();
 
-        cin >> productsOpt;
-        cin.ignore();
+//         cin >> productsOpt;
+//         cin.ignore();
 
-    } while (productsMenu);
-}
+//     } while (productsMenu);
+// }
 
-// Stock Menu
-void stockMenu() // TODO
-{
-    bool stockMenu = true;
-    string input;
-    int productsOpt;
+// // Stock Menu
+// // show stock, give an option to add or remove and cancel
+// void stockMenu() // TODO
+// {
+//     bool stockMenu = true;
+//     string input;
+//     int productsOpt;
 
-    do
-    {
-        do
-        {
-            clearConsole();
-            cout << "Stock Menu" << endl;
-            limh();
-            cout << "1. Show Stock" << endl;
-            limh();
-            cout << "2. Add to Stock" << endl;
-            limh();
-            cout << "3. Remove from Stock" << endl;
-            limh();
-            cout << "4. Go Back" << endl;
-            limh();
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, productsOpt));
+//     do
+//     {
+//         do
+//         {
+//             clearConsole();
+//             cout << "Stock Menu" << endl;
+//             limh();
+//             cout << "1. Show Stock" << endl;
+//             limh();
+//             cout << "2. Add to Stock" << endl;
+//             limh();
+//             cout << "3. Remove from Stock" << endl;
+//             limh();
+//             cout << "4. Go Back" << endl;
+//             limh();
+//             cout << "Option: ";
+//             getline(cin, input);
+//         } while (!validateMenuInput(input, productsOpt));
 
-        switch (productsOpt)
-        {
-        case 1:
-            readStockFile();
-            break;
-        case 2:
-           // addPurchaseToStock();
-            break;
+//         switch (productsOpt)
+//         {
+//         case 1:
+//             printStockFile();
+//             break;
+//         case 2:
+//             addPurchaseToStock();
+//             break;
         
-        case 3:
-            removePurchaseFromStock();
-            break;
-        case 4:
-            stockMenu = false;
-            break;
+//         case 3:
+//             removePurchaseFromStock();
+//             break;
+//         case 4:
+//             stockMenu = false;
+//             break;
         
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
+//         default:
+//             cout << "Invalid input, try again." << endl;
+//             pause();
+//             break;
+//         }
         
-    } while (stockMenu);
+//     } while (stockMenu);
     
-    // show stock, give an option to add or remove and cancel
-}
+// }
 
 /*Sorting Criteria for stock vector*/
 // Sort by Id
