@@ -90,43 +90,50 @@ void createStockFile(const string &filename)
     ofstream file(filename, ios::app);
 }
 
-//  will fix
-// void addPurchaseToStock() // TODO
-// {
-//     Stock item;
-//     string line, filename = "stockList.csv";
-//     char confirm;
+void addPurchaseToStock()
+{
+    Stock item;
+    string filename = "stockList.csv";
+    char confirm;
 
-//     clearConsole();
-//     cout << "Register a purchase: " << endl;
-//     do
-//     {
-//         limh();
-//         cout << "Item ID: "; // this will change, as we want autoincrement ids
-//         cin >> item.stockId;
-//         cin.ignore();
+    clearConsole();
+    cout << "Register a purchase: " << endl;
+    do
+    {
+        stringstream line;
+        string field;
+        limh();
+        cout << "Item ID: "; // this will change, as we want autoincrement ids
+        getline(cin, field);
+        line << field << ',';
 
-//         cout << "Product Name: ";
-//         getline(cin, item.productName);
+        cout << "Product Name: ";
+        getline(cin, field);
+        line << field << ',';
 
-//         cout << "Quantity: ";
-//         cin >> item.quantity;
-//         cin.ignore();
+        cout << "Quantity: ";
+        getline(cin, field);
+        line << field << ',';
 
-//         cout << "Cost Value: ";
-//         cin >> item.costValue;
-//         cin.ignore();
+        cout << "Cost Value: ";
+        getline(cin, field);
+        line << field;
 
-//         // write to file here
-//         line = to_string(item.stockId) + ", " + item.productName + ", " + to_string(item.quantity) + ", " + to_string(item.costValue);
-//         writeToFile(filename, line);
+        // write to file here
+        item.fromString(line.str());
+        readStockFile();
+        writeToFile(filename, line.str());
 
-//         cout << "Do you want to register another item? (y/n): ";
-//         cin >> confirm;
-//         confirm = tolower(confirm);
-//         cin.ignore();
-//     } while (confirm == 'y');
-// }
+        cout << "Do you want to register another item? (y/n): ";
+        cin >> confirm;
+        confirm = tolower(confirm);
+        cin.ignore();
+    } while (confirm == 'y');
+}
+
+//  return true if item found, false if no item found
+//  will we use vectors after all?
+bool searchForItem();
 
 //  need for stock menu: remove item (MY HOMEWORK)
 void removePurchaseFromStock(){
