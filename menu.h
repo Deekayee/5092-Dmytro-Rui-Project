@@ -121,7 +121,7 @@ void productsMenu() // TODO
 
 // Stock Menu
 // show stock, give an option to add or remove and cancel
-void stockMenu() // TODO
+void stockMenu(vector <Stock>* stockList) // TODO
 {
     bool stockMenu = true;
     string input;
@@ -152,7 +152,7 @@ void stockMenu() // TODO
             printStockFile();
             break;
         case 2:
-            addPurchaseToStock();
+            addPurchaseToStock(stockList);
             break;
         
         case 3:

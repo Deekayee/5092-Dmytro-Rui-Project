@@ -3,3 +3,5 @@ StockId, ProductName, Quantity, CostValue
 2, Sony 1.8, 10 , 200.000000
 3, CPL Filter, 20, 20.000000
 4, Tripe, 2, 40.000000
+100,Teste,23,10.50
+1000,Teste 2,0,50

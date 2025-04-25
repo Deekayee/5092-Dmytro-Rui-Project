@@ -26,24 +26,40 @@ void writeToFile(string filename, const string &line) // TODO #1
     }
 }
 
-//  Will use to make changes in stockList.csv
-void changeLineFile(string filename, const string &line, const string &field)
+void createStockFile()
 {
-}
-
-void createStockFile(const string &filename)
-{
-    if (!ifstream(filename)) // if the file doesn't exist, we create it
+    if (!ifstream("output/stockList.csv")) // if the file doesn't exist, we create it
     {
-        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
+        writeToFile("output/stockList.csv", "StockId, ProductName, Quantity, CostValue"); // gives the file a header
     }
-    ofstream file(filename, ios::app);
+    ofstream file("output/stockList.csv", ios::app);
 }
 
-void addPurchaseToStock()
+//  Will return a vector of Stock objects
+vector <Stock> openStockFile()
+{
+    vector <Stock> stockList;
+    fstream file("output/stockList.csv", ios::in);
+    if (file.is_open())
+    {
+        string line;
+        getline(file, line);                //  ignores header
+        while (getline(file, line))
+        {
+            Stock item;
+            item.fromString(line);
+            stockList.push_back(item);
+        }
+
+    }else cout << "Error opening file." << endl;
+
+    return stockList;
+}
+
+void addPurchaseToStock(vector <Stock>* stockList)
 {
     Stock item;
-    string filename = "stockList.csv";
+    string filename = "output/stockList.csv";
     char confirm;
 
     clearConsole();
@@ -72,6 +88,8 @@ void addPurchaseToStock()
         // write to file here
         item.fromString(line.str());
         // need search function for stock verification purposes
+        // for now, will write into vector, then file
+        stockList->push_back(item);
         writeToFile(filename, line.str());
 
         cout << "Do you want to register another item? (y/n): ";
@@ -87,6 +105,11 @@ void removePurchaseFromStock(){
     return;
 }
 
+//  Will use to make changes in stockList.csv
+void changeLineFile(string filename, const string &line, const string &field)
+{
+}
+
 void printStockFile() // TODO
 {
     // vars
@@ -96,7 +119,7 @@ void printStockFile() // TODO
     clearConsole();
     cout << "Stock: " << endl;
     limh();
-    ifstream fr("stockList.csv");
+    ifstream fr("output/stockList.csv");
     if (fr.is_open())
     {
         while (getline(fr, line))
@@ -159,197 +182,3 @@ void printStockFile() // TODO
 //     }
 //     system("pause");
 // }
-
-
-// // Sales Menu
-// void salesMenu()
-// {
-//     bool salesMenu = true;
-//     string input;
-//     int salesOpt;
-//     do
-//     {
-//         do
-//         {
-//             clearConsole();
-//             cout << "Sales Menu" << endl;
-//             limh();
-//             cout << "1. Show Products" << endl;
-//             limh();
-//             cout << "2. Go Back" << endl;
-//             limh();
-//             cout << "Option: ";
-//             getline(cin, input);
-//         } while (!validateMenuInput(input, salesOpt));
-
-//         switch (salesOpt)
-//         {
-//         case 1:
-//             cout << "Products" << endl;
-//             limh();
-//             // show products
-//             printStockFile();
-//             break;
-//         case 2:
-//             salesMenu = false;
-//             break;
-//         default:
-//             cout << "Invalid input, try again." << endl;
-//             pause();
-//             break;
-//         }
-
-//     } while (salesMenu);
-// }
-
-// // Products Menu
-// void productsMenu() // TODO
-// {
-//     bool productsMenu = true;
-//     int productsOpt;
-//     do
-//     {
-//         clearConsole();
-//         // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
-//         limh();
-
-//         cin >> productsOpt;
-//         cin.ignore();
-
-//     } while (productsMenu);
-// }
-
-// // Stock Menu
-// // show stock, give an option to add or remove and cancel
-// void stockMenu() // TODO
-// {
-//     bool stockMenu = true;
-//     string input;
-//     int productsOpt;
-
-//     do
-//     {
-//         do
-//         {
-//             clearConsole();
-//             cout << "Stock Menu" << endl;
-//             limh();
-//             cout << "1. Show Stock" << endl;
-//             limh();
-//             cout << "2. Add to Stock" << endl;
-//             limh();
-//             cout << "3. Remove from Stock" << endl;
-//             limh();
-//             cout << "4. Go Back" << endl;
-//             limh();
-//             cout << "Option: ";
-//             getline(cin, input);
-//         } while (!validateMenuInput(input, productsOpt));
-
-//         switch (productsOpt)
-//         {
-//         case 1:
-//             printStockFile();
-//             break;
-//         case 2:
-//             addPurchaseToStock();
-//             break;
-        
-//         case 3:
-//             removePurchaseFromStock();
-//             break;
-//         case 4:
-//             stockMenu = false;
-//             break;
-        
-//         default:
-//             cout << "Invalid input, try again." << endl;
-//             pause();
-//             break;
-//         }
-        
-//     } while (stockMenu);
-    
-// }
-
-/*Sorting Criteria for stock vector*/
-// Sort by Id
-/*
-bool lambdaId(const Stock &a, const Stock &b)
-{
-    return a.stockId < b.stockId;
-}
-// Sort by Quantity
-bool lambdaQuantity(const Stock &a, const Stock &b)
-{
-    return a.quantity < b.quantity;
-}
-// Sort by Price (without tax)
-bool lambdaPrice(const Stock &a, const Stock &b)
-{
-    return a.costWithoutTax < b.costWithoutTax;
-}
-
-
-// Read file function - will default to sorting the produced vector
-vector<Stock> readFromFile(string filename)
-{
-    vector <Stock> stockItems; //declaration of our stock vector for our items
-    fstream file(filename, ios::in);
-    if (file.is_open())
-    {
-        string line; //will receive the entire line
-
-        //now we go line by line, divide into substrings, and tranferring them into our new stock vector
-        while (getline(file, line))
-        {
-            if(line.empty()) continue; //skip empty lines
-            if(line.at(0) == '/' || line.at(0) == ' ' || line.at(1) == '*') continue; //ignore <stockName>.txt header
-
-            stringstream stream_line(line); //stream version of line, for use in getline
-            string str_aux; //getline destination for the newly partitioned string
-            Stock item; //will receive useful data from the line out of stream_line
-
-            //now we begin initializing our item
-            getline(stream_line, str_aux, ',');// ID
-            item.stockId = stoi(str_aux);
-
-            getline(stream_line, item.productName, ',');// PRODUCT NAME
-
-            getline(stream_line, str_aux, ',');// QUANTITY
-            item.quantity = stoi(str_aux);
-
-            getline(stream_line, str_aux);// COST NO TAX
-            item.costWithoutTax = stod(str_aux);
-
-            stockItems.push_back(item); // Add the complete item to the list
-        }
-
-    }else cout << "Error opening file." << endl;
-
-    file.close();
-
-    // Return with the sorted list of stockItems
-    sort(stockItems.begin(), stockItems.end(), lambdaId);
-    return stockItems;
-}
-//testing purposes only,
-void printingTester(vector <Stock> list)
-{
-    for (Stock item : list)
-    {
-    //  Item ID n -> item name
-
-        cout << "Item ID " << item.stockId << " -> " << item.productName << endl
-        << "            |-" << item.quantity << endl
-        << "            |-" << item.costWithoutTax << endl;
-        limh();
-    }
-}
-*/
-
-// Write line to file function
-// I kinda like the idea of using a vect to store temporary data of stuff happening in the store, then storing
-// it in the csv file once everything is done, this way data is available more readily in vector for usr
-// maybe create getLine() function, for converting data from our stock structure into a string?
-// file format: stockId,productName,quantity,costWithoutTax\n
