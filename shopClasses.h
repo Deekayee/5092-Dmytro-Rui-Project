@@ -30,16 +30,33 @@ public:
     double getCostValue() const { return costValue; }
     string getProductName() const { return productName; }
 
+    string toString()
+    {
+        string line = to_string(stockId) + ',' + productName + ',' + to_string(quantity) + ',' + to_string(costValue);
+    }
+
     double getSaleValue() const
     {
         const double taxRate = 0.3;
         return costValue * (1 + taxRate);
     }
-
     void setStockId(int id) { stockId = id; }
     void setQuantity(int qty) { quantity = qty; }
     void setCostValue(double price) { costValue = price; }
     void setProductName(string name) { productName = name; }
+    
+    void fromString(string line)
+    {
+        stringstream ss(line);
+        string field;
+        getline(ss, field, ',');
+        stockId = stoi(field);
+        getline(ss, productName, ',');
+        getline(ss, field, ',');
+        quantity = stoi(field);
+        getline(ss, field);
+        costValue = stod(field);
+    }
 };
 
 class CartItem

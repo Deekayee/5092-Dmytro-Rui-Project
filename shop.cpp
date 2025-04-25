@@ -4,12 +4,22 @@
 #include "utils.h"
 using namespace std;
 
+void test()
+{
+    Stock testStock(12,"TESTE",1,0.0);
+    string testString = testStock.toString();
+    cout << testString;
+    cin.ignore();
+    return;
+}
+
 int main()
 {
     // vars
     bool run = true;
     int opt;
     string input;
+    test();
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
