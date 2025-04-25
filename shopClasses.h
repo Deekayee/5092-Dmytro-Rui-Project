@@ -4,6 +4,7 @@
 #include <sstream> // for stringstream
 #include <iomanip> // for setw
 #include <vector>  // for vectors
+#include <cmath>   // for rounding doubles 
 using namespace std;
 
 class Stock
@@ -22,7 +23,7 @@ public:
         stockId = id;
         productName = name;
         quantity = qty;
-        costValue = price;
+        costValue = round(price * 100.0) / 100.0;
     }
 
     int getStockId() const { return stockId; }
@@ -32,7 +33,9 @@ public:
 
     string toString()
     {
-        string line = to_string(stockId) + ',' + productName + ',' + to_string(quantity) + ',' + to_string(costValue);
+        stringstream ss;
+        ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << costValue;
+        return ss.str();
     }
 
     double getSaleValue() const

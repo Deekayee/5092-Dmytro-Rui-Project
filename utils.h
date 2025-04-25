@@ -90,42 +90,43 @@ void createStockFile(const string &filename)
     ofstream file(filename, ios::app);
 }
 
-void addPurchaseToStock() // TODO
-{
-    Stock item;
-    string line, filename = "stockList.csv";
-    char confirm;
+//  will fix
+// void addPurchaseToStock() // TODO
+// {
+//     Stock item;
+//     string line, filename = "stockList.csv";
+//     char confirm;
 
-    clearConsole();
-    cout << "Register a purchase: " << endl;
-    do
-    {
-        limh();
-        cout << "Item ID: "; // this will change, as we want autoincrement ids
-        cin >> item.stockId;
-        cin.ignore();
+//     clearConsole();
+//     cout << "Register a purchase: " << endl;
+//     do
+//     {
+//         limh();
+//         cout << "Item ID: "; // this will change, as we want autoincrement ids
+//         cin >> item.stockId;
+//         cin.ignore();
 
-        cout << "Product Name: ";
-        getline(cin, item.productName);
+//         cout << "Product Name: ";
+//         getline(cin, item.productName);
 
-        cout << "Quantity: ";
-        cin >> item.quantity;
-        cin.ignore();
+//         cout << "Quantity: ";
+//         cin >> item.quantity;
+//         cin.ignore();
 
-        cout << "Cost Value: ";
-        cin >> item.costValue;
-        cin.ignore();
+//         cout << "Cost Value: ";
+//         cin >> item.costValue;
+//         cin.ignore();
 
-        // write to file here
-        line = to_string(item.stockId) + ", " + item.productName + ", " + to_string(item.quantity) + ", " + to_string(item.costValue);
-        writeToFile(filename, line);
+//         // write to file here
+//         line = to_string(item.stockId) + ", " + item.productName + ", " + to_string(item.quantity) + ", " + to_string(item.costValue);
+//         writeToFile(filename, line);
 
-        cout << "Do you want to register another item? (y/n): ";
-        cin >> confirm;
-        confirm = tolower(confirm);
-        cin.ignore();
-    } while (confirm == 'y');
-}
+//         cout << "Do you want to register another item? (y/n): ";
+//         cin >> confirm;
+//         confirm = tolower(confirm);
+//         cin.ignore();
+//     } while (confirm == 'y');
+// }
 
 //  need for stock menu: remove item (MY HOMEWORK)
 void removePurchaseFromStock(){
@@ -175,27 +176,20 @@ Stock* findProduct()
     if (fr.is_open())
     {
         string line;
-        string number;
-        Stock *st;
+        string tmp;
+        Stock st;
         //vector<Stock> items;
         while (getline(fr, line))
         {
-            stringstream ss(line);
-            getline(ss, number, ',');
-            st->stockId = stoi(number);          //  int conversion
-            getline(ss, st->productName, ',');
-            getline(ss, number, ',');
-            st->quantity = stoi(number);         //  int conversion
-            getline(ss, number, ',');
-            st->costValue = stod(number);        //  double conversion
-            if(st->stockId == id)
+            st.fromString(line);
+            if(st.getStockId() == id)
             {
                 found = 1;
                 break;
             }
         }
         fr.close();
-        if (found)  return st;
+        if (found)  return &st;
         else 
         {
             cout << "No matching ID found" << endl;
@@ -302,11 +296,11 @@ void stockMenu() // TODO
             readStockFile();
             break;
         case 2:
-            addPurchaseToStock();
+           // addPurchaseToStock();
             break;
         
         case 3:
-            /* removePurchaseFromStock() */
+            removePurchaseFromStock();
             break;
         case 4:
             stockMenu = false;
