@@ -1,3 +1,4 @@
+#pragma once    //  compiler only sees this lib file once
 #include <iostream>
 #include <string>  // for string
 #include <ctime>   // for time

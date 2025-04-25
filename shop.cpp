@@ -2,6 +2,7 @@
 #include <string>
 #include <cctype>
 #include "utils.h"
+#include "menu.h"
 using namespace std;
 
 void test()
@@ -9,8 +10,12 @@ void test()
     // Stock testStock(12,"TESTE",1,2.50);
     // string testString = testStock.toString();
     // cout << testString;
-    // cin.ignore();
-    // return;
+    createStockFile();
+    vector <Stock> StockList = openStockFile();
+    addPurchaseToStock(&StockList);
+    cin.ignore();
+    return;
+
 }
 
 int main()
@@ -19,7 +24,7 @@ int main()
     bool run = true;
     int opt;
     string input;
-    //test();
+    test();
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
@@ -48,7 +53,7 @@ int main()
             break;
         case 2:
             // show stock, give an option to add or remove and cancel
-            stockMenu();
+            //stockMenu(vector<Stock> StockList);
             break;
         case 3:
             // exit
