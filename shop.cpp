@@ -11,8 +11,9 @@ void test()
     // string testString = testStock.toString();
     // cout << testString;
     createStockFile();
-    vector <Stock> StockList = openStockFile();
-    addPurchaseToStock(&StockList);
+    vector <Stock> *StockList;
+    bool flag = openStockFile(StockList);
+    addPurchaseToStock(StockList);
     cin.ignore();
     return;
 
@@ -24,7 +25,7 @@ int main()
     bool run = true;
     int opt;
     string input;
-    test();
+    //test();
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop

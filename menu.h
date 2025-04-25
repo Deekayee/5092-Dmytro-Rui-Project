@@ -156,7 +156,7 @@ void stockMenu(vector <Stock>* stockList) // TODO
             break;
         
         case 3:
-            removePurchaseFromStock();
+            //removePurchaseFromStock();
             break;
         case 4:
             stockMenu = false;
