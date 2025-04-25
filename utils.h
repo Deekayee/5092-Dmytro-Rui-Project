@@ -42,7 +42,7 @@ void createStockFile()
 bool openStockFile(vector <Stock> *stockList)
 {
     fstream file("output/stockList.csv", ios::in);
-    if (file.is_open() || stockList != nullptr)
+    if (file.is_open() && stockList != nullptr)
     {
         string line;
         getline(file, line);                //  ignores header
@@ -139,6 +139,44 @@ bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
     return true;
 }
 
+vector <Stock> searchForProduct(vector <Stock> *stockList, const string &name)
+{
+    vector <Stock> items;
+    string lowerName = name;
+    transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    for(Stock i : *stockList)
+    {
+        string lowerProduct = i.getProductName();
+        transform(lowerProduct.begin(), lowerProduct.end(), lowerProduct.begin(), ::tolower);
+        if(lowerProduct.find(lowerName) != string::npos)
+        {
+            items.push_back(i);
+        }
+    }
+    return items;
+}
+
+bool showSearchResults(vector <Stock>items)
+{
+    clearConsole();
+    if(items.empty()){
+        cout << "No matching results found" << endl;
+    }
+
+    cout << "Here is the list of matching results:" << endl;
+    for(Stock match : items)
+    {
+        cout << match.toString() << endl;
+    }
+    char confirm;
+    cout << "Do you wish to keep searching? (y/n): ";
+    cin >> confirm;
+    confirm = tolower(confirm);
+    cin.ignore();
+    if(confirm == 'y') return true;
+    else return false;
+}
+
 //  Will use to delete (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
 bool removePurchaseFromStock(vector <Stock> *stockList, int id)
@@ -166,7 +204,7 @@ bool changePurchaseFromStock(vector <Stock> *stockList, int id, const string &li
     }else return false;
 }
 
-void printStockFile() // TODO
+void printStock() // TODO
 {
     // vars
     string line;
@@ -189,6 +227,6 @@ void printStockFile() // TODO
         cout << "Unable to open file";
     }
     limh();
-    system("pause");
+    pause();
 }
 

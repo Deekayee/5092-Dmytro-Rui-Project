@@ -29,6 +29,21 @@ int main()
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
+    cout << "Opening Stock File... ";
+    createStockFile();
+    vector <Stock> stockList;
+    if(openStockFile(&stockList))
+    {
+        cout << "Success!" << endl;
+        pause();
+    }else 
+    {
+        cout << "Error" << endl;
+        pause();
+        return 1;
+    }
+    
+    
     do
     {
         do
@@ -54,7 +69,7 @@ int main()
             break;
         case 2:
             // show stock, give an option to add or remove and cancel
-            //stockMenu(vector<Stock> StockList);
+            stockMenu(&stockList);
             break;
         case 3:
             // exit
