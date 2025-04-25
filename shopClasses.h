@@ -23,7 +23,7 @@ public:
         stockId = id;
         productName = name;
         quantity = qty;
-        costValue = price;
+        costValue = round(price * 100.0) / 100.0;
     }
 
     int getStockId() const { return stockId; }

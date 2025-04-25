@@ -121,15 +121,15 @@ void addPurchaseToStock()
 
         // write to file here
         item.fromString(line.str());
-        readStockFile();
+        // need search function for stock verification purposes
         writeToFile(filename, line.str());
 
-        cout << "Do you want to register another item? (y/n): ";
-        cin >> confirm;
-        confirm = tolower(confirm);
-        cin.ignore();
-    } while (confirm == 'y');
-}
+//         cout << "Do you want to register another item? (y/n): ";
+//         cin >> confirm;
+//         confirm = tolower(confirm);
+//         cin.ignore();
+//     } while (confirm == 'y');
+// }
 
 //  return true if item found, false if no item found
 //  will we use vectors after all?
