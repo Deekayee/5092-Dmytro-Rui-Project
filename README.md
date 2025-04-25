@@ -4,7 +4,10 @@
 
 ## Objetivo
 Elaborar um programa em C++ com o intuito de gestão de um pequeno comércio local, concretizando os pontos abaixo.
-Tema: Loja de Maquinas Fotograficas
+
+### Tema
+Loja de Maquinas Fotograficas
+
 ---
 
 ## Funcionalidades

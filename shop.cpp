@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <cctype>
 #include "utils.h"
 using namespace std;
 
@@ -7,30 +9,27 @@ int main()
     // vars
     bool run = true;
     int opt;
+    string input;
     // add classes (when checking out, so the time stamps are correct) ClassName something
-    
-    //Testing file reading
-    //uncomment to check results
-    /*
-    vector <Stock> ItemStock_test = readFromFile("stockList_test.txt");
-    printingTester(ItemStock_test);
-    cin.ignore();
-    */
+
     // main loop
     do
     {
-        clearConsole();
-        cout << "Shop menu" << endl;
-        limh();
-        cout << "1. Shop Sales" << endl;
-        limh();
-        cout << "2. Shop Stock" << endl;
-        limh();
-        cout << "3. Exit" << endl;
-        limh();
-        cout << "Option: ";
-        cin >> opt;
-        cin.ignore();
+        do
+        {
+            clearConsole();
+            cout << "Shop menu" << endl;
+            limh();
+            cout << "1. Shop Sales" << endl;
+            limh();
+            cout << "2. Shop Stock" << endl;
+            limh();
+            cout << "3. Exit" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
         switch (opt)
         {
         case 1:

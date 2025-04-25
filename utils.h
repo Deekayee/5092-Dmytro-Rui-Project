@@ -10,6 +10,45 @@
 #include "shopClasses.h" // my classes
 using namespace std;
 
+void pause() // pause the console
+{
+    cout << "Press enter to continue...";
+    cin.ignore();
+}
+
+bool validateMenuInput(const string &input, int &opt)
+{
+    // Check if the string is entirely digits
+    for (char ch : input)
+    {
+        if (!isdigit(ch))
+        {
+            cout << "Please enter a number" << endl;
+            pause();
+            return false;
+        }
+    }
+
+    // catch exceptions
+    try
+    {
+        opt = stoi(input);
+    }
+    catch (const std::out_of_range &)
+    {
+        cout << "Number is too large. Please enter a smaller number." << endl;
+        pause();
+        return false;
+    }
+    catch (const std::invalid_argument &)
+    {
+        cout << "Invalid input. Please enter numbers only." << endl;
+        pause();
+        return false;
+    }
+    return true;
+}
+
 void limh() // horizontal line
 {
     cout << "----------------------------------------" << endl;
@@ -24,29 +63,175 @@ void clearConsole() // clear the console
 #endif
 }
 
-void pause() // pause the console
+void writeToFile(string filename, const string &line) // TODO #1
 {
-    cout << "Press enter to continue...";
-    cin.ignore();
+    fstream file(filename, ios::app);
+    if (file.is_open())
+    {
+        file << line << endl;
+    }
+    else
+    {
+        cout << "Error opening file." << endl;
+    }
 }
+
+//  Will use to make changes in stockList.csv
+void changeLineFile(string filename, const string &line, const string &field)
+{
+}
+
+void createStockFile(const string &filename)
+{
+    if (!ifstream(filename)) // if the file doesn't exist, we create it
+    {
+        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
+    }
+    ofstream file(filename, ios::app);
+}
+
+void addPurchaseToStock() // TODO
+{
+    Stock item;
+    string line, filename = "stockList.csv";
+    char confirm;
+
+    clearConsole();
+    cout << "Register a purchase: " << endl;
+    do
+    {
+        limh();
+        cout << "Item ID: "; // this will change, as we want autoincrement ids
+        cin >> item.stockId;
+        cin.ignore();
+
+        cout << "Product Name: ";
+        getline(cin, item.productName);
+
+        cout << "Quantity: ";
+        cin >> item.quantity;
+        cin.ignore();
+
+        cout << "Cost Value: ";
+        cin >> item.costValue;
+        cin.ignore();
+
+        // write to file here
+        line = to_string(item.stockId) + ", " + item.productName + ", " + to_string(item.quantity) + ", " + to_string(item.costValue);
+        writeToFile(filename, line);
+
+        cout << "Do you want to register another item? (y/n): ";
+        cin >> confirm;
+        confirm = tolower(confirm);
+        cin.ignore();
+    } while (confirm == 'y');
+}
+
+//  need for stock menu: remove item (MY HOMEWORK)
+void removePurchaseFromStock(){
+    return;
+}
+
+void readStockFile() // TODO
+{
+    // vars
+    string line;
+
+    // open file
+    clearConsole();
+    cout << "Stock: " << endl;
+    limh();
+    ifstream fr("stockList.csv");
+    if (fr.is_open())
+    {
+        while (getline(fr, line))
+        {
+            cout << line << endl;
+        }
+        fr.close();
+    }
+    else
+    {
+        cout << "Unable to open file";
+    }
+    limh();
+    system("pause");
+}
+
+//  returns pointer to <Stock>, nullptr if none found
+Stock* findProduct()
+{
+    // Get the id to search for
+    int id;
+    clearConsole();
+    cout << "Finding a Product by ID" << endl;
+    limh();
+    cout << "Enter the ID of the product you want to find: ";
+    cin >> id;
+    
+    // Read the stockList.csv file and search for the item
+    bool found = 0;
+    ifstream fr("stockList.csv");
+    if (fr.is_open())
+    {
+        string line;
+        string number;
+        Stock *st;
+        //vector<Stock> items;
+        while (getline(fr, line))
+        {
+            stringstream ss(line);
+            getline(ss, number, ',');
+            st->stockId = stoi(number);          //  int conversion
+            getline(ss, st->productName, ',');
+            getline(ss, number, ',');
+            st->quantity = stoi(number);         //  int conversion
+            getline(ss, number, ',');
+            st->costValue = stod(number);        //  double conversion
+            if(st->stockId == id)
+            {
+                found = 1;
+                break;
+            }
+        }
+        fr.close();
+        if (found)  return st;
+        else 
+        {
+            cout << "No matching ID found" << endl;
+            return nullptr;
+        }
+        
+    }
+    else
+    {
+        cout << "Unable to open file" << endl;
+        limh();
+    }
+    system("pause");
+}
+
 
 // Sales Menu
 void salesMenu()
 {
     bool salesMenu = true;
+    string input;
     int salesOpt;
     do
     {
-        clearConsole();
-        cout << "Sales Menu" << endl;
-        limh();
-        cout << "1. Show Products" << endl;
-        limh();
-        cout << "2. Go Back" << endl;
-        limh();
-        cout << "Option: ";
-        cin >> salesOpt;
-        cin.ignore();
+        do
+        {
+            clearConsole();
+            cout << "Sales Menu" << endl;
+            limh();
+            cout << "1. Show Products" << endl;
+            limh();
+            cout << "2. Go Back" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, salesOpt));
 
         switch (salesOpt)
         {
@@ -54,8 +239,9 @@ void salesMenu()
             cout << "Products" << endl;
             limh();
             // show products
+            readStockFile();
             break;
-        case 2: // TODO
+        case 2:
             salesMenu = false;
             break;
         default:
@@ -87,6 +273,53 @@ void productsMenu() // TODO
 // Stock Menu
 void stockMenu() // TODO
 {
+    bool stockMenu = true;
+    string input;
+    int productsOpt;
+
+    do
+    {
+        do
+        {
+            clearConsole();
+            cout << "Stock Menu" << endl;
+            limh();
+            cout << "1. Show Stock" << endl;
+            limh();
+            cout << "2. Add to Stock" << endl;
+            limh();
+            cout << "3. Remove from Stock" << endl;
+            limh();
+            cout << "4. Go Back" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, productsOpt));
+
+        switch (productsOpt)
+        {
+        case 1:
+            readStockFile();
+            break;
+        case 2:
+            addPurchaseToStock();
+            break;
+        
+        case 3:
+            /* removePurchaseFromStock() */
+            break;
+        case 4:
+            stockMenu = false;
+            break;
+        
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+        
+    } while (stockMenu);
+    
     // show stock, give an option to add or remove and cancel
 }
 
@@ -171,62 +404,3 @@ void printingTester(vector <Stock> list)
 // it in the csv file once everything is done, this way data is available more readily in vector for usr
 // maybe create getLine() function, for converting data from our stock structure into a string?
 // file format: stockId,productName,quantity,costWithoutTax\n
-void writeToFile(string filename, const string &line) // TODO #1
-{
-    fstream file(filename, ios::app);
-    if (file.is_open())
-    {
-        file << line << endl;
-    }
-    else
-    {
-        cout << "Error opening file." << endl;
-    }
-    //shouldnt we close file at some point?
-}
-
-
-
-void createStockFile(const string &filename)
-{
-    if (!ifstream(filename)) // if the file doesn't exist, we create it
-    {
-        writeToFile(filename, "StockId, ProductName, Quantity, CostValue"); // gives the file a header
-    }
-    ofstream file(filename, ios::app);
-}
-
-void addPurchaseToStock() // TODO
-{
-    Stock item;
-    string line, filename = "stockList.csv";
-    char confirm;
-
-    clearConsole();
-    cout << "Register a purchase: " << endl;
-    do
-    {
-        limh();
-        cout << "Item ID: "; // this will change, as we want autoincrement ids
-        cin >> item.stockId;
-        cin.ignore();
-
-        cout << "Product Name: ";
-        getline(cin, item.productName);
-
-        cout << "Quantity: ";
-        cin >> item.quantity;
-        cin.ignore();
-
-        cout << "Cost Value: ";
-        cin >> item.costValue;
-        cin.ignore();
-
-        // write to file here
-
-        cout << "Do you want to register another item? (y/n): ";
-        cin >> confirm;
-        confirm = tolower(confirm);
-        cin.ignore();
-    } while (confirm == 'y');
-}
