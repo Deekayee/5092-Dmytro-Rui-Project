@@ -1,4 +1,4 @@
-#pragma once    //  compiler only sees this lib file once
+#pragma once //  compiler only sees this lib file once
 #include <iostream>
 #include <string>    // will need this for the string class
 #include <fstream>   // will need this for file handling
@@ -13,7 +13,7 @@ void limh();
 void pause();
 
 //  writes string to file, returns false if error
-void writeToFile(string filename, const string &line) 
+void writeToFile(string filename, const string &line)
 {
     fstream file(filename, ios::app);
     if (file.is_open())
@@ -31,7 +31,7 @@ void writeToFile(string filename, const string &line)
 //  if the file doesn't exist, we create it, returns false if error
 void createStockFile()
 {
-    if (!ifstream("output/stockList.csv")) 
+    if (!ifstream("output/stockList.csv"))
     {
         // gives the file a header
         writeToFile("output/stockList.csv", "StockId,ProductName,Quantity,CostValue");
@@ -39,21 +39,21 @@ void createStockFile()
 }
 
 //  will validate pointer to vector and returns stockList by reference
-bool openStockFile(vector <Stock> *stockList)
+bool openStockFile(vector<Stock> *stockList)
 {
     fstream file("output/stockList.csv", ios::in);
     if (file.is_open() && stockList != nullptr)
     {
         string line;
-        getline(file, line);                //  ignores header
+        getline(file, line); //  ignores header
         while (getline(file, line))
         {
             Stock item;
             item.fromString(line);
             stockList->push_back(item);
         }
-
-    }else 
+    }
+    else
     {
         cout << "Error opening file." << endl;
         return false;
@@ -62,10 +62,10 @@ bool openStockFile(vector <Stock> *stockList)
     return true;
 }
 
-bool updateFile(vector <Stock>* stockList)
+bool updateFile(vector<Stock> *stockList)
 {
     ofstream file("output/stockList.csv");
-    if(file.is_open())
+    if (file.is_open())
     {
         file << "output/stockList.csv", "StockId,ProductName,Quantity,CostValue";
         for (Stock item : *stockList)
@@ -73,14 +73,15 @@ bool updateFile(vector <Stock>* stockList)
             file << item.toString();
         }
         return true;
-    }else
+    }
+    else
     {
         cout << "Error opening file." << endl;
         return false;
     }
 }
 
-void addPurchaseToStock(vector <Stock>* stockList)
+void addPurchaseToStock(vector<Stock> *stockList)
 {
     Stock item;
     string filename = "output/stockList.csv";
@@ -93,9 +94,10 @@ void addPurchaseToStock(vector <Stock>* stockList)
         stringstream line;
         string field;
         limh();
-        cout << "Item ID: "; // this will change, as we want autoincrement ids
-        getline(cin, field);
-        line << field << ',';
+        // added autoincrement, so this is unnecessary
+        // cout << "Item ID: "; // this will change, as we want autoincrement ids
+        // getline(cin, field);
+        // line << field << ',';
 
         cout << "Product Name: ";
         getline(cin, field);
@@ -127,28 +129,28 @@ void addPurchaseToStock(vector <Stock>* stockList)
 // passes fstream and item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
+bool findPurchaseFromStock(vector<Stock> *stockList, Stock *item, int id)
 {
     // Read the stockList.csv file and search for the item
-    if(id >= stockList->size())
+    if (id >= stockList->size())
     {
         return false;
     }
-    item = &stockList->at(id);  // copies address of corresponding <Stock> object to <Stock> pointer item
-    
+    item = &stockList->at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
+
     return true;
 }
 
-vector <Stock> searchForProduct(vector <Stock> *stockList, const string &name)
+vector<Stock> searchForProduct(vector<Stock> *stockList, const string &name)
 {
-    vector <Stock> items;
+    vector<Stock> items;
     string lowerName = name;
     transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
-    for(Stock i : *stockList)
+    for (Stock i : *stockList)
     {
         string lowerProduct = i.getProductName();
         transform(lowerProduct.begin(), lowerProduct.end(), lowerProduct.begin(), ::tolower);
-        if(lowerProduct.find(lowerName) != string::npos)
+        if (lowerProduct.find(lowerName) != string::npos)
         {
             items.push_back(i);
         }
@@ -156,15 +158,16 @@ vector <Stock> searchForProduct(vector <Stock> *stockList, const string &name)
     return items;
 }
 
-bool showSearchResults(vector <Stock>items)
+bool showSearchResults(vector<Stock> items)
 {
     clearConsole();
-    if(items.empty()){
+    if (items.empty())
+    {
         cout << "No matching results found" << endl;
     }
 
     cout << "Here is the list of matching results:" << endl;
-    for(Stock match : items)
+    for (Stock match : items)
     {
         cout << match.toString() << endl;
     }
@@ -173,35 +176,40 @@ bool showSearchResults(vector <Stock>items)
     cin >> confirm;
     confirm = tolower(confirm);
     cin.ignore();
-    if(confirm == 'y') return true;
-    else return false;
+    if (confirm == 'y')
+        return true;
+    else
+        return false;
 }
 
 //  Will use to delete (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
-bool removePurchaseFromStock(vector <Stock> *stockList, int id)
+bool removePurchaseFromStock(vector<Stock> *stockList, int id)
 {
     Stock *item;
-    if(findPurchaseFromStock(stockList, item, id))
+    if (findPurchaseFromStock(stockList, item, id))
     {
         item->setQuantity(0);
         updateFile(stockList);
         return true;
-    }else return false;
+    }
+    else
+        return false;
 }
 
 //  Will use to replace object in stockList vector
 //  returns true if successful, false if not (product not found)
-bool changePurchaseFromStock(vector <Stock> *stockList, int id, const string &line)
+bool changePurchaseFromStock(vector<Stock> *stockList, int id, const string &line)
 {
     Stock *item;
-    if(findPurchaseFromStock(stockList, item, id))
+    if (findPurchaseFromStock(stockList, item, id))
     {
         item->fromString(line);
         updateFile(stockList);
         return true;
-
-    }else return false;
+    }
+    else
+        return false;
 }
 
 void printStock() // TODO
@@ -229,4 +237,3 @@ void printStock() // TODO
     limh();
     pause();
 }
-
