@@ -110,6 +110,33 @@ public:
     {
         return getSaleWithTax() * quantity;
     }
+
+    string toString() const
+    {
+        stringstream ss;
+        ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << saleWithoutTax << ',' << fixed << setprecision(2) << taxRatePercent << ',' << fixed << setprecision(2) << getSaleWithTax() << ',' << fixed << setprecision(2) << getTotalItemSellValue();
+        return ss.str();
+    }
+
+    // dont really need this yet
+    void fromString(string line)
+    {
+        stringstream ss(line);
+        string field;
+        getline(ss, field, ',');
+        stockId = stoi(field);
+        getline(ss, productName, ',');
+        getline(ss, field, ',');
+        quantity = stoi(field);
+        getline(ss, field, ',');
+        saleWithoutTax = stod(field);
+        getline(ss, field, ',');
+        taxRatePercent = stod(field);
+        getline(ss, field, ',');
+        double saleWithTax = stod(field);
+        getline(ss, field);
+        double totalItemSellValue = stod(field);
+    }
 };
 
 class Receipt
@@ -166,6 +193,42 @@ public:
     double getChange() const
     {
         return paymentAmount - getTotalCost();
+    }
+
+    string toString() const
+    {
+        stringstream ss;
+        ss << "Receipt ID: " << receiptId << endl;
+        ss << "Client ID: " << clientId << endl;
+        ss << "Payment Amount: $" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Date: " << date << endl;
+        ss << "Items:" << endl;
+        for (auto &item : items)
+        {
+            ss << item.toString() << endl;
+        }
+        ss << "Total Cost: $" << fixed << setprecision(2) << getTotalCost() << endl;
+        ss << "Change: $" << fixed << setprecision(2) << getChange() << endl;
+        return ss.str();
+    }
+
+    void fromString(string line)
+    {
+        stringstream ss(line);
+        string field;
+        getline(ss, field, ',');
+        receiptId = stoi(field);
+        getline(ss, field, ',');
+        clientId = stoi(field);
+        getline(ss, field, ',');
+        paymentAmount = stod(field);
+        getline(ss, date, ',');
+        while (getline(ss, field, ','))
+        {
+            CartItem item;
+            item.fromString(field);
+            items.push_back(item);
+        }
     }
 
 private:
