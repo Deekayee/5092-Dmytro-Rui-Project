@@ -49,6 +49,7 @@ public:
         const double taxRate = 0.3;
         return costValue * (1 + taxRate);
     }
+
     void setStockId(int id) { stockId = id; }
     void setQuantity(int qty) { quantity = qty; }
     void setCostValue(double price) { costValue = price; }

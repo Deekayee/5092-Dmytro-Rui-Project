@@ -5,6 +5,7 @@
 #include "menu.h"
 using namespace std;
 
+/*
 void test()
 {
     // Stock testStock(12,"TESTE",1,2.50);
@@ -18,7 +19,7 @@ void test()
     return;
 
 }
-
+*/
 int main()
 {
     // vars

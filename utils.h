@@ -19,6 +19,7 @@ void writeToFile(string filename, const string &line)
     if (file.is_open())
     {
         file << line << endl;
+        file.close();
     }
     else
     {
@@ -67,10 +68,10 @@ bool updateFile(vector<Stock> *stockList)
     ofstream file("output/stockList.csv");
     if (file.is_open())
     {
-        file << "output/stockList.csv", "StockId,ProductName,Quantity,CostValue";
+        file << "StockId,ProductName,Quantity,CostValue" << endl; // FIX this here
         for (Stock item : *stockList)
         {
-            file << item.toString();
+            file << item.toString() << endl;
         }
         return true;
     }
@@ -95,28 +96,27 @@ void addPurchaseToStock(vector<Stock> *stockList)
         string field;
         limh();
         // added autoincrement, so this is unnecessary
-        // cout << "Item ID: "; // this will change, as we want autoincrement ids
+        // cout << "Item ID: ";
         // getline(cin, field);
         // line << field << ',';
 
         cout << "Product Name: ";
         getline(cin, field);
-        line << field << ',';
+        item.setProductName(field);
 
         cout << "Quantity: ";
         getline(cin, field);
-        line << field << ',';
+        item.setQuantity(stoi(field));
 
         cout << "Cost Value: ";
         getline(cin, field);
-        line << field;
+        item.setCostValue(stod(field));
 
         // write to file here
-        item.fromString(line.str());
         // need search function for stock verification purposes
         // for now, will write into vector, then file
         stockList->push_back(item);
-        writeToFile(filename, line.str());
+        writeToFile(filename, item.toString());
 
         cout << "Do you want to register another item? (y/n): ";
         cin >> confirm;
@@ -129,7 +129,7 @@ void addPurchaseToStock(vector<Stock> *stockList)
 // passes fstream and item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> *stockList, Stock *item, int id)
+bool findPurchaseFromStock(vector<Stock> *stockList, Stock *item, int id) // fucked something here, gotta FIX
 {
     // Read the stockList.csv file and search for the item
     if (id >= stockList->size())
@@ -187,7 +187,7 @@ bool showSearchResults(vector<Stock> items)
 bool removePurchaseFromStock(vector<Stock> *stockList, int id)
 {
     Stock *item;
-    if (findPurchaseFromStock(stockList, item, id))
+    if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
     {
         item->setQuantity(0);
         updateFile(stockList);
@@ -202,7 +202,7 @@ bool removePurchaseFromStock(vector<Stock> *stockList, int id)
 bool changePurchaseFromStock(vector<Stock> *stockList, int id, const string &line)
 {
     Stock *item;
-    if (findPurchaseFromStock(stockList, item, id))
+    if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
     {
         item->fromString(line);
         updateFile(stockList);
