@@ -12,8 +12,8 @@ void clearConsole();
 void limh();
 void pause();
 
-
-void writeToFile(string filename, const string &line) // TODO #1
+//  writes string to file, returns false if error
+void writeToFile(string filename, const string &line) 
 {
     fstream file(filename, ios::app);
     if (file.is_open())
@@ -23,24 +23,26 @@ void writeToFile(string filename, const string &line) // TODO #1
     else
     {
         cout << "Error opening file." << endl;
+        return;
     }
+    return;
 }
 
+//  if the file doesn't exist, we create it, returns false if error
 void createStockFile()
 {
-    if (!ifstream("output/stockList.csv")) // if the file doesn't exist, we create it
+    if (!ifstream("output/stockList.csv")) 
     {
-        writeToFile("output/stockList.csv", "StockId, ProductName, Quantity, CostValue"); // gives the file a header
+        // gives the file a header
+        writeToFile("output/stockList.csv", "StockId,ProductName,Quantity,CostValue");
     }
-    ofstream file("output/stockList.csv", ios::app);
 }
 
-//  Will return a vector of Stock objects
-vector <Stock> openStockFile()
+//  will validate pointer to vector and returns stockList by reference
+bool openStockFile(vector <Stock> *stockList)
 {
-    vector <Stock> stockList;
     fstream file("output/stockList.csv", ios::in);
-    if (file.is_open())
+    if (file.is_open() && stockList != nullptr)
     {
         string line;
         getline(file, line);                //  ignores header
@@ -48,12 +50,34 @@ vector <Stock> openStockFile()
         {
             Stock item;
             item.fromString(line);
-            stockList.push_back(item);
+            stockList->push_back(item);
         }
 
-    }else cout << "Error opening file." << endl;
+    }else 
+    {
+        cout << "Error opening file." << endl;
+        return false;
+    }
 
-    return stockList;
+    return true;
+}
+
+bool updateFile(vector <Stock>* stockList)
+{
+    ofstream file("output/stockList.csv");
+    if(file.is_open())
+    {
+        file << "output/stockList.csv", "StockId,ProductName,Quantity,CostValue";
+        for (Stock item : *stockList)
+        {
+            file << item.toString();
+        }
+        return true;
+    }else
+    {
+        cout << "Error opening file." << endl;
+        return false;
+    }
 }
 
 void addPurchaseToStock(vector <Stock>* stockList)
@@ -99,18 +123,88 @@ void addPurchaseToStock(vector <Stock>* stockList)
     } while (confirm == 'y');
 }
 
-
-//  need for stock menu: remove item (MY HOMEWORK)
-void removePurchaseFromStock(){
-    return;
-}
-
-//  Will use to make changes in stockList.csv
-void changeLineFile(string filename, const string &line, const string &field)
+// finds product in vector
+// passes fstream and item by reference:
+// item --> item in vector
+// returns true if found, false if not found
+bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
 {
+    // Read the stockList.csv file and search for the item
+    if(id >= stockList->size())
+    {
+        return false;
+    }
+    item = &stockList->at(id);  // copies address of corresponding <Stock> object to <Stock> pointer item
+    
+    return true;
 }
 
-void printStockFile() // TODO
+vector <Stock> searchForProduct(vector <Stock> *stockList, const string &name)
+{
+    vector <Stock> items;
+    string lowerName = name;
+    transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    for(Stock i : *stockList)
+    {
+        string lowerProduct = i.getProductName();
+        transform(lowerProduct.begin(), lowerProduct.end(), lowerProduct.begin(), ::tolower);
+        if(lowerProduct.find(lowerName) != string::npos)
+        {
+            items.push_back(i);
+        }
+    }
+    return items;
+}
+
+bool showSearchResults(vector <Stock>items)
+{
+    clearConsole();
+    if(items.empty()){
+        cout << "No matching results found" << endl;
+    }
+
+    cout << "Here is the list of matching results:" << endl;
+    for(Stock match : items)
+    {
+        cout << match.toString() << endl;
+    }
+    char confirm;
+    cout << "Do you wish to keep searching? (y/n): ";
+    cin >> confirm;
+    confirm = tolower(confirm);
+    cin.ignore();
+    if(confirm == 'y') return true;
+    else return false;
+}
+
+//  Will use to delete (setQuantity to 0) in stockList vector
+//  returns true if successful, false if not (product not found)
+bool removePurchaseFromStock(vector <Stock> *stockList, int id)
+{
+    Stock *item;
+    if(findPurchaseFromStock(stockList, item, id))
+    {
+        item->setQuantity(0);
+        updateFile(stockList);
+        return true;
+    }else return false;
+}
+
+//  Will use to replace object in stockList vector
+//  returns true if successful, false if not (product not found)
+bool changePurchaseFromStock(vector <Stock> *stockList, int id, const string &line)
+{
+    Stock *item;
+    if(findPurchaseFromStock(stockList, item, id))
+    {
+        item->fromString(line);
+        updateFile(stockList);
+        return true;
+
+    }else return false;
+}
+
+void printStock() // TODO
 {
     // vars
     string line;
@@ -133,52 +227,6 @@ void printStockFile() // TODO
         cout << "Unable to open file";
     }
     limh();
-    system("pause");
+    pause();
 }
 
-//  returns pointer to <Stock>, nullptr if none found
-// needs rework
-// Stock* findProduct()
-// {
-//     // Get the id to search for
-//     int id;
-//     clearConsole();
-//     cout << "Finding a Product by ID" << endl;
-//     limh();
-//     cout << "Enter the ID of the product you want to find: ";
-//     cin >> id;
-    
-//     // Read the stockList.csv file and search for the item
-//     bool found = 0;
-//     ifstream fr("stockList.csv");
-//     if (fr.is_open())
-//     {
-//         string line;
-//         string tmp;
-//         Stock st;
-//         //vector<Stock> items;
-//         while (getline(fr, line))
-//         {
-//             st.fromString(line);
-//             if(st.getStockId() == id)
-//             {
-//                 found = 1;
-//                 break;
-//             }
-//         }
-//         fr.close();
-//         if (found)  return &st;
-//         else 
-//         {
-//             cout << "No matching ID found" << endl;
-//             return nullptr;
-//         }
-        
-//     }
-//     else
-//     {
-//         cout << "Unable to open file" << endl;
-//         limh();
-//     }
-//     system("pause");
-// }

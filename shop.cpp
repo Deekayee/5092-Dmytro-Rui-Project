@@ -11,8 +11,9 @@ void test()
     // string testString = testStock.toString();
     // cout << testString;
     createStockFile();
-    vector <Stock> StockList = openStockFile();
-    addPurchaseToStock(&StockList);
+    vector <Stock> *StockList;
+    bool flag = openStockFile(StockList);
+    addPurchaseToStock(StockList);
     cin.ignore();
     return;
 
@@ -24,10 +25,25 @@ int main()
     bool run = true;
     int opt;
     string input;
-    test();
+    //test();
     // add classes (when checking out, so the time stamps are correct) ClassName something
 
     // main loop
+    cout << "Opening Stock File... ";
+    createStockFile();
+    vector <Stock> stockList;
+    if(openStockFile(&stockList))
+    {
+        cout << "Success!" << endl;
+        pause();
+    }else 
+    {
+        cout << "Error" << endl;
+        pause();
+        return 1;
+    }
+    
+    
     do
     {
         do
@@ -53,7 +69,7 @@ int main()
             break;
         case 2:
             // show stock, give an option to add or remove and cancel
-            //stockMenu(vector<Stock> StockList);
+            stockMenu(&stockList);
             break;
         case 3:
             // exit
