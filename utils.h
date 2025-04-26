@@ -67,10 +67,10 @@ bool updateFile(vector <Stock>* stockList)
     ofstream file("output/stockList.csv");
     if(file.is_open())
     {
-        file << "output/stockList.csv", "StockId,ProductName,Quantity,CostValue";
+        file << "StockId,ProductName,Quantity,CostValue" << endl;
         for (Stock item : *stockList)
         {
-            file << item.toString();
+            file << item.toString() << endl;
         }
         return true;
     }else
@@ -80,9 +80,25 @@ bool updateFile(vector <Stock>* stockList)
     }
 }
 
+// finds product in vector
+// passes fstream and item by reference:
+// item --> item in vector
+// returns true if found and returns found item by reference, false if not found
+bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
+{
+    // Read the stockList.csv file and search for the item
+    if(id >= stockList->size())
+    {
+        return false;
+    }
+    item = &stockList->at(id);  // copies address of corresponding <Stock> object to <Stock> pointer item
+    
+    return true;
+}
+
 void addPurchaseToStock(vector <Stock>* stockList)
 {
-    Stock item;
+    Stock *item;
     string filename = "output/stockList.csv";
     char confirm;
 
@@ -110,12 +126,16 @@ void addPurchaseToStock(vector <Stock>* stockList)
         line << field;
 
         // write to file here
-        item.fromString(line.str());
-        // need search function for stock verification purposes
-        // for now, will write into vector, then file
-        stockList->push_back(item);
-        writeToFile(filename, line.str());
-
+        item->fromString(line.str());
+        // ATTENTION, read function description bellow
+        if(findPurchaseFromStock(stockList, item, item->getStockId()))
+        {
+            // if found, this item IS THE ITEM IN STOCK
+            item->setQuantity(item->getQuantity() + 1);
+            cout << "Purchase was found in stock, adding to quantity" << endl;
+        }
+        stockList->push_back(*item);
+        updateFile(stockList);
         cout << "Do you want to register another item? (y/n): ";
         cin >> confirm;
         confirm = tolower(confirm);
@@ -123,21 +143,6 @@ void addPurchaseToStock(vector <Stock>* stockList)
     } while (confirm == 'y');
 }
 
-// finds product in vector
-// passes fstream and item by reference:
-// item --> item in vector
-// returns true if found, false if not found
-bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
-{
-    // Read the stockList.csv file and search for the item
-    if(id >= stockList->size())
-    {
-        return false;
-    }
-    item = &stockList->at(id);  // copies address of corresponding <Stock> object to <Stock> pointer item
-    
-    return true;
-}
 
 vector <Stock> searchForProduct(vector <Stock> *stockList, const string &name)
 {
@@ -161,13 +166,15 @@ bool showSearchResults(vector <Stock>items)
     clearConsole();
     if(items.empty()){
         cout << "No matching results found" << endl;
+    }else
+    {
+        cout << "Here is the list of matching results:" << endl;
+        for(Stock match : items)
+        {
+            cout << match.toString() << endl;
+        }
     }
 
-    cout << "Here is the list of matching results:" << endl;
-    for(Stock match : items)
-    {
-        cout << match.toString() << endl;
-    }
     char confirm;
     cout << "Do you wish to keep searching? (y/n): ";
     cin >> confirm;
@@ -218,13 +225,14 @@ void printStock() // TODO
     {
         while (getline(fr, line))
         {
+            limh();
             cout << line << endl;
         }
         fr.close();
     }
     else
     {
-        cout << "Unable to open file";
+        cout << "Unable to open file" << endl;
     }
     limh();
     pause();

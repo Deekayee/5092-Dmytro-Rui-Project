@@ -218,8 +218,7 @@ void editStockMenu(vector <Stock> *stockList)
             searchEditMenu(stockList);
             break;
         case 2:
-            cout << "Add purchase to Stock functionality not implemented yet." << endl;
-            pause();
+            addPurchaseToStock(stockList);
             break;
         case 3:
             cout << "Change purchase from Stock functionality not implemented yet." << endl;
