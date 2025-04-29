@@ -1,27 +1,32 @@
-#pragma once    //  compiler only sees this lib file once
+#pragma once //  compiler only sees this lib file once
 #include <iostream>
 #include <string>  // for string
 #include <ctime>   // for time
 #include <sstream> // for stringstream
 #include <iomanip> // for setw
 #include <vector>  // for vectors
-#include <cmath>   // for rounding doubles 
+#include <cmath>   // for rounding doubles
 using namespace std;
 
 class Stock
 {
 private: // private this and do gets and sets, do a to_string
+    static int nextStockId;
+
     int stockId;
     int quantity;
     double costValue;
     string productName;
 
 public:
-    Stock() : stockId(0), quantity(0), costValue(0.0), productName("") {}
-
-    Stock(int id, string name, int qty, double price)
+    Stock() : quantity(0), costValue(0.0), productName("")
     {
-        stockId = id;
+        stockId = nextStockId++;
+    }
+
+    Stock(string name, int qty, double price)
+    {
+        stockId = nextStockId++;
         productName = name;
         quantity = qty;
         costValue = round(price * 100.0) / 100.0;
@@ -44,11 +49,12 @@ public:
         const double taxRate = 0.3;
         return costValue * (1 + taxRate);
     }
+
     void setStockId(int id) { stockId = id; }
     void setQuantity(int qty) { quantity = qty; }
     void setCostValue(double price) { costValue = price; }
     void setProductName(string name) { productName = name; }
-    
+
     void fromString(string line)
     {
         stringstream ss(line);
@@ -75,9 +81,6 @@ private:
 public:
     CartItem() : stockId(0), quantity(0), saleWithoutTax(0.0), taxRatePercent(0.0), productName("") {}
 
-    // cart item another constructor
-
-    // Custom constructor that derives data from a Stock object
     CartItem(const Stock &stock, int qty, double taxRate = 23.0) // default tax is 23%
     {
         stockId = stock.getStockId();
@@ -86,6 +89,18 @@ public:
         taxRatePercent = taxRate;
         saleWithoutTax = stock.getSaleValue(); // fetch from stock method
     }
+
+    int getStockId() const { return stockId; }
+    int getQuantity() const { return quantity; }
+    int getSaleWithoutTax() const { return saleWithoutTax; }
+    double getTaxRatePercent() const { return taxRatePercent; }
+    string getProductName() const { return productName; }
+
+    void setStockId(int id) { stockId = id; }
+    void setQuantity(int qty) { quantity = qty; }
+    void setSaleWithoutTax(double price) { saleWithoutTax = price; }
+    void setTaxRatePercent(double rate) { taxRatePercent = rate; }
+    void setProductName(string name) { productName = name; }
 
     double getSaleWithTax() const
     {
@@ -96,30 +111,66 @@ public:
     {
         return getSaleWithTax() * quantity;
     }
+
+    string toString() const
+    {
+        stringstream ss;
+        ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << saleWithoutTax << ',' << fixed << setprecision(2) << taxRatePercent << ',' << fixed << setprecision(2) << getSaleWithTax() << ',' << fixed << setprecision(2) << getTotalItemSellValue();
+        return ss.str();
+    }
+
+    // dont really need this yet
+    void fromString(string line)
+    {
+        stringstream ss(line);
+        string field;
+        getline(ss, field, ',');
+        stockId = stoi(field);
+        getline(ss, productName, ',');
+        getline(ss, field, ',');
+        quantity = stoi(field);
+        getline(ss, field, ',');
+        saleWithoutTax = stod(field);
+        getline(ss, field, ',');
+        taxRatePercent = stod(field);
+        getline(ss, field, ',');
+        double saleWithTax = stod(field);
+        getline(ss, field);
+        double totalItemSellValue = stod(field);
+    }
 };
 
 class Receipt
 {
-public:
+private:
+    static int nextReceiptId;
+    static int nextClientId;
+
     int receiptId;
     int clientId;
     double paymentAmount;
     string date;
     vector<CartItem> items;
 
-    Receipt()
+public:
+    int getReceiptId() const { return receiptId; }
+    int getClientId() const { return clientId; }
+    double getPaymentAmount() const { return paymentAmount; }
+    string getDate() const { return date; }
+    vector<CartItem> getItems() const { return items; }
+
+    Receipt() : paymentAmount(0.0)
     {
-        receiptId = 0;
-        clientId = 0;
-        paymentAmount = 0.0;
+        receiptId = nextReceiptId++;
+        clientId = nextClientId++;
         date = getCurrentDateTime();
     }
 
     // New constructor to auto-create Receipt from a cart
-    Receipt(const vector<CartItem> &cart, double payment, int receiptID, int clientID)
+    Receipt(const vector<CartItem> &cart, double payment)
     {
-        receiptId = receiptID;
-        clientId = clientID;
+        receiptId = nextReceiptId++;
+        clientId = nextClientId++;
         paymentAmount = payment;
         date = getCurrentDateTime();
         items = cart; // simple copy of all cart items
@@ -145,6 +196,42 @@ public:
         return paymentAmount - getTotalCost();
     }
 
+    string toString() const
+    {
+        stringstream ss;
+        ss << "Receipt ID: " << receiptId << endl;
+        ss << "Client ID: " << clientId << endl;
+        ss << "Payment Amount: $" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Date: " << date << endl;
+        ss << "Items:" << endl;
+        for (auto &item : items)
+        {
+            ss << item.toString() << endl;
+        }
+        ss << "Total Cost: $" << fixed << setprecision(2) << getTotalCost() << endl;
+        ss << "Change: $" << fixed << setprecision(2) << getChange() << endl;
+        return ss.str();
+    }
+
+    void fromString(string line)
+    {
+        stringstream ss(line);
+        string field;
+        getline(ss, field, ',');
+        receiptId = stoi(field);
+        getline(ss, field, ',');
+        clientId = stoi(field);
+        getline(ss, field, ',');
+        paymentAmount = stod(field);
+        getline(ss, date, ',');
+        while (getline(ss, field, ','))
+        {
+            CartItem item;
+            item.fromString(field);
+            items.push_back(item);
+        }
+    }
+
 private:
     string getCurrentDateTime()
     {
@@ -159,6 +246,11 @@ private:
         return ss.str();
     }
 };
+
+// init static variables
+int Stock::nextStockId = 1;
+int Receipt::nextReceiptId = 1;
+int Receipt::nextClientId = 1;
 
 // TODO
 // Separate this into documentation file afterwards
