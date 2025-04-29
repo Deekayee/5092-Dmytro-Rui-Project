@@ -68,11 +68,7 @@ bool updateFile(vector<Stock> *stockList)
     ofstream file("output/stockList.csv");
     if (file.is_open())
     {
-<<<<<<< HEAD
-        file << "StockId,ProductName,Quantity,CostValue" << endl;
-=======
         file << "StockId,ProductName,Quantity,CostValue" << endl; // FIX this here
->>>>>>> b527b99dc958fba9589788e99e10c9ce956247a0
         for (Stock item : *stockList)
         {
             file << item.toString() << endl;
@@ -86,27 +82,7 @@ bool updateFile(vector<Stock> *stockList)
     }
 }
 
-<<<<<<< HEAD
-// finds product in vector
-// passes fstream and item by reference:
-// item --> item in vector
-// returns true if found and returns found item by reference, false if not found
-bool findPurchaseFromStock(vector <Stock> *stockList, Stock *item, int id)
-{
-    // Read the stockList.csv file and search for the item
-    if(id >= stockList->size())
-    {
-        return false;
-    }
-    item = &stockList->at(id);  // copies address of corresponding <Stock> object to <Stock> pointer item
-    
-    return true;
-}
-
-void addPurchaseToStock(vector <Stock>* stockList)
-=======
 void addPurchaseToStock(vector<Stock> *stockList)
->>>>>>> b527b99dc958fba9589788e99e10c9ce956247a0
 {
     Stock *item;
     string filename = "output/stockList.csv";
@@ -137,24 +113,11 @@ void addPurchaseToStock(vector<Stock> *stockList)
         item.setCostValue(stod(field));
 
         // write to file here
-<<<<<<< HEAD
-        item->fromString(line.str());
-        // ATTENTION, read function description bellow
-        if(findPurchaseFromStock(stockList, item, item->getStockId()))
-        {
-            // if found, this item IS THE ITEM IN STOCK
-            item->setQuantity(item->getQuantity() + 1);
-            cout << "Purchase was found in stock, adding to quantity" << endl;
-        }
-        stockList->push_back(*item);
-        updateFile(stockList);
-=======
         // need search function for stock verification purposes
         // for now, will write into vector, then file
         stockList->push_back(item);
         writeToFile(filename, item.toString());
 
->>>>>>> b527b99dc958fba9589788e99e10c9ce956247a0
         cout << "Do you want to register another item? (y/n): ";
         cin >> confirm;
         confirm = tolower(confirm);
@@ -162,8 +125,6 @@ void addPurchaseToStock(vector<Stock> *stockList)
     } while (confirm == 'y');
 }
 
-<<<<<<< HEAD
-=======
 // finds product in vector
 // passes fstream and item by reference:
 // item --> item in vector
@@ -179,7 +140,6 @@ bool findPurchaseFromStock(vector<Stock> *stockList, Stock *item, int id) // fuc
 
     return true;
 }
->>>>>>> b527b99dc958fba9589788e99e10c9ce956247a0
 
 vector<Stock> searchForProduct(vector<Stock> *stockList, const string &name)
 {
@@ -213,14 +173,11 @@ bool showSearchResults(vector<Stock> items)
         }
     }
 
-<<<<<<< HEAD
-=======
     cout << "Here is the list of matching results:" << endl;
     for (Stock match : items)
     {
         cout << match.toString() << endl;
     }
->>>>>>> b527b99dc958fba9589788e99e10c9ce956247a0
     char confirm;
     cout << "Do you wish to keep searching? (y/n): ";
     cin >> confirm;
