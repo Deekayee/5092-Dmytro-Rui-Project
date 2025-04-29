@@ -63,13 +63,14 @@ bool openStockFile(vector<Stock> *stockList)
     return true;
 }
 
-bool updateFile(vector<Stock> *stockList)
+bool updateFile(vector<Stock> &stockList)
 {
+    //  opens in truncate mode (overwrites)
     ofstream file("output/stockList.csv");
     if (file.is_open())
     {
         file << "StockId,ProductName,Quantity,CostValue" << endl; // FIX this here
-        for (Stock item : *stockList)
+        for (Stock item : stockList)
         {
             file << item.toString() << endl;
         }
@@ -82,9 +83,9 @@ bool updateFile(vector<Stock> *stockList)
     }
 }
 
-void addPurchaseToStock(vector<Stock> *stockList)
+void addPurchaseToStock(vector<Stock> &stockList)
 {
-    Stock *item;
+    Stock item;
     string filename = "output/stockList.csv";
     char confirm;
 
@@ -115,7 +116,7 @@ void addPurchaseToStock(vector<Stock> *stockList)
         // write to file here
         // need search function for stock verification purposes
         // for now, will write into vector, then file
-        stockList->push_back(item);
+        stockList.push_back(item);
         writeToFile(filename, item.toString());
 
         cout << "Do you want to register another item? (y/n): ";
@@ -129,24 +130,28 @@ void addPurchaseToStock(vector<Stock> *stockList)
 // passes fstream and item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> *stockList, Stock *item, int id) // fucked something here, gotta FIX
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fucked something here, gotta FIX (Fixed?)
 {
+    // think it missed a pointer init
+    
     // Read the stockList.csv file and search for the item
-    if (id >= stockList->size())
+    if (id >= stockList.size())
     {
         return false;
     }
-    item = &stockList->at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
+    
+    item = new Stock;
+    item = &stockList.at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
 }
 
-vector<Stock> searchForProduct(vector<Stock> *stockList, const string &name)
+vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
 {
     vector<Stock> items;
     string lowerName = name;
     transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
-    for (Stock i : *stockList)
+    for (Stock i : stockList)
     {
         string lowerProduct = i.getProductName();
         transform(lowerProduct.begin(), lowerProduct.end(), lowerProduct.begin(), ::tolower);
@@ -166,18 +171,14 @@ bool showSearchResults(vector<Stock> items)
         cout << "No matching results found" << endl;
     }else
     {
-        cout << "Here is the list of matching results:" << endl;
+        cout << "Found " << items.size() << " matching results:" << endl;
         for(Stock match : items)
         {
             cout << match.toString() << endl;
         }
     }
 
-    cout << "Here is the list of matching results:" << endl;
-    for (Stock match : items)
-    {
-        cout << match.toString() << endl;
-    }
+    
     char confirm;
     cout << "Do you wish to keep searching? (y/n): ";
     cin >> confirm;
@@ -189,14 +190,15 @@ bool showSearchResults(vector<Stock> items)
         return false;
 }
 
-//  Will use to delete (setQuantity to 0) in stockList vector
+//  Will use to delete a deleteNo from an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
-bool removePurchaseFromStock(vector<Stock> *stockList, int id)
+bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 {
     Stock *item;
     if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
     {
         item->setQuantity(0);
+        
         updateFile(stockList);
         return true;
     }
@@ -206,25 +208,23 @@ bool removePurchaseFromStock(vector<Stock> *stockList, int id)
 
 //  Will use to replace object in stockList vector
 //  returns true if successful, false if not (product not found)
-bool changePurchaseFromStock(vector<Stock> *stockList, int id, const string &line)
+bool changePurchaseFromStock(vector<Stock> &stockList, int id, const string &line)
 {
     Stock *item;
     if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
     {
         item->fromString(line);
-        updateFile(stockList);
-        return true;
+        if (updateFile(stockList)) return true;
+        else return false;
     }
     else
         return false;
 }
 
-void printStock() // TODO
+void printStock() 
 {
-    // vars
     string line;
 
-    // open file
     clearConsole();
     cout << "Stock: " << endl;
     limh();

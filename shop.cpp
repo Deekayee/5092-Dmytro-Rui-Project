@@ -70,7 +70,7 @@ int main()
             break;
         case 2:
             // show stock, give an option to add or remove and cancel
-            stockMenu(&stockList);
+            stockMenu(stockList);
             break;
         case 3:
             // exit
