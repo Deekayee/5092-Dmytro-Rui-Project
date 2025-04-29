@@ -12,6 +12,19 @@ void clearConsole();
 void limh();
 void pause();
 
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name);
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id);
+void changePurchaseFromStock(vector <Stock> stockList, Stock &olditem, Stock newitem);
+
+
+string stringToLower(string name)
+{
+    string lowerName = name;
+    transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    return lowerName;
+}
+
+
 //  writes string to file, returns false if error
 void writeToFile(string filename, const string &line)
 {
@@ -96,10 +109,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
         stringstream line;
         string field;
         limh();
-        // added autoincrement, so this is unnecessary
-        // cout << "Item ID: ";
-        // getline(cin, field);
-        // line << field << ',';
+        // added autoincrement, so this is unnecessary - Awesome!
 
         cout << "Product Name: ";
         getline(cin, field);
@@ -115,9 +125,24 @@ void addPurchaseToStock(vector<Stock> &stockList)
 
         // write to file here
         // need search function for stock verification purposes
-        // for now, will write into vector, then file
-        stockList.push_back(item);
-        writeToFile(filename, item.toString());
+        Stock *findItem;
+        if(findPurchaseFromStock(stockList, findItem, item.getProductName()))
+        {
+            cout << endl << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
+            cin >> confirm;
+            confirm = tolower(confirm);
+            cin.ignore();
+            if(confirm == 'y')
+            {
+                changePurchaseFromStock(stockList, *findItem, item);
+                cout << endl << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
+                pause();
+            }
+        }else
+        {
+            stockList.push_back(item);
+            updateFile(stockList);
+        }
 
         cout << "Do you want to register another item? (y/n): ";
         cin >> confirm;
@@ -126,35 +151,56 @@ void addPurchaseToStock(vector<Stock> &stockList)
     } while (confirm == 'y');
 }
 
-// finds product in vector
-// passes fstream and item by reference:
+// OVERLOADED
+// finds product in vector by id
+// passes item by reference:
 // item --> item in vector
 // returns true if found, false if not found
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fucked something here, gotta FIX (Fixed?)
 {
-    // think it missed a pointer init
-    
-    // Read the stockList.csv file and search for the item
+    // ID == vector index
     if (id >= stockList.size())
     {
         return false;
     }
     
-    item = new Stock;
+    item = new Stock; // allocates memory for the pointer
     item = &stockList.at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
 }
 
+// OVERLOADED
+// finds product in vector by name
+// passes item by reference:
+// item --> item in vector
+// returns true if found, false if not found
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name)
+{
+    // Read the stockList vector and search for the item by name
+    string tolowerName = stringToLower(name);
+    for(Stock findItem : stockList)
+    {
+        //  checking if any item matches argument name
+        if(stringToLower(item->getProductName()) == tolowerName)
+        {
+            item = new Stock; // allocates memory for the pointer
+            *item = findItem; // copies address of corresponding <Stock> object to <Stock> pointer item
+            return true;
+        }
+    }
+    return false;
+}
+
+
+//  not asked for, just sorta useful
 vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
 {
     vector<Stock> items;
-    string lowerName = name;
-    transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+    string lowerName = stringToLower(name);
     for (Stock i : stockList)
     {
-        string lowerProduct = i.getProductName();
-        transform(lowerProduct.begin(), lowerProduct.end(), lowerProduct.begin(), ::tolower);
+        string lowerProduct = stringToLower(i.getProductName());
         if (lowerProduct.find(lowerName) != string::npos)
         {
             items.push_back(i);
@@ -192,6 +238,7 @@ bool showSearchResults(vector<Stock> items)
 
 //  Will use to delete a deleteNo from an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
+//  updates file
 bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 {
     Stock *item;
@@ -206,20 +253,20 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
         return false;
 }
 
+// searches for name and changes
 //  Will use to replace object in stockList vector
+//  uses item argument to search in stock for same !!!NAME!!!, and updates if found
 //  returns true if successful, false if not (product not found)
-bool changePurchaseFromStock(vector<Stock> &stockList, int id, const string &line)
+//  updates file on success
+void changePurchaseFromStock(vector <Stock> stockList, Stock &olditem, Stock newitem)
 {
-    Stock *item;
-    if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
-    {
-        item->fromString(line);
-        if (updateFile(stockList)) return true;
-        else return false;
-    }
-    else
-        return false;
+        olditem.setProductName(newitem.getProductName());
+        olditem.setQuantity(newitem.getQuantity());
+        olditem.setCostValue(newitem.getCostValue());
+
+        updateFile(stockList);
 }
+
 
 void printStock() 
 {
