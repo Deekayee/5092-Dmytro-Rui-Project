@@ -13,9 +13,9 @@ void limh();
 void clearConsole();
 void salesMenu();
 void productsMenu();
-void stockMenu(vector<Stock> *stockList);
-void editStockMenu(vector<Stock> *stockList);
-void searchEditMenu(vector<Stock> *stockList);
+void stockMenu(vector<Stock> &stockList);
+void editStockMenu(vector<Stock> &stockList);
+void searchEditMenu(vector<Stock> &stockList);
 
 using namespace std;
 void pause() // pause the console
@@ -139,7 +139,7 @@ void productsMenu() // TODO
 
 // Stock Menu
 // show stock, give an option to add or remove and cancel
-void stockMenu(vector <Stock>* stockList) // TODO
+void stockMenu(vector <Stock> &stockList) // TODO
 {
     bool stockMenu = true;
     string input;
@@ -185,7 +185,7 @@ void stockMenu(vector <Stock>* stockList) // TODO
 }
 
 //  In charge of Adding, Changing, Removing and Searching in stock (search is for fun!)
-void editStockMenu(vector <Stock> *stockList)
+void editStockMenu(vector <Stock> &stockList)
 {
     bool editMenu = true;
     string input;
@@ -194,8 +194,8 @@ void editStockMenu(vector <Stock> *stockList)
     {
         do
         {
-
             clearConsole();
+
             cout << "Stock Editing Menu" << endl;
             limh();
             cout << "1. Search Stock" << endl;
@@ -210,6 +210,7 @@ void editStockMenu(vector <Stock> *stockList)
             limh();
             cout << "Option: ";
             getline(cin, input);
+            
         } while (!validateMenuInput(input, opt));
 
         switch (opt)
@@ -218,8 +219,7 @@ void editStockMenu(vector <Stock> *stockList)
             searchEditMenu(stockList);
             break;
         case 2:
-            cout << "Add purchase to Stock functionality not implemented yet." << endl;
-            pause();
+            addPurchaseToStock(stockList);
             break;
         case 3:
             cout << "Change purchase from Stock functionality not implemented yet." << endl;
@@ -242,7 +242,7 @@ void editStockMenu(vector <Stock> *stockList)
     } while (editMenu);
     
 }
-void searchEditMenu(vector <Stock> *stockList)
+void searchEditMenu(vector <Stock> &stockList)
 {
     bool searchMenu;
     do
