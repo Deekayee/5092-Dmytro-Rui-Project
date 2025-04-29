@@ -14,7 +14,7 @@ void pause();
 
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name);
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id);
-void changePurchaseFromStock(vector <Stock> stockList, Stock &olditem, Stock newitem);
+void changePurchaseFromStock(vector <Stock> stockList, Stock *olditem, Stock newitem);
 
 
 string stringToLower(string name)
@@ -103,30 +103,27 @@ void addPurchaseToStock(vector<Stock> &stockList)
     char confirm;
 
     clearConsole();
-    cout << "Register a purchase: " << endl;
+    cout << "Register a purchase " << endl;
     do
     {
         stringstream line;
         string field;
         limh();
         // added autoincrement, so this is unnecessary - Awesome!
+        // needs user validation
 
         cout << "Product Name: ";
         getline(cin, field);
         item.setProductName(field);
 
-        cout << "Quantity: ";
-        getline(cin, field);
-        item.setQuantity(stoi(field));
-
-        cout << "Cost Value: ";
-        getline(cin, field);
-        item.setCostValue(stod(field));
-
+        
+        
         // write to file here
         // need search function for stock verification purposes
+        // ie quantity needs to be > 0
         Stock *findItem;
-        if(findPurchaseFromStock(stockList, findItem, item.getProductName()))
+        string name = item.getProductName();
+        if(findPurchaseFromStock(stockList, findItem, name))
         {
             cout << endl << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
             cin >> confirm;
@@ -134,15 +131,32 @@ void addPurchaseToStock(vector<Stock> &stockList)
             cin.ignore();
             if(confirm == 'y')
             {
-                changePurchaseFromStock(stockList, *findItem, item);
+                item.setStockId(findItem->getStockId());
+                item.setCostValue(findItem->getCostValue());
+                item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
+
+                cout << "Quantity to add: ";
+                getline(cin, field);
+                item.setQuantity(item.getQuantity() + stoi(field));
+                
+                changePurchaseFromStock(stockList, findItem, item);
                 cout << endl << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
                 pause();
             }
         }else
         {
+            cout << "Quantity: ";
+            getline(cin, field);
+            item.setQuantity(stoi(field));
+            
+            cout << "Cost Value: ";
+            getline(cin, field);
+            item.setCostValue(stod(field));
+
             stockList.push_back(item);
-            updateFile(stockList);
         }
+
+        updateFile(stockList);
 
         cout << "Do you want to register another item? (y/n): ";
         cin >> confirm;
@@ -182,7 +196,9 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &
     for(Stock findItem : stockList)
     {
         //  checking if any item matches argument name
-        if(stringToLower(item->getProductName()) == tolowerName)
+        string tolowerProduct = findItem.getProductName();
+        tolowerProduct = stringToLower(tolowerProduct);
+        if(tolowerProduct == tolowerName)
         {
             item = new Stock; // allocates memory for the pointer
             *item = findItem; // copies address of corresponding <Stock> object to <Stock> pointer item
@@ -258,11 +274,11 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 //  uses item argument to search in stock for same !!!NAME!!!, and updates if found
 //  returns true if successful, false if not (product not found)
 //  updates file on success
-void changePurchaseFromStock(vector <Stock> stockList, Stock &olditem, Stock newitem)
+void changePurchaseFromStock(vector <Stock> stockList, Stock *olditem, Stock newitem)
 {
-        olditem.setProductName(newitem.getProductName());
-        olditem.setQuantity(newitem.getQuantity());
-        olditem.setCostValue(newitem.getCostValue());
+        olditem->setProductName(newitem.getProductName());
+        olditem->setQuantity(newitem.getQuantity());
+        olditem->setCostValue(newitem.getCostValue());
 
         updateFile(stockList);
 }
