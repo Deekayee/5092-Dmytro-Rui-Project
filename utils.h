@@ -96,7 +96,6 @@ bool updateFile(vector<Stock> &stockList)
 
 void addPurchaseToStock(vector<Stock> &stockList)
 {
-    Stock item;
     string filename = "output/stockList.csv";
     string confirm;
 
@@ -104,6 +103,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
     cout << "Register a purchase " << endl;
     do
     {
+        Stock item;
         stringstream line;
         string field;
         limh();
@@ -113,7 +113,8 @@ void addPurchaseToStock(vector<Stock> &stockList)
         cout << "Product Name: ";
         getline(cin, field);
         item.setProductName(field);
-
+      
+        
         // write to file here
         // need search function for stock verification purposes
         // ie quantity needs to be > 0
