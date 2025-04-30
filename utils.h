@@ -12,8 +12,8 @@ void clearConsole();
 void limh();
 void pause();
 
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name);
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id);
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name);
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
 void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem);
 
 string stringToLower(string name)
@@ -113,33 +113,35 @@ void addPurchaseToStock(vector<Stock> &stockList)
         cout << "Product Name: ";
         getline(cin, field);
         item.setProductName(field);
-      
-        
+
         // write to file here
         // need search function for stock verification purposes
         // ie quantity needs to be > 0
         Stock *findItem;
         string name = item.getProductName();
-        if (findPurchaseFromStock(stockList, findItem, name))
+        if (findPurchaseFromStock(stockList, findItem, name) && findItem != nullptr)
         {
-            cout << endl
-                 << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
-            getline(cin, confirm);
-            confirm = stringToLower(confirm);
-            if (confirm == "y")
+            if (findItem != nullptr)
             {
-                item.setStockId(findItem->getStockId());
-                item.setCostValue(findItem->getCostValue());
-                item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
-
-                cout << "Quantity to add: ";
-                getline(cin, field);
-                item.setQuantity(findItem->getQuantity() + stoi(field));
-
-                changePurchaseFromStock(stockList, findItem, item);
                 cout << endl
-                     << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
-                pause();
+                     << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
+                getline(cin, confirm);
+                confirm = stringToLower(confirm);
+                if (confirm == "y")
+                {
+                    item.setStockId(findItem->getStockId());
+                    item.setCostValue(findItem->getCostValue());
+                    item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
+
+                    cout << "Quantity to add: ";
+                    getline(cin, field);
+                    item.setQuantity(findItem->getQuantity() + stoi(field));
+
+                    changePurchaseFromStock(stockList, findItem, item);
+                    cout << endl
+                         << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
+                    pause();
+                }
             }
         }
         else
@@ -168,7 +170,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
 // passes item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fucked something here, gotta FIX (Fixed?)
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id) // fucked something here, gotta FIX (Fixed?)
 {
     // ID == vector index
     if (id >= stockList.size())
@@ -176,7 +178,6 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fuc
         return false;
     }
 
-    item = new Stock;         // allocates memory for the pointer
     item = &stockList.at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
@@ -187,8 +188,9 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fuc
 // passes item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name)
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name)
 {
+    item = nullptr;
     // Read the stockList vector and search for the item by name
     string tolowerName = stringToLower(name);
 
@@ -197,8 +199,7 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &
     for (Stock &findItem : stockList)
     {
         //  checking if any item matches argument name
-        string tolowerProduct = findItem.getProductName();
-        tolowerProduct = stringToLower(tolowerProduct);
+        string tolowerProduct = stringToLower(findItem.getProductName());
         if (tolowerProduct == tolowerName)
         {
             item = &findItem; // copies address of corresponding <Stock> object to <Stock> pointer item

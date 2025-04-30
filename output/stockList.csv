@@ -4,3 +4,5 @@ StockId,ProductName,Quantity,CostValue
 3,Pixora 200,30,209.99
 4,Pixora 3000,50,500.99
 5,Pixora 350,25,269.99
+6,test,70,30.00
+7,test 2,100,200.00
