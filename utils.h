@@ -14,15 +14,14 @@ void pause();
 
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &name);
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id);
-void changePurchaseFromStock(vector <Stock> stockList, Stock *olditem, Stock newitem);
-
+void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem);
 
 bool validateIntInput(const string &input, int &opt)
 {
     // Check if the string is entirely digits
     for (char ch : input)
     {
-        if (!isdigit(ch))
+        if (!isdigit(ch) && ch != '.')
         {
             cout << "Please enter a number" << endl;
             pause();
@@ -50,13 +49,47 @@ bool validateIntInput(const string &input, int &opt)
     return true;
 }
 
+int getValidatedInt(const std::string &prompt)
+{
+    int value;
+    while (true)
+    {
+        cout << prompt;
+        if (cin >> value)
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+        else
+        {
+            cout << "Invalid input. Please enter an integer.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+
+double getValidatedDouble(const string& prompt) {
+    double value;
+    while (true) {
+        cout << prompt;
+        if (cin >> value) {
+            cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+            return value;
+        } else {
+            cout << "Invalid input. Please enter a decimal number.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+
 string stringToLower(string name)
 {
     string lowerName = name;
     transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
     return lowerName;
 }
-
 
 //  writes string to file, returns false if error
 void writeToFile(string filename, const string &line)
@@ -149,41 +182,45 @@ void addPurchaseToStock(vector<Stock> &stockList)
         getline(cin, field);
         item.setProductName(field);
 
-        
-        
         // write to file here
         // need search function for stock verification purposes
         // ie quantity needs to be > 0
         Stock *findItem;
         string name = item.getProductName();
-        if(findPurchaseFromStock(stockList, findItem, name))
+        if (findPurchaseFromStock(stockList, findItem, name))
         {
-            cout << endl << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
+            cout << endl
+                 << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
             getline(cin, confirm);
             confirm = stringToLower(confirm);
-            if(confirm == "y")
+            if (confirm == "y")
             {
                 item.setStockId(findItem->getStockId());
                 item.setCostValue(findItem->getCostValue());
                 item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
 
-                cout << "Quantity to add: ";
-                getline(cin, field);
-                item.setQuantity(findItem->getQuantity() + stoi(field));
-                
+                //cout << "Quantity to add: ";
+                int addedQuantity = getValidatedInt("Quantity to add: ");
+                //getline(cin, field);
+                item.setQuantity(findItem->getQuantity() + addedQuantity);
+
                 changePurchaseFromStock(stockList, findItem, item);
-                cout << endl << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
+                cout << endl
+                     << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
                 pause();
             }
-        }else
+        }
+        else
         {
-            cout << "Quantity: ";
-            getline(cin, field);
-            item.setQuantity(stoi(field));
-            
-            cout << "Cost Value: ";
-            getline(cin, field);
-            item.setCostValue(stod(field));
+            //cout << "Quantity: ";
+            //getline(cin, field);
+            //item.setQuantity(stoi(field));
+            item.setQuantity(getValidatedInt("Quantity: "));
+
+            //cout << "Cost Value: ";
+            //getline(cin, field);
+            //item.setCostValue(stod(field));
+            item.setCostValue(getValidatedDouble("Cost Value: "));
 
             stockList.push_back(item);
         }
@@ -208,8 +245,8 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id) // fuc
     {
         return false;
     }
-    
-    item = new Stock; // allocates memory for the pointer
+
+    item = new Stock;         // allocates memory for the pointer
     item = &stockList.at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
@@ -227,12 +264,12 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &
 
     //  problem -> for cycle was copying the value of the found item to <findItem>, instead of copying the reference
     //  to avoid this, we cycle through items in stock using references, thus not making any copies, using the correct value
-    for(Stock &findItem : stockList)
+    for (Stock &findItem : stockList)
     {
         //  checking if any item matches argument name
         string tolowerProduct = findItem.getProductName();
         tolowerProduct = stringToLower(tolowerProduct);
-        if(tolowerProduct == tolowerName)
+        if (tolowerProduct == tolowerName)
         {
             *item = findItem; // copies address of corresponding <Stock> object to <Stock> pointer item
             return true;
@@ -240,7 +277,6 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &
     }
     return false;
 }
-
 
 //  not asked for, just sorta useful
 vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
@@ -264,16 +300,16 @@ bool showSearchResults(vector<Stock> items)
     if (items.empty())
     {
         cout << "No matching results found" << endl;
-    }else
+    }
+    else
     {
         cout << "Found " << items.size() << " matching results:" << endl;
-        for(Stock match : items)
+        for (Stock match : items)
         {
             cout << match.toString() << endl;
         }
     }
 
-    
     char confirm;
     cout << "Do you wish to keep searching? (y/n): ";
     cin >> confirm;
@@ -294,7 +330,7 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
     if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
     {
         item->setQuantity(0);
-        
+
         updateFile(stockList);
         return true;
     }
@@ -307,17 +343,16 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 //  uses item argument to search in stock for same !!!NAME!!!, and updates if found
 //  returns true if successful, false if not (product not found)
 //  updates file on success
-void changePurchaseFromStock(vector <Stock> stockList, Stock *olditem, Stock newitem)
+void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem)
 {
-        olditem->setProductName(newitem.getProductName());
-        olditem->setQuantity(newitem.getQuantity());
-        olditem->setCostValue(newitem.getCostValue());
+    olditem->setProductName(newitem.getProductName());
+    olditem->setQuantity(newitem.getQuantity());
+    olditem->setCostValue(newitem.getCostValue());
 
-        updateFile(stockList);
+    updateFile(stockList);
 }
 
-
-void printStock() 
+void printStock()
 {
     string line;
 

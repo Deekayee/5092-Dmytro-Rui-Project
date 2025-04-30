@@ -60,7 +60,7 @@ int main()
             limh();
             cout << "Option: ";
             getline(cin, input);
-        } while (!validateMenuInput(input, opt));
+        } while (!validateIntInput(input, opt));
 
         switch (opt)
         {
