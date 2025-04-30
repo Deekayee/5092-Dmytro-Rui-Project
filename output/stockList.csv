@@ -2,3 +2,7 @@ StockId,ProductName,Quantity,CostValue
 1,Sony a1990 Camera,1,399.99
 2,Sony b2010 Camerallete,12,199.99
 3,Pixora 200,30,209.99
+4,test,3,200.00
+5,test 2,2,200.00
+5,tes 2,2,200.00
+7,teste,1,2.00
