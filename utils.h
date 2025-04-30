@@ -100,7 +100,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
 {
     Stock item;
     string filename = "output/stockList.csv";
-    char confirm;
+    string confirm;
 
     clearConsole();
     cout << "Register a purchase " << endl;
@@ -126,10 +126,9 @@ void addPurchaseToStock(vector<Stock> &stockList)
         if(findPurchaseFromStock(stockList, findItem, name))
         {
             cout << endl << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
-            cin >> confirm;
-            confirm = tolower(confirm);
-            cin.ignore();
-            if(confirm == 'y')
+            getline(cin, confirm);
+            confirm = stringToLower(confirm);
+            if(confirm == "y")
             {
                 item.setStockId(findItem->getStockId());
                 item.setCostValue(findItem->getCostValue());
@@ -137,7 +136,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
 
                 cout << "Quantity to add: ";
                 getline(cin, field);
-                item.setQuantity(item.getQuantity() + stoi(field));
+                item.setQuantity(findItem->getQuantity() + stoi(field));
                 
                 changePurchaseFromStock(stockList, findItem, item);
                 cout << endl << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
@@ -159,10 +158,9 @@ void addPurchaseToStock(vector<Stock> &stockList)
         updateFile(stockList);
 
         cout << "Do you want to register another item? (y/n): ";
-        cin >> confirm;
-        confirm = tolower(confirm);
-        cin.ignore();
-    } while (confirm == 'y');
+        getline(cin, confirm);
+        confirm = stringToLower(confirm);
+    } while (confirm == "y");
 }
 
 // OVERLOADED
@@ -193,14 +191,16 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, const string &
 {
     // Read the stockList vector and search for the item by name
     string tolowerName = stringToLower(name);
-    for(Stock findItem : stockList)
+
+    //  problem -> for cycle was copying the value of the found item to <findItem>, instead of copying the reference
+    //  to avoid this, we cycle through items in stock using references, thus not making any copies, using the correct value
+    for(Stock &findItem : stockList)
     {
         //  checking if any item matches argument name
         string tolowerProduct = findItem.getProductName();
         tolowerProduct = stringToLower(tolowerProduct);
         if(tolowerProduct == tolowerName)
         {
-            item = new Stock; // allocates memory for the pointer
             *item = findItem; // copies address of corresponding <Stock> object to <Stock> pointer item
             return true;
         }

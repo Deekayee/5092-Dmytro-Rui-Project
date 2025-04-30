@@ -5,3 +5,4 @@ StockId,ProductName,Quantity,CostValue
 4,test,3,200.00
 5,test 2,2,200.00
 5,tes 2,2,200.00
+7,teste,1,2.00
