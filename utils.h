@@ -17,6 +17,39 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *item, int id);
 void changePurchaseFromStock(vector <Stock> stockList, Stock *olditem, Stock newitem);
 
 
+bool validateIntInput(const string &input, int &opt)
+{
+    // Check if the string is entirely digits
+    for (char ch : input)
+    {
+        if (!isdigit(ch))
+        {
+            cout << "Please enter a number" << endl;
+            pause();
+            return false;
+        }
+    }
+
+    // catch exceptions
+    try
+    {
+        opt = stoi(input);
+    }
+    catch (const std::out_of_range &)
+    {
+        cout << "Number is too large. Please enter a smaller number." << endl;
+        pause();
+        return false;
+    }
+    catch (const std::invalid_argument &)
+    {
+        cout << "Invalid input. Please enter numbers only." << endl;
+        pause();
+        return false;
+    }
+    return true;
+}
+
 string stringToLower(string name)
 {
     string lowerName = name;
