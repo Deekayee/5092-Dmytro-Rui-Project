@@ -46,8 +46,8 @@ public:
 
     double getSaleValue() const
     {
-        const double taxRate = 0.3;
-        return costValue * (1 + taxRate);
+        const double saleRate = 0.3;
+        return costValue * (1 + saleRate);
     }
 
     void setStockId(int id) { stockId = id; }
