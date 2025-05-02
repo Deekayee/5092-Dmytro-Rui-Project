@@ -1,4 +1,4 @@
-#pragma once    //  compiler only sees this lib file once
+#pragma once //  compiler only sees this lib file once
 
 #include <iostream>
 #include <string>
@@ -20,41 +20,9 @@ void searchEditMenu(vector<Stock> &stockList);
 using namespace std;
 void pause() // pause the console
 {
+
     cout << "Press enter to continue...";
     cin.ignore();
-}
-
-bool validateMenuInput(const string &input, int &opt)
-{
-    // Check if the string is entirely digits
-    for (char ch : input)
-    {
-        if (!isdigit(ch))
-        {
-            cout << "Please enter a number" << endl;
-            pause();
-            return false;
-        }
-    }
-
-    // catch exceptions
-    try
-    {
-        opt = stoi(input);
-    }
-    catch (const std::out_of_range &)
-    {
-        cout << "Number is too large. Please enter a smaller number." << endl;
-        pause();
-        return false;
-    }
-    catch (const std::invalid_argument &)
-    {
-        cout << "Invalid input. Please enter numbers only." << endl;
-        pause();
-        return false;
-    }
-    return true;
 }
 
 void limh() // horizontal line with color
@@ -130,18 +98,19 @@ void productsMenu() // TODO
         /*Show products here*/
 
         cin >> productsOpt;
-        cout << endl << "Press 0 to go cancel" << endl; //placeholder
+        cout << endl
+             << "Press 0 to go cancel" << endl; // placeholder
         cin.ignore();
-        
-        if(productsOpt == 0) productsMenu = false;
+
+        if (productsOpt == 0)
+            productsMenu = false;
 
     } while (productsMenu);
 }
 
-
 // Stock Menu
 // show stock, give an option to add or remove and cancel
-void stockMenu(vector <Stock> &stockList) // TODO
+void stockMenu(vector<Stock> &stockList) // TODO
 {
     bool stockMenu = true;
     string input;
@@ -174,7 +143,7 @@ void stockMenu(vector <Stock> &stockList) // TODO
         case 2:
             editStockMenu(stockList);
             break;
-        
+
         case 3:
             stockMenu = false;
             break;
@@ -183,13 +152,12 @@ void stockMenu(vector <Stock> &stockList) // TODO
             pause();
             break;
         }
-        
+
     } while (stockMenu);
-    
 }
 
 //  In charge of Adding, Changing, Removing and Searching in stock (search is for fun!)
-void editStockMenu(vector <Stock> &stockList)
+void editStockMenu(vector<Stock> &stockList)
 {
     bool editMenu = true;
     string input;
@@ -216,7 +184,7 @@ void editStockMenu(vector <Stock> &stockList)
             limh();
             cout << "Option: ";
             getline(cin, input);
-            
+
         } while (!validateMenuInput(input, opt));
 
         switch (opt)
@@ -242,19 +210,17 @@ void editStockMenu(vector <Stock> &stockList)
             cout << "Invalid input, try again." << endl;
             pause();
             break;
-        
         }
-        
+
     } while (editMenu);
-    
 }
-void searchEditMenu(vector <Stock> &stockList)
+void searchEditMenu(vector<Stock> &stockList)
 {
     bool searchMenu;
     do
     {
         string name;
-                
+
         clearConsole();
         setColor("\033[0;36m");
         cout << "Stock Search Menu" << endl;
@@ -263,9 +229,8 @@ void searchEditMenu(vector <Stock> &stockList)
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
         getline(cin, name);
-    
-        vector <Stock> items = searchForProduct(stockList, name);
+
+        vector<Stock> items = searchForProduct(stockList, name);
         searchMenu = showSearchResults(items);
     } while (searchMenu);
-    
 }

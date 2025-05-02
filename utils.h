@@ -5,6 +5,7 @@
 #include <sstream>   // will need this for string stream
 #include <algorithm> // will need this for sorting and searching
 #include <vector>    // will need for stock vector list
+#include <regex>     // will need this for regex validation
 
 #include "shopClasses.h" // my classes
 using namespace std;
@@ -16,22 +17,126 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string 
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
 void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem);
 
+bool validateMenuInput(const string &input, int &opt)
+{
+    // Check if the string is entirely digits
+    for (char ch : input)
+    {
+        if (!isdigit(ch) && ch != '.')
+        {
+            cout << "Please enter a number" << endl;
+            pause();
+            return false;
+        }
+    }
+
+    // catch exceptions
+    try
+    {
+        opt = stoi(input);
+    }
+    catch (const std::out_of_range &)
+    {
+        cout << "Number is too large. Please enter a smaller number." << endl;
+        pause();
+        return false;
+    }
+    catch (const std::invalid_argument &)
+    {
+        cout << "Invalid input. Please enter numbers only." << endl;
+        pause();
+        return false;
+    }
+    return true;
+}
+
+int getValidatedInt(const string &prompt)
+{
+    string input;
+    int value;
+    regex pattern("^\\d+$"); // Matches only positive integers (no minus sign, no letters)
+
+    while (true)
+    {
+        cout << prompt;
+        getline(cin, input);
+
+        if (!regex_match(input, pattern))
+        {
+            cout << "Invalid input. Please enter a positive whole number." << endl;
+            continue;
+        }
+        try
+        {
+            value = stoi(input);
+            if (value == 0)
+            {
+                cout << "Value must be greater than zero." << endl;
+                continue;
+            }
+            return value;
+        }
+        catch (...)
+        {
+            cout << "Number is out of range. Try a smaller value." << endl;
+        }
+    }
+}
+
+double getValidatedDouble(const string &prompt)
+{
+    const double maxValue = 1000000.00; // Arbitrary maximum
+    string input;
+    double value;
+    regex pattern("^\\d+(\\.\\d{1,2})?$"); // Matches only positive integers with up to two decimal places
+
+    while (true)
+    {
+        cout << prompt;
+        getline(cin, input);
+
+        if (!regex_match(input, pattern))
+        {
+            cout << "Invalid input. Please enter a positive number with up to two decimals." << endl;
+            continue;
+        }
+        try
+        {
+            value = stod(input);
+            if (value <= 0.0)
+            {
+                cout << "Value must be greater than zero." << endl;
+                continue;
+            }
+            if (value > maxValue)
+            {
+                cout << "Value exceeds allowed maximum of €" << fixed << setprecision(2) << maxValue << "." << endl;
+                continue;
+            }
+            return value;
+        }
+        catch (...)
+        {
+            cout << "Number is out of range. Try a smaller value." << endl;
+        }
+    }
+}
 void setColor(const string &colorCode)
 {
     cout << colorCode;
-/*
-| --------------- | ---------------------------------------------- |
-| Black           | `\033[0;30m`                                   |
-| Red             | `\033[0;31m`                                   |
-| Green           | `\033[0;32m`                                   |
-| Yellow          | `\033[0;33m`                                   |
-| Blue            | `\033[0;34m`                                   |
-| Magenta         | `\033[0;35m`                                   |
-| Cyan            | `\033[0;36m`                                   |
-| White (default) | `\033[0;37m`                                   |
-| Bright variant  | Add `1;` (e.g., `\033[1;32m` for bright green) |
-// \033[0m = reset color
-*/
+    /*
+    | --------------- | ---------------------------------------------- |
+    | Black           | `\033[0;30m`                                   |
+    | Red             | `\033[0;31m`                                   |
+    | Green           | `\033[0;32m`                                   |
+    | Yellow          | `\033[0;33m`                                   |
+    | Blue            | `\033[0;34m`                                   |
+    | Magenta         | `\033[0;35m`                                   |
+    | Cyan            | `\033[0;36m`                                   |
+    | White (default) | `\033[0;37m`                                   |
+    | Bright variant  | Add `1;` (e.g., `\033[1;32m` for bright green) |
+    // \033[0m = reset color
+    */
 }
 
 string stringToLower(string name)
@@ -151,9 +256,8 @@ void addPurchaseToStock(vector<Stock> &stockList)
                     item.setCostValue(findItem->getCostValue());
                     item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
 
-                    cout << "Quantity to add: ";
-                    getline(cin, field);
-                    item.setQuantity(findItem->getQuantity() + stoi(field));
+                    int addedQuantity = getValidatedInt("Quantity to add: ");
+                    item.setQuantity(findItem->getQuantity() + addedQuantity);
 
                     changePurchaseFromStock(stockList, findItem, item);
                     cout << endl
@@ -164,13 +268,8 @@ void addPurchaseToStock(vector<Stock> &stockList)
         }
         else
         {
-            cout << "Quantity: ";
-            getline(cin, field);
-            item.setQuantity(stoi(field));
-
-            cout << "Cost Value: ";
-            getline(cin, field);
-            item.setCostValue(stod(field));
+            item.setQuantity(getValidatedInt("Quantity: "));
+            item.setCostValue(getValidatedDouble("Cost Value: "));
 
             stockList.push_back(item);
         }
