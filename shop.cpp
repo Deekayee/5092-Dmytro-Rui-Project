@@ -5,46 +5,30 @@
 #include "menu.h"
 using namespace std;
 
-/*
-void test()
-{
-    // Stock testStock(12,"TESTE",1,2.50);
-    // string testString = testStock.toString();
-    // cout << testString;
-    createStockFile();
-    vector <Stock> *StockList;
-    bool flag = openStockFile(StockList);
-    addPurchaseToStock(StockList);
-    cin.ignore();
-    return;
-
-}
-*/
 int main()
 {
-    // vars
-    bool run = true;
-    int opt;
-    string input;
-    //test();
-    // add classes (when checking out, so the time stamps are correct) ClassName something
-
-    // main loop
+    // Data init
     cout << "Opening Stock File... ";
     createStockFile();
-    vector <Stock> stockList;
-    if(openStockFile(&stockList))
+    vector<Stock> stockList;
+    if (openStockFile(&stockList))
     {
         cout << "Success!" << endl;
         pause();
-    }else 
+    }
+    else
     {
         cout << "Error" << endl;
         pause();
         return 1;
     }
-    
-    
+
+    // main loop
+    // vars
+    bool run = true;
+    int opt;
+    string input;
+
     do
     {
         do

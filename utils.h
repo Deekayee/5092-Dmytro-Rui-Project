@@ -1,5 +1,5 @@
 #pragma once //  compiler only sees this lib file once
-#include <iostream>
+#include <iostream>  // will need this for cin and cout
 #include <string>    // will need this for the string class
 #include <fstream>   // will need this for file handling
 #include <sstream>   // will need this for string stream
@@ -9,10 +9,10 @@
 
 #include "shopClasses.h" // my classes
 using namespace std;
+
 void clearConsole();
 void limh();
 void pause();
-
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name);
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
 void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem);
@@ -22,7 +22,7 @@ bool validateMenuInput(const string &input, int &opt)
     // Check if the string is entirely digits
     for (char ch : input)
     {
-        if (!isdigit(ch) && ch != '.')
+        if (!isdigit(ch))
         {
             cout << "Please enter a number" << endl;
             pause();
@@ -124,19 +124,6 @@ double getValidatedDouble(const string &prompt)
 void setColor(const string &colorCode)
 {
     cout << colorCode;
-    /*
-    | --------------- | ---------------------------------------------- |
-    | Black           | `\033[0;30m`                                   |
-    | Red             | `\033[0;31m`                                   |
-    | Green           | `\033[0;32m`                                   |
-    | Yellow          | `\033[0;33m`                                   |
-    | Blue            | `\033[0;34m`                                   |
-    | Magenta         | `\033[0;35m`                                   |
-    | Cyan            | `\033[0;36m`                                   |
-    | White (default) | `\033[0;37m`                                   |
-    | Bright variant  | Add `1;` (e.g., `\033[1;32m` for bright green) |
-    // \033[0m = reset color
-    */
 }
 
 string stringToLower(string name)
@@ -203,7 +190,7 @@ bool updateFile(vector<Stock> &stockList)
     ofstream file("output/stockList.csv");
     if (file.is_open())
     {
-        file << "StockId,ProductName,Quantity,CostValue" << endl; // FIX this here
+        file << "StockId,ProductName,Quantity,CostValue" << endl;
         for (Stock item : stockList)
         {
             file << item.toString() << endl;
@@ -230,16 +217,11 @@ void addPurchaseToStock(vector<Stock> &stockList)
         stringstream line;
         string field;
         limh();
-        // added autoincrement, so this is unnecessary - Awesome!
-        // needs user validation
 
         cout << "Product Name: ";
         getline(cin, field);
         item.setProductName(field);
 
-        // write to file here
-        // need search function for stock verification purposes
-        // ie quantity needs to be > 0
         Stock *findItem;
         string name = item.getProductName();
         if (findPurchaseFromStock(stockList, findItem, name) && findItem != nullptr)
@@ -254,7 +236,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
                 {
                     item.setStockId(findItem->getStockId());
                     item.setCostValue(findItem->getCostValue());
-                    item.setProductName(findItem->getProductName()); // SEGFAULTS HERE for some
+                    item.setProductName(findItem->getProductName());
 
                     int addedQuantity = getValidatedInt("Quantity to add: ");
                     item.setQuantity(findItem->getQuantity() + addedQuantity);
@@ -287,7 +269,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
 // passes item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id) // fucked something here, gotta FIX (Fixed?)
+bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id)
 {
     // ID == vector index
     if (id >= stockList.size())
@@ -375,7 +357,7 @@ bool showSearchResults(vector<Stock> items)
 bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 {
     Stock *item;
-    if (findPurchaseFromStock(stockList, item, id)) // fucked something here, gotta FIX
+    if (findPurchaseFromStock(stockList, item, id))
     {
         item->setQuantity(0);
 

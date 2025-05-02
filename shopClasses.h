@@ -1,16 +1,16 @@
-#pragma once //  compiler only sees this lib file once
-#include <iostream>
-#include <string>  // for string
-#include <ctime>   // for time
-#include <sstream> // for stringstream
-#include <iomanip> // for setw
-#include <vector>  // for vectors
-#include <cmath>   // for rounding doubles
+#pragma once        //  compiler only sees this lib file once
+#include <iostream> // for cout
+#include <string>   // for string
+#include <ctime>    // for time
+#include <sstream>  // for stringstream
+#include <iomanip>  // for setw
+#include <vector>   // for vectors
+#include <cmath>    // for rounding doubles
 using namespace std;
 
 class Stock
 {
-private: // private this and do gets and sets, do a to_string
+private:
     static int nextStockId;
 
     int stockId;
@@ -19,11 +19,13 @@ private: // private this and do gets and sets, do a to_string
     string productName;
 
 public:
+    // Default constructor for Stock. Initializes stockId to the next available ID, and all other fields to zero/default values.
     Stock() : quantity(0), costValue(0.0), productName("")
     {
         stockId = nextStockId++;
     }
 
+    // Construct a Stock object with a given name, quantity and price.
     Stock(string name, int qty, double price)
     {
         stockId = nextStockId++;
@@ -37,6 +39,7 @@ public:
     double getCostValue() const { return costValue; }
     string getProductName() const { return productName; }
 
+// Returns a string representation of the Stock object in CSV format.
     string toString()
     {
         stringstream ss;
@@ -44,6 +47,7 @@ public:
         return ss.str();
     }
 
+    // Returns the sale value of the item, which is the cost value plus 30% sales markup.
     double getSaleValue() const
     {
         const double saleRate = 0.3;
@@ -55,6 +59,7 @@ public:
     void setCostValue(double price) { costValue = price; }
     void setProductName(string name) { productName = name; }
 
+// Parses a comma-separated string to initialize Stock attributes: stockId, productName, quantity, and costValue.
     void fromString(string line)
     {
         stringstream ss(line);
@@ -79,15 +84,17 @@ private:
     string productName;
 
 public:
+    // Default constructor
     CartItem() : stockId(0), quantity(0), saleWithoutTax(0.0), taxRatePercent(0.0), productName("") {}
 
-    CartItem(const Stock &stock, int qty, double taxRate = 23.0) // default tax is 23%
+    // Construct a CartItem from a Stock item, quantity and tax rate (default = 23%)
+    CartItem(const Stock &stock, int qty, double taxRate = 23.0)
     {
         stockId = stock.getStockId();
         productName = stock.getProductName();
         quantity = qty;
         taxRatePercent = taxRate;
-        saleWithoutTax = stock.getSaleValue(); // fetch from stock method
+        saleWithoutTax = stock.getSaleValue();
     }
 
     int getStockId() const { return stockId; }
@@ -102,16 +109,19 @@ public:
     void setTaxRatePercent(double rate) { taxRatePercent = rate; }
     void setProductName(string name) { productName = name; }
 
+// Calculates and returns the sale value of the item including tax by applying the tax rate to the sale value without tax.
     double getSaleWithTax() const
     {
         return saleWithoutTax * (1 + taxRatePercent / 100.0);
     }
 
+    // Returns the total value of the item in the cart, including tax.
     double getTotalItemSellValue() const
     {
         return getSaleWithTax() * quantity;
     }
 
+    // Returns a string with the CartItem attributes in CSV format.
     string toString() const
     {
         stringstream ss;
@@ -119,7 +129,7 @@ public:
         return ss.str();
     }
 
-    // dont really need this yet
+    // Parses a comma-separated string to initialize CartItem attributes.
     void fromString(string line)
     {
         stringstream ss(line);
@@ -159,6 +169,7 @@ public:
     string getDate() const { return date; }
     vector<CartItem> getItems() const { return items; }
 
+// Initializes a Receipt object with a unique receipt ID, client ID, current date, and default payment amount.
     Receipt() : paymentAmount(0.0)
     {
         receiptId = nextReceiptId++;
@@ -166,7 +177,7 @@ public:
         date = getCurrentDateTime();
     }
 
-    // New constructor to auto-create Receipt from a cart
+    // new constructor to auto-create Receipt from a cart
     Receipt(const vector<CartItem> &cart, double payment)
     {
         receiptId = nextReceiptId++;
@@ -176,11 +187,13 @@ public:
         items = cart; // simple copy of all cart items
     }
 
+    // Adds a CartItem to the receipt.
     void addItem(const CartItem &item)
     {
         items.push_back(item);
     }
 
+    // Calculates the total cost of all items in the receipt by summing the total value of each item, including tax.
     double getTotalCost() const
     {
         double total = 0;
@@ -191,28 +204,31 @@ public:
         return total;
     }
 
+    // Calculates the change to be returned to the client based on the total cost of the items purchased.
     double getChange() const
     {
         return paymentAmount - getTotalCost();
     }
 
+    // Returns a string representation of the receipt, including its ID, client ID, payment amount, date, items and total cost and change.
     string toString() const
     {
         stringstream ss;
         ss << "Receipt ID: " << receiptId << endl;
         ss << "Client ID: " << clientId << endl;
-        ss << "Payment Amount: $" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Payment Amount: €" << fixed << setprecision(2) << paymentAmount << endl;
         ss << "Date: " << date << endl;
         ss << "Items:" << endl;
         for (auto &item : items)
         {
             ss << item.toString() << endl;
         }
-        ss << "Total Cost: $" << fixed << setprecision(2) << getTotalCost() << endl;
-        ss << "Change: $" << fixed << setprecision(2) << getChange() << endl;
+        ss << "Total Cost: €" << fixed << setprecision(2) << getTotalCost() << endl;
+        ss << "Change: €" << fixed << setprecision(2) << getChange() << endl;
         return ss.str();
     }
 
+// Parses a comma-separated string to initialize Receipt attributes and CartItems.
     void fromString(string line)
     {
         stringstream ss(line);
@@ -233,6 +249,7 @@ public:
     }
 
 private:
+    // Returns a string with the current date and time in the format "YYYY-MM-DD HH:MM".
     string getCurrentDateTime()
     {
         time_t now = time(nullptr);
@@ -251,75 +268,3 @@ private:
 int Stock::nextStockId = 1;
 int Receipt::nextReceiptId = 1;
 int Receipt::nextClientId = 1;
-
-// TODO
-// Separate this into documentation file afterwards
-
-/*
-How this works:
-
-Stock myCamera;
-myCamera.stockId = 1;
-myCamera.productName = "Sony A6000";
-myCamera.quantity = 10;
-myCamera.costValue = 500.0;
-
-CartItem cartItem(myCamera, 2); // buying 2 units with 23% tax
-
-cout << "Item total with tax: " << cartItem.getTotalItemSellValue() << endl;
-
--------------------------------------------------------------------------------------
-for Receipt:
-
-vector<CartItem> cart;
-// Assume cart is filled with CartItem objects
-
-double userPayment = 1300.0;
-int newReceiptId = 1;
-int newClientId = 1;
-
-Receipt receipt(cart, userPayment, newReceiptId, newClientId);
-
-cout << "Receipt total: " << receipt.getTotalCost() << endl;
-cout << "Change to give: " << receipt.getChange() << endl;
-
--------------------------------------------------------------------------------------
-Added autoincrementation
-
-Stock camera;
-camera.productName = "Canon M50";
-camera.quantity = 5;
-camera.costValue = 600.0;
-
-CartItem item(camera, 2); // 2 units of this stock
-
-vector<CartItem> cart = { item };
-
-Receipt receipt(cart, 1500.0); // only need to pass cart and payment
-
-cout << "Receipt ID: " << receipt.receiptId << ", Client ID: " << receipt.clientId << endl;
-
--------------------------------------------------------------------------------------
-vector<Stock> inventory;
-
-// Adding some stock entries
-Stock cam1;
-cam1.productName = "Canon M50";
-cam1.quantity = 5;
-cam1.costValue = 600.0;
-
-Stock cam2;
-cam2.productName = "Sony A6000";
-cam2.quantity = 3;
-cam2.costValue = 500.0;
-
-inventory.push_back(cam1);
-inventory.push_back(cam2);
-
-// Display stock
-for (const auto& item : inventory) {
-    cout << "ID: " << item.stockId << ", Product: " << item.productName
-         << ", Qty: " << item.quantity << ", Sale Value: " << item.getSaleValue() << endl;
-}
-
-*/
