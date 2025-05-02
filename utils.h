@@ -17,6 +17,26 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string 
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
 void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem);
 
+void pause() // pause the console
+{
+    cout << "Press enter to continue...";
+    cin.ignore();
+}
+
+void limh() // horizontal line with color
+{
+    cout << "\033[0;35m----------------------------------------\033[0m" << endl;
+}
+
+void clearConsole() // clear the console
+{
+#ifdef _WIN32
+    system("cls"); // For Windows
+#else
+    system("clear"); // For Linux and macOS
+#endif
+}
+
 bool validateMenuInput(const string &input, int &opt)
 {
     // Check if the string is entirely digits
@@ -201,6 +221,24 @@ bool updateFile(vector<Stock> &stockList)
     {
         cout << "Error opening file." << endl;
         return false;
+    }
+}
+
+int dataInit(vector<Stock> &stockList)
+{
+    cout << "Opening Stock File... ";
+    createStockFile();
+    if (openStockFile(&stockList))
+    {
+        cout << "Success!" << endl;
+        pause();
+        return 0;
+    }
+    else
+    {
+        cout << "Error!" << endl;
+        pause();
+        return 1;
     }
 }
 

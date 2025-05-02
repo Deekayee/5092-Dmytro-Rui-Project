@@ -18,25 +18,56 @@ void editStockMenu(vector<Stock> &stockList);
 void searchEditMenu(vector<Stock> &stockList);
 
 using namespace std;
-void pause() // pause the console
-{
 
-    cout << "Press enter to continue...";
-    cin.ignore();
-}
-
-void limh() // horizontal line with color
+void mainMenu(vector<Stock> &stockList)
 {
-    cout << "\033[0;35m----------------------------------------\033[0m" << endl;
-}
+    // main loop
+    // vars
+    bool run = true;
+    int opt;
+    string input;
 
-void clearConsole() // clear the console
-{
-#ifdef _WIN32
-    system("cls"); // For Windows
-#else
-    system("clear"); // For Linux and macOS
-#endif
+    do
+    {
+        do
+        {
+            clearConsole();
+            setColor("\033[0;36m");
+            cout << "Shop menu" << endl;
+            setColor("\033[0m");
+            limh();
+            cout << "1. Shop Sales" << endl;
+            limh();
+            cout << "2. Shop Stock" << endl;
+            limh();
+            cout << "3. Exit" << endl;
+            limh();
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            // show products, give an option to buy and checkout or cancel
+            salesMenu();
+            break;
+        case 2:
+            // show stock, give an option to add or remove and cancel
+            stockMenu(stockList);
+            break;
+        case 3:
+            // exit
+            clearConsole();
+            run = false;
+            break;
+        default:
+            // user is a bit slow, what can we do
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    } while (run);
 }
 
 // Sales Menu
