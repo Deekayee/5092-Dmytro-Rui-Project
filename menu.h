@@ -20,6 +20,7 @@ void searchEditMenu(vector<Stock> &stockList);
 using namespace std;
 void pause() // pause the console
 {
+
     cout << "Press enter to continue...";
     cin.ignore();
 }
@@ -57,7 +58,7 @@ void salesMenu()
             limh();
             cout << "Option: ";
             getline(cin, input);
-        } while (!validateIntInput(input, salesOpt));
+        } while (!validateMenuInput(input, salesOpt));
 
         switch (salesOpt)
         {
@@ -128,7 +129,7 @@ void stockMenu(vector<Stock> &stockList) // TODO
             limh();
             cout << "Option: ";
             getline(cin, input);
-        } while (!validateIntInput(input, productsOpt));
+        } while (!validateMenuInput(input, productsOpt));
 
         switch (productsOpt)
         {
@@ -178,7 +179,7 @@ void editStockMenu(vector<Stock> &stockList)
             cout << "Option: ";
             getline(cin, input);
 
-        } while (!validateIntInput(input, opt));
+        } while (!validateMenuInput(input, opt));
 
         switch (opt)
         {
