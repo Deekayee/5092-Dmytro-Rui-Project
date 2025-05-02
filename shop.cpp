@@ -50,7 +50,9 @@ int main()
         do
         {
             clearConsole();
+            setColor("\033[0;36m");
             cout << "Shop menu" << endl;
+            setColor("\033[0m");
             limh();
             cout << "1. Shop Sales" << endl;
             limh();

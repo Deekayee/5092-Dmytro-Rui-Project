@@ -57,9 +57,9 @@ bool validateMenuInput(const string &input, int &opt)
     return true;
 }
 
-void limh() // horizontal line
+void limh() // horizontal line with color
 {
-    cout << "----------------------------------------" << endl;
+    cout << "\033[0;35m----------------------------------------\033[0m" << endl;
 }
 
 void clearConsole() // clear the console
@@ -82,7 +82,9 @@ void salesMenu()
         do
         {
             clearConsole();
+            setColor("\033[0;36m");
             cout << "Sales Menu" << endl;
+            setColor("\033[0m");
             limh();
             cout << "1. Show Products" << endl;
             limh();
@@ -150,7 +152,9 @@ void stockMenu(vector <Stock> &stockList) // TODO
         do
         {
             clearConsole();
+            setColor("\033[0;36m");
             cout << "Stock Menu" << endl;
+            setColor("\033[0m");
             limh();
             cout << "1. Show Stock" << endl;
             limh();
@@ -196,7 +200,9 @@ void editStockMenu(vector <Stock> &stockList)
         {
             clearConsole();
 
+            setColor("\033[0;36m");
             cout << "Stock Editing Menu" << endl;
+            setColor("\033[0m");
             limh();
             cout << "1. Search Stock" << endl;
             limh();
@@ -250,7 +256,9 @@ void searchEditMenu(vector <Stock> &stockList)
         string name;
                 
         clearConsole();
+        setColor("\033[0;36m");
         cout << "Stock Search Menu" << endl;
+        setColor("\033[0m");
         limh();
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
