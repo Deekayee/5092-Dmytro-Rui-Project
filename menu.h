@@ -14,3 +14,4 @@ void productsMenu(); //TODO
 void stockMenu(vector<Stock> &stockList);
 void editStockMenu(vector<Stock> &stockList);
 void searchEditMenu(vector<Stock> &stockList);
+void changeEditMenu(vector<Stock> &stockList);

@@ -210,8 +210,9 @@ void editStockMenu(vector<Stock> &stockList)
             addPurchaseToStock(stockList);
             break;
         case 3:
-            cout << "Change purchase from Stock functionality not implemented yet." << endl;
-            pause();
+            // cout << "Change purchase from Stock functionality not implemented yet." << endl;
+            // pause();
+            changeEditMenu(stockList);
             break;
         case 4:
             cout << "Remove purchase from Stock functionality not implemented yet." << endl;
@@ -230,7 +231,7 @@ void editStockMenu(vector<Stock> &stockList)
 }
 void searchEditMenu(vector<Stock> &stockList)
 {
-    bool searchMenu;
+    bool run;
     do
     {
         string name;
@@ -245,6 +246,68 @@ void searchEditMenu(vector<Stock> &stockList)
         getline(cin, name);
 
         vector<Stock> items = searchForProduct(stockList, name);
-        searchMenu = showSearchResults(items);
-    } while (searchMenu);
+        run = showSearchResults(items);
+    } while (run);
+}
+void changeEditMenu(vector<Stock> &stockList)
+{
+    while (true)
+    {
+        string prompt;
+        int id;
+        do
+        {
+            clearConsole();
+            setColor("\033[0;36m");
+            cout << "Change Stock Menu" << endl;
+            setColor(("\033[0m"));
+            limh();
+
+            cout << "Please enter the ID of the product you wish to change (Enter 0 to return)" << endl;
+            cout << "ID: ";
+            getline(cin, prompt);
+
+        } while (!validateMenuInput(prompt, id));
+        if (id <= 0) // go back in menu
+            return;
+
+        Stock *item;
+        if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
+        {
+            cout << "Item not found in stock" << endl;
+            pause();
+            continue;
+        }
+        clearConsole();
+
+        setColor("\033[0;36m");
+        cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
+        setColor("\033[0m");
+        cout << "Do you wish to proceed? (y/n):";
+        getline(cin, prompt);
+        if (prompt != "y")
+        {
+            continue;
+        }
+        limh();
+
+        stringstream itemString;
+        itemString << item->getStockId() << ",";
+        cout << "Enter new product data" << endl;
+        cout << "Product name: ";
+        getline(cin, prompt);
+        itemString << prompt << ",";
+        itemString << getValidatedInt("Quantity: ") << ",";
+        itemString << getValidatedDouble("Cost: ");
+
+        Stock newItem;
+        newItem.fromString(itemString.str());
+        changePurchaseFromStock(stockList, item, newItem);
+        updateFile(stockList);
+
+        cout << "Do you wish to keep editing items? (y/n): ";
+        getline(cin, prompt);
+        if (prompt != "y")
+            return;
+    }
 }

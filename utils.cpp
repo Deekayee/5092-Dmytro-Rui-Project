@@ -27,6 +27,7 @@ void clearConsole() // clear the console
 #endif
 }
 
+// returns true if number is validated, false if not
 bool validateMenuInput(const string &input, int &opt)
 {
     // Check if the string is entirely digits
@@ -205,6 +206,7 @@ bool updateFile(vector<Stock> &stockList)
         {
             file << item.toString() << endl;
         }
+        cout << "Stock Updated!" << endl;
         return true;
     }
     else
@@ -247,33 +249,33 @@ void addPurchaseToStock(vector<Stock> &stockList)
         limh();
 
         cout << "Product Name: ";
-        getline(cin, field);
+        do
+        {
+            getline(cin, field);
+        } while (field.empty());
         item.setProductName(field);
 
         Stock *findItem;
         string name = item.getProductName();
         if (findPurchaseFromStock(stockList, findItem, name) && findItem != nullptr)
         {
-            if (findItem != nullptr)
+            cout << endl
+                 << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
+            getline(cin, confirm);
+            confirm = stringToLower(confirm);
+            if (confirm == "y")
             {
+                item.setStockId(findItem->getStockId());
+                item.setCostValue(findItem->getCostValue());
+                item.setProductName(findItem->getProductName());
+
+                int addedQuantity = getValidatedInt("Quantity to add: ");
+                item.setQuantity(findItem->getQuantity() + addedQuantity);
+
+                changePurchaseFromStock(stockList, findItem, item);
                 cout << endl
-                     << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
-                getline(cin, confirm);
-                confirm = stringToLower(confirm);
-                if (confirm == "y")
-                {
-                    item.setStockId(findItem->getStockId());
-                    item.setCostValue(findItem->getCostValue());
-                    item.setProductName(findItem->getProductName());
-
-                    int addedQuantity = getValidatedInt("Quantity to add: ");
-                    item.setQuantity(findItem->getQuantity() + addedQuantity);
-
-                    changePurchaseFromStock(stockList, findItem, item);
-                    cout << endl
-                         << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
-                    pause();
-                }
+                     << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
+                pause();
             }
         }
         else
@@ -282,9 +284,9 @@ void addPurchaseToStock(vector<Stock> &stockList)
             item.setCostValue(getValidatedDouble("Cost Value: "));
 
             stockList.push_back(item);
+            updateFile(stockList);
         }
 
-        updateFile(stockList);
 
         cout << "Do you want to register another item? (y/n): ";
         getline(cin, confirm);
@@ -300,12 +302,19 @@ void addPurchaseToStock(vector<Stock> &stockList)
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id)
 {
     // ID == vector index
-    if (id >= stockList.size())
+    item = nullptr;
+    if (stockList.empty())
     {
+        cout << "Stock is empty!" << endl;
+        return false;
+    }
+    if (id > stockList.size())
+    {
+        cout << "No matching ID in stock" << endl;
         return false;
     }
 
-    item = &stockList.at(id); // copies address of corresponding <Stock> object to <Stock> pointer item
+    item = &stockList.at(id - 1); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
 }
@@ -318,6 +327,10 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id)
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name)
 {
     item = nullptr;
+    if (stockList.empty())
+    {
+        return false;
+    }
     // Read the stockList vector and search for the item by name
     string tolowerName = stringToLower(name);
 
@@ -401,7 +414,7 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 //  uses item argument to search in stock for same !!!NAME!!!, and updates if found
 //  returns true if successful, false if not (product not found)
 //  updates file on success
-void changePurchaseFromStock(vector<Stock> stockList, Stock *olditem, Stock newitem)
+void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem)
 {
     olditem->setProductName(newitem.getProductName());
     olditem->setQuantity(newitem.getQuantity());
