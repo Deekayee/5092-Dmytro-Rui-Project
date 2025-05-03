@@ -15,7 +15,7 @@ void pause() // pause the console
 
 void limh() // horizontal line with color
 {
-    cout << "\033[0;35m----------------------------------------\033[0m" << endl;
+    cout << "\033[0;35m---------------------------------------------------\033[0m" << endl;
 }
 
 void clearConsole() // clear the console
@@ -429,28 +429,30 @@ void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock new
     updateFile(stockList);
 }
 
-void printStock()
+void printStock(const vector<Stock> &stockList)
 {
-    string line;
-
     clearConsole();
-    setColor("\033[0;36m");
-    cout << "Stock: " << endl;
+    setColor("\033[1;33m");
+    cout << "Stock:\n";
     setColor("\033[0m");
-    ifstream fr("output/stockList.csv");
-    if (fr.is_open())
+
+    limh();
+    setColor("\033[1;36m");
+    cout << "ID | Product Name           | Quantity | Cost (€)" << endl;
+    setColor("\033[0m");
+    limh();
+
+    for (const auto &item : stockList)
     {
-        while (getline(fr, line))
-        {
-            limh();
-            cout << line << endl;
-        }
-        fr.close();
+        if (item.getQuantity() == 0)
+            setColor("\033[1;31m"); // red for zero quantity
+
+        cout << item.toString() << endl;
+
+        if (item.getQuantity() == 0)
+            setColor("\033[0m"); // resets color
     }
-    else
-    {
-        cout << "Unable to open file" << endl;
-    }
+
     limh();
     pause();
 }
