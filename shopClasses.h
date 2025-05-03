@@ -20,10 +20,7 @@ private:
 
 public:
     // Default constructor for Stock. Initializes stockId to the next available ID, and all other fields to zero/default values.
-    Stock() : quantity(0), costValue(0.0), productName("")
-    {
-        stockId = nextStockId++;
-    }
+    Stock() : quantity(0), costValue(0.0), productName(""), stockId(0) {} // temporary invalid id
 
     // Construct a Stock object with a given name, quantity and price.
     Stock(string name, int qty, double price)
@@ -38,6 +35,10 @@ public:
     int getQuantity() const { return quantity; }
     double getCostValue() const { return costValue; }
     string getProductName() const { return productName; }
+    static int getNextStockId() { return nextStockId; }
+    static void incrementStockId() { ++nextStockId; }
+    static void setNextStockId(int id) { nextStockId = id; }
+
 
 // Returns a string representation of the Stock object in CSV format.
     string toString()

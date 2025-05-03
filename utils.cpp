@@ -178,20 +178,27 @@ bool openStockFile(vector<Stock> *stockList)
     if (file.is_open() && stockList != nullptr)
     {
         string line;
-        getline(file, line); //  ignores header
+        getline(file, line); // ignores header
+        int maxId = 0;
+
         while (getline(file, line))
         {
             Stock item;
             item.fromString(line);
             stockList->push_back(item);
+
+            // Track the highest ID
+            if (item.getStockId() > maxId)
+                maxId = item.getStockId();
         }
+        // Set the nextStockId to one greater than the highest existing ID
+        Stock::setNextStockId(maxId + 1);
     }
     else
     {
         cout << "Error opening file." << endl;
         return false;
     }
-
     return true;
 }
 
@@ -280,14 +287,14 @@ void addPurchaseToStock(vector<Stock> &stockList)
         }
         else
         {
+            item.setStockId(Stock::getNextStockId());
+            Stock::incrementStockId();
             item.setQuantity(getValidatedInt("Quantity: "));
             item.setCostValue(getValidatedDouble("Cost Value: "));
 
             stockList.push_back(item);
             updateFile(stockList);
         }
-
-
         cout << "Do you want to register another item? (y/n): ";
         getline(cin, confirm);
         confirm = stringToLower(confirm);
@@ -313,7 +320,6 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id)
         cout << "No matching ID in stock" << endl;
         return false;
     }
-
     item = &stockList.at(id - 1); // copies address of corresponding <Stock> object to <Stock> pointer item
 
     return true;
