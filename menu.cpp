@@ -215,8 +215,9 @@ void editStockMenu(vector<Stock> &stockList)
             changeEditMenu(stockList);
             break;
         case 4:
-            cout << "Remove purchase from Stock functionality not implemented yet." << endl;
-            pause();
+            // cout << "Remove purchase from Stock functionality not implemented yet." << endl;
+            // pause();
+            removeEditMenu(stockList);
             break;
         case 5:
             editMenu = false;
@@ -303,9 +304,63 @@ void changeEditMenu(vector<Stock> &stockList)
         Stock newItem;
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
-        updateFile(stockList);
 
         cout << "Do you wish to keep editing items? (y/n): ";
+        getline(cin, prompt);
+        if (prompt != "y")
+            return;
+    }
+}
+void removeEditMenu(vector<Stock> &stockList)
+{
+    while (true)
+    {
+        string prompt;
+        int id;
+        do
+        {
+            clearConsole();
+            setColor("\033[0;36m");
+            cout << "Change Stock Menu" << endl;
+            setColor(("\033[0m"));
+            limh();
+
+            cout << "Please enter the ID of the product you wish to remove (Enter 0 to return)" << endl;
+            cout << "ID: ";
+            getline(cin, prompt);
+
+        } while (!validateMenuInput(prompt, id));
+        if (id <= 0) // go back in menu
+            return;
+
+        Stock *item;
+        if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
+        {
+            cout << "Item not found in stock" << endl;
+            pause();
+            continue;
+        }
+        clearConsole();
+
+        setColor("\033[0;36m");
+        cout << "Removing product: " << item->getStockId() << "-" << item->getProductName() << endl;
+        setColor("\033[0m");
+        cout << "Do you wish to proceed? (y/n):";
+        getline(cin, prompt);
+        if (prompt != "y")
+        {
+            continue;
+        }
+        limh();
+
+        Stock newItem;
+        newItem.setStockId(item->getStockId());
+        newItem.setProductName(item->getProductName());
+        newItem.setCostValue(item->getCostValue());
+        newItem.setQuantity(0);
+        changePurchaseFromStock(stockList, item, newItem);
+
+        cout << "Do you wish to keep removing items? (y/n): ";
         getline(cin, prompt);
         if (prompt != "y")
             return;
