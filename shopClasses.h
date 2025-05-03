@@ -264,7 +264,3 @@ private:
     }
 };
 
-// init static variables
-int Stock::nextStockId = 1;
-int Receipt::nextReceiptId = 1;
-int Receipt::nextClientId = 1;
