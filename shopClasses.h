@@ -80,7 +80,7 @@ public:
         ss << setw(2) << stockId << " | "
            << setw(22) << left << productName << " | "
            << setw(8) << right << quantity << " | "
-           << fixed << setprecision(2) << costValue << " €";
+           << fixed << setprecision(2) << costValue << " eur";
         return ss.str();
     }
     
@@ -228,15 +228,15 @@ public:
         stringstream ss;
         ss << "Receipt ID: " << receiptId << endl;
         ss << "Client ID: " << clientId << endl;
-        ss << "Payment Amount: €" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Payment Amount: eur" << fixed << setprecision(2) << paymentAmount << endl;
         ss << "Date: " << date << endl;
         ss << "Items:" << endl;
         for (auto &item : items)
         {
             ss << item.toString() << endl;
         }
-        ss << "Total Cost: €" << fixed << setprecision(2) << getTotalCost() << endl;
-        ss << "Change: €" << fixed << setprecision(2) << getChange() << endl;
+        ss << "Total Cost: eur" << fixed << setprecision(2) << getTotalCost() << endl;
+        ss << "Change: eur" << fixed << setprecision(2) << getChange() << endl;
         return ss.str();
     }
 

@@ -438,7 +438,7 @@ void printStock(const vector<Stock> &stockList)
 
     limh();
     setColor("\033[1;36m");
-    cout << "ID | Product Name           | Quantity | Cost (€)" << endl;
+    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
     setColor("\033[0m");
     limh();
 
