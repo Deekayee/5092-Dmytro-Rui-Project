@@ -301,7 +301,7 @@ void changeEditMenu(vector<Stock> &stockList)
         itemString << getValidatedInt("Quantity: ") << ",";
         itemString << getValidatedDouble("Cost: ");
 
-        Stock newItem;
+        Stock newItem(stockList);
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
 
@@ -353,7 +353,7 @@ void removeEditMenu(vector<Stock> &stockList)
         }
         limh();
 
-        Stock newItem;
+        Stock newItem(stockList);
         newItem.setStockId(item->getStockId());
         newItem.setProductName(item->getProductName());
         newItem.setCostValue(item->getCostValue());

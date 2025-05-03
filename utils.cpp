@@ -181,7 +181,7 @@ bool openStockFile(vector<Stock> *stockList)
         getline(file, line); //  ignores header
         while (getline(file, line))
         {
-            Stock item;
+            Stock item(*stockList);
             item.fromString(line);
             stockList->push_back(item);
         }
@@ -243,7 +243,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
     cout << "Register a purchase " << endl;
     do
     {
-        Stock item;
+        Stock item(stockList);
         stringstream line;
         string field;
         limh();

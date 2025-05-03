@@ -20,15 +20,17 @@ private:
 
 public:
     // Default constructor for Stock. Initializes stockId to the next available ID, and all other fields to zero/default values.
-    Stock() : quantity(0), costValue(0.0), productName("")
+    Stock(vector <Stock> stockList) : quantity(0), costValue(0.0), productName("")
     {
-        stockId = nextStockId++;
+        stockId = stockList.size() + 1;
+        //stockId = nextStockId++;
     }
 
     // Construct a Stock object with a given name, quantity and price.
-    Stock(string name, int qty, double price)
+    Stock(vector <Stock> stockList, string name, int qty, double price)
     {
-        stockId = nextStockId++;
+        stockId = stockList.size() + 1;
+        //stockId = nextStockId++;
         productName = name;
         quantity = qty;
         costValue = round(price * 100.0) / 100.0;
