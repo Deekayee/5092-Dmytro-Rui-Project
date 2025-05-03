@@ -447,7 +447,7 @@ void printStock(const vector<Stock> &stockList)
         if (item.getQuantity() == 0)
             setColor("\033[1;31m"); // red for zero quantity
 
-        cout << item.toString() << endl;
+        cout << item.toDisplay() << endl;
 
         if (item.getQuantity() == 0)
             setColor("\033[0m"); // resets color
