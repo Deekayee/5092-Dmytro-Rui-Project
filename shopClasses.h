@@ -39,12 +39,22 @@ public:
     static void incrementStockId() { ++nextStockId; }
     static void setNextStockId(int id) { nextStockId = id; }
 
-
-// Returns a string representation of the Stock object in CSV format.
+    // Returns a string representation of the Stock object in CSV format.
     string toString()
     {
         stringstream ss;
         ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << costValue;
+        return ss.str();
+    }
+
+    // Returns a string representation of the Stock object in a display-friendly format, with left-aligned product name and right-aligned quantity and price.
+    string toDisplay() const
+    {
+        stringstream ss;
+        ss << setw(2) << stockId << " | "
+           << setw(22) << left << productName << " | "
+           << setw(8) << right << quantity << " | "
+           << fixed << setprecision(2) << costValue << " eur";
         return ss.str();
     }
 
@@ -60,7 +70,7 @@ public:
     void setCostValue(double price) { costValue = price; }
     void setProductName(string name) { productName = name; }
 
-// Parses a comma-separated string to initialize Stock attributes: stockId, productName, quantity, and costValue.
+    // Parses a comma-separated string to initialize Stock attributes: stockId, productName, quantity, and costValue.
     void fromString(string line)
     {
         stringstream ss(line);
@@ -121,7 +131,7 @@ public:
     void setTaxRatePercent(double rate) { taxRatePercent = rate; }
     void setProductName(string name) { productName = name; }
 
-// Calculates and returns the sale value of the item including tax by applying the tax rate to the sale value without tax.
+    // Calculates and returns the sale value of the item including tax by applying the tax rate to the sale value without tax.
     double getSaleWithTax() const
     {
         return saleWithoutTax * (1 + taxRatePercent / 100.0);
@@ -181,7 +191,7 @@ public:
     string getDate() const { return date; }
     vector<CartItem> getItems() const { return items; }
 
-// Initializes a Receipt object with a unique receipt ID, client ID, current date, and default payment amount.
+    // Initializes a Receipt object with a unique receipt ID, client ID, current date, and default payment amount.
     Receipt() : paymentAmount(0.0)
     {
         receiptId = nextReceiptId++;
@@ -228,19 +238,19 @@ public:
         stringstream ss;
         ss << "Receipt ID: " << receiptId << endl;
         ss << "Client ID: " << clientId << endl;
-        ss << "Payment Amount: €" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Payment Amount: eur" << fixed << setprecision(2) << paymentAmount << endl;
         ss << "Date: " << date << endl;
         ss << "Items:" << endl;
         for (auto &item : items)
         {
             ss << item.toString() << endl;
         }
-        ss << "Total Cost: €" << fixed << setprecision(2) << getTotalCost() << endl;
-        ss << "Change: €" << fixed << setprecision(2) << getChange() << endl;
+        ss << "Total Cost: eur" << fixed << setprecision(2) << getTotalCost() << endl;
+        ss << "Change: eur" << fixed << setprecision(2) << getChange() << endl;
         return ss.str();
     }
 
-// Parses a comma-separated string to initialize Receipt attributes and CartItems.
+    // Parses a comma-separated string to initialize Receipt attributes and CartItems.
     void fromString(string line)
     {
         stringstream ss(line);
@@ -275,4 +285,3 @@ private:
         return ss.str();
     }
 };
-
