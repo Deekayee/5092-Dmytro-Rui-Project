@@ -259,9 +259,27 @@ void changeEditMenu(vector<Stock> &stockList)
         do
         {
             clearConsole();
-            setColor("\033[0;36m");
-            cout << "Change Stock Menu" << endl;
-            setColor(("\033[0m"));
+            setColor("\033[1;33m");
+            cout << "Changing item from stock:\n";
+            setColor("\033[0m");
+
+            limh();
+            setColor("\033[1;36m");
+            cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+            setColor("\033[0m");
+            limh();
+
+            for (const Stock &item : stockList)
+            {
+                if (item.getQuantity() == 0)
+                    setColor("\033[1;31m"); // red for zero quantity
+
+                cout << item.toDisplay() << endl;
+
+                if (item.getQuantity() == 0)
+                    setColor("\033[0m"); // resets color
+            }
+
             limh();
 
             cout << "Please enter the ID of the product you wish to change (Enter 0 to return)" << endl;
@@ -320,9 +338,27 @@ void removeEditMenu(vector<Stock> &stockList)
         do
         {
             clearConsole();
-            setColor("\033[0;36m");
-            cout << "Change Stock Menu" << endl;
-            setColor(("\033[0m"));
+            setColor("\033[1;33m");
+            cout << "Removing from stock:\n";
+            setColor("\033[0m");
+
+            limh();
+            setColor("\033[1;36m");
+            cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+            setColor("\033[0m");
+            limh();
+
+            for (Stock &item : stockList)
+            {
+                if (item.getQuantity() == 0)
+                    setColor("\033[1;31m"); // red for zero quantity
+
+                cout << item.toDisplay() << endl;
+
+                if (item.getQuantity() == 0)
+                    setColor("\033[0m"); // resets color
+            }
+
             limh();
 
             cout << "Please enter the ID of the product you wish to remove (Enter 0 to return)" << endl;

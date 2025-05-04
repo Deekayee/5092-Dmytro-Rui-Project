@@ -246,20 +246,53 @@ void addPurchaseToStock(vector<Stock> &stockList)
     string filename = "output/stockList.csv";
     string confirm;
 
-    clearConsole();
-    cout << "Register a purchase " << endl;
+    vector<int> ids; // saves ids for marking when changed
+
     do
     {
+        clearConsole();
+        setColor("\033[1;33m");
+        cout << "Register a purchase: " << endl;
+        setColor("\033[0m");
+        limh();
+
+        setColor("\033[1;36m");
+        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+        setColor("\033[0m");
+        limh();
+
+        int colorMarker = 0;
+
+        for (const Stock &item : stockList)
+        {
+            for (int i : ids) // checks if item was introduced recently and sets color to green
+            {
+                if (item.getStockId() == i)
+                    colorMarker = 1;
+            }
+            if (item.getQuantity() == 0)
+                colorMarker = 2;
+
+            if (colorMarker == 2)
+                setColor("\033[1;31m"); // red for zero quantity
+            else if (colorMarker == 1)
+                setColor("\033[0;32m"); // green for recent addition
+
+            cout << item.toDisplay() << endl;
+
+            setColor("\033[0m"); // resets color
+            colorMarker = 0;
+        }
+        limh();
+
         Stock item;
         stringstream line;
         string field;
-        limh();
+        cout << "Product Name (leave empty to go back): ";
 
-        cout << "Product Name: ";
-        do
-        {
-            getline(cin, field);
-        } while (field.empty());
+        getline(cin, field);
+        if (field.empty())
+            return;
         item.setProductName(field);
 
         Stock *findItem;
@@ -295,6 +328,8 @@ void addPurchaseToStock(vector<Stock> &stockList)
             stockList.push_back(item);
             updateFile(stockList);
         }
+        ids.push_back((item.getStockId()));
+
         cout << "Do you want to register another item? (y/n): ";
         getline(cin, confirm);
         confirm = stringToLower(confirm);
@@ -374,17 +409,40 @@ vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
 bool showSearchResults(vector<Stock> items)
 {
     clearConsole();
+    setColor("\033[1;33m");
+    cout << "Search Results:" << endl;
+    setColor("\033[0m");
     if (items.empty())
     {
+        limh();
+        setColor("\033[1;36m");
         cout << "No matching results found" << endl;
+        setColor("\033[0m");
+        limh();
     }
     else
     {
+        setColor("\033[0;35m");
         cout << "Found " << items.size() << " matching results:" << endl;
-        for (Stock match : items)
+        setColor("\033[0m");
+        limh();
+
+        setColor("\033[1;36m");
+        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+        setColor("\033[0m");
+        limh();
+
+        for (const Stock &item : items)
         {
-            cout << match.toString() << endl;
+            if (item.getQuantity() == 0)
+                setColor("\033[1;31m"); // red for zero quantity
+
+            cout << item.toDisplay() << endl;
+
+            if (item.getQuantity() == 0)
+                setColor("\033[0m"); // resets color
         }
+        limh();
     }
 
     char confirm;
@@ -438,16 +496,16 @@ void printStock(const vector<Stock> &stockList)
 
     limh();
     setColor("\033[1;36m");
-    cout << "ID | Product Name           | Quantity | Cost (€)" << endl;
+    cout << "ID | Product Name           | Quantity | Cost eur" << endl;
     setColor("\033[0m");
     limh();
 
-    for (const auto &item : stockList)
+    for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
             setColor("\033[1;31m"); // red for zero quantity
 
-        cout << item.toString() << endl;
+        cout << item.toDisplay() << endl;
 
         if (item.getQuantity() == 0)
             setColor("\033[0m"); // resets color
