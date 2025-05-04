@@ -252,6 +252,7 @@ void searchEditMenu(vector<Stock> &stockList)
 }
 void changeEditMenu(vector<Stock> &stockList)
 {
+    vector<int> ids;
     while (true)
     {
         string prompt;
@@ -271,12 +272,25 @@ void changeEditMenu(vector<Stock> &stockList)
 
             for (const Stock &item : stockList)
             {
+                int colorMarker = 0;
                 if (item.getQuantity() == 0)
+                    colorMarker = 2;
+                else
+                    for (int i : ids)
+                        if (item.getStockId() == i)
+                        {
+                            colorMarker = 1;
+                            break;
+                        }
+
+                if (colorMarker == 1)
+                    setColor("\033[0;32m"); // greem for recent change
+                if (colorMarker == 2)
                     setColor("\033[1;31m"); // red for zero quantity
 
                 cout << item.toDisplay() << endl;
 
-                if (item.getQuantity() == 0)
+                if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
             }
 
@@ -302,6 +316,7 @@ void changeEditMenu(vector<Stock> &stockList)
         setColor("\033[0;36m");
         cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
         setColor("\033[0m");
+
         cout << "Do you wish to proceed? (y/n):";
         getline(cin, prompt);
         if (prompt != "y")
@@ -323,6 +338,7 @@ void changeEditMenu(vector<Stock> &stockList)
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
 
+        ids.push_back(item->getStockId());
         cout << "Do you wish to keep editing items? (y/n): ";
         getline(cin, prompt);
         if (prompt != "y")
@@ -331,6 +347,7 @@ void changeEditMenu(vector<Stock> &stockList)
 }
 void removeEditMenu(vector<Stock> &stockList)
 {
+    vector<int> ids; // stores recent changes for pretty printing
     while (true)
     {
         string prompt;
@@ -350,12 +367,26 @@ void removeEditMenu(vector<Stock> &stockList)
 
             for (Stock &item : stockList)
             {
+                int colorMarker = 0;
+
                 if (item.getQuantity() == 0)
+                    colorMarker = 2;
+
+                for (int i : ids)
+                    if (item.getStockId() == i)
+                    {
+                        colorMarker = 1;
+                        break;
+                    }
+
+                if (colorMarker == 2)
                     setColor("\033[1;31m"); // red for zero quantity
+                else if (colorMarker == 1)
+                    setColor("\033[0;33m"); // yellow for recent change (with zero quantity)
 
                 cout << item.toDisplay() << endl;
 
-                if (item.getQuantity() == 0)
+                if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
             }
 
@@ -388,12 +419,13 @@ void removeEditMenu(vector<Stock> &stockList)
             continue;
         }
         limh();
-
+        
         Stock newItem;
         newItem.setStockId(item->getStockId());
         newItem.setProductName(item->getProductName());
         newItem.setCostValue(item->getCostValue());
         newItem.setQuantity(0);
+        ids.push_back(item->getStockId());
         changePurchaseFromStock(stockList, item, newItem);
 
         cout << "Do you wish to keep removing items? (y/n): ";

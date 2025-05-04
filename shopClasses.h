@@ -84,15 +84,6 @@ public:
         costValue = stod(field);
     }
 
-    string toDisplay() const
-    {
-        stringstream ss;
-        ss << setw(2) << stockId << " | "
-           << setw(22) << left << productName << " | "
-           << setw(8) << right << quantity << " | "
-           << fixed << setprecision(2) << costValue << " eur";
-        return ss.str();
-    }
     
 };
 

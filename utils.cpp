@@ -268,7 +268,10 @@ void addPurchaseToStock(vector<Stock> &stockList)
             for (int i : ids) // checks if item was introduced recently and sets color to green
             {
                 if (item.getStockId() == i)
+                {
                     colorMarker = 1;
+                    break;
+                }
             }
             if (item.getQuantity() == 0)
                 colorMarker = 2;
