@@ -442,7 +442,7 @@ void printStock(const vector<Stock> &stockList)
     setColor("\033[0m");
     limh();
 
-    for (const auto &item : stockList)
+    for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
             setColor("\033[1;31m"); // red for zero quantity
