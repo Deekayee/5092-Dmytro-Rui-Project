@@ -152,7 +152,7 @@ void stockMenu(vector<Stock> &stockList)
         switch (productsOpt)
         {
         case 1:
-            printStock(stockList);
+            printStock(stockList, "Stock\n");
             break;
         case 2:
             editStockMenu(stockList);
@@ -252,14 +252,15 @@ void searchEditMenu(vector<Stock> &stockList)
 }
 void changeEditMenu(vector<Stock> &stockList)
 {
-    vector<int> ids;
+    vector <int> idColor;   // saves ids for marking when changed
     while (true)
     {
         string prompt;
         int id;
         do
         {
-            clearConsole();
+            printStock(stockList, "Change Item Menu", idColor, "\033[0;32m");
+            /*clearConsole();
             setColor("\033[1;33m");
             cout << "Changing item from stock:\n";
             setColor("\033[0m");
@@ -292,7 +293,7 @@ void changeEditMenu(vector<Stock> &stockList)
 
                 if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
-            }
+            }*/
 
             limh();
 
@@ -338,7 +339,7 @@ void changeEditMenu(vector<Stock> &stockList)
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
 
-        ids.push_back(item->getStockId());
+        idColor.push_back(item->getStockId());
         cout << "Do you wish to keep editing items? (y/n): ";
         getline(cin, prompt);
         if (prompt != "y")
@@ -347,14 +348,15 @@ void changeEditMenu(vector<Stock> &stockList)
 }
 void removeEditMenu(vector<Stock> &stockList)
 {
-    vector<int> ids; // stores recent changes for pretty printing
+    vector<int> idColor; // saves ids for marking when changed
     while (true)
     {
         string prompt;
         int id;
         do
         {
-            clearConsole();
+            printStock(stockList, "Remove Item Menu", idColor, "\033[0;33m");
+            /*clearConsole();
             setColor("\033[1;33m");
             cout << "Removing from stock:\n";
             setColor("\033[0m");
@@ -388,7 +390,7 @@ void removeEditMenu(vector<Stock> &stockList)
 
                 if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
-            }
+            }*/
 
             limh();
 
@@ -425,7 +427,7 @@ void removeEditMenu(vector<Stock> &stockList)
         newItem.setProductName(item->getProductName());
         newItem.setCostValue(item->getCostValue());
         newItem.setQuantity(0);
-        ids.push_back(item->getStockId());
+        idColor.push_back(item->getStockId());
         changePurchaseFromStock(stockList, item, newItem);
 
         cout << "Do you wish to keep removing items? (y/n): ";
