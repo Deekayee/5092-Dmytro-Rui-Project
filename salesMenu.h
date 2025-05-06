@@ -9,5 +9,5 @@
 #include "utils.h"
 
 void salesMenu(); // TODO
-    void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool view);
+    void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState);
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart); // TODO

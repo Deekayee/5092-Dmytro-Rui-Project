@@ -5,8 +5,8 @@ using namespace std;
 // Sales Menu
 void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 {
-    bool salesMenu = false;
-    // salesMenu:
+    bool menuState = false;
+    // menuState:
     //  0-Shows Products
     //  1-Shows Cart
     string input;
@@ -15,17 +15,17 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
     {
         do
         {
-            if (salesMenu == false)
+            if (menuState == false)
                 printStock(stockList, "Products Menu:\n");
-            if (salesMenu == true)
+            if (menuState == true)
                 printCart(stockList, cart);
             limh();
 
             cout << "Options:" << endl
                  << "1. Add product to cart" << endl;
-            if (salesMenu == 1)
+            if (menuState == 0)
                 cout << "2. View Cart" << endl;
-            if (salesMenu == 2)
+            if (menuState == 1)
                 cout << "2. View Products" << endl;
             cout << "3. Go back" << endl;
             cout << "Option: ";
@@ -36,10 +36,10 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
         switch (opt)
         {
         case 1:
-            addProductCart(stockList, cart, salesMenu);
+            addProductCart(stockList, cart, menuState);
             break;
         case 2:
-            salesMenu++;
+            menuState++;
             break;
         case 3:
             return;
@@ -55,11 +55,11 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 }
 
 // Adds items to Cart similar to addPurchaseToStock()
-void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool salesMenu)
+void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
-    if (salesMenu == false)
+    if (menuState == false)
         printStock(stockList, "Products Menu:\n");
-    if (salesMenu == true)
+    if (menuState == true)
         printCart(stockList, cart);
     /*TO DO*/
 
