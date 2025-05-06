@@ -132,6 +132,7 @@ double getValidatedDouble(const string &prompt)
         }
     }
 }
+
 void setColor(const string &colorCode)
 {
     cout << colorCode;
@@ -251,43 +252,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
     do
     {
         printStock(stockList, "Add Item Menu", idColor, "\033[0;32m");
-        /*clearConsole();
-        setColor("\033[1;33m");
-        cout << "Register a purchase: " << endl;
-        setColor("\033[0m");
-        limh();
-
-        setColor("\033[1;36m");
-        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
-        setColor("\033[0m");
-        limh();
-
-        int colorMarker = 0;
-
-        for (const Stock &item : stockList)
-        {
-            for (int i : ids) // checks if item was introduced recently and sets color to green
-            {
-                if (item.getStockId() == i)
-                {
-                    colorMarker = 1;
-                    break;
-                }
-            }
-            if (item.getQuantity() == 0)
-                colorMarker = 2;
-
-            if (colorMarker == 2)
-                setColor("\033[1;31m"); // red for zero quantity
-            else if (colorMarker == 1)
-                setColor("\033[0;32m"); // green for recent addition
-
-            cout << item.toDisplay() << endl;
-
-            setColor("\033[0m"); // resets color
-            colorMarker = 0;
-        }
-        limh();*/
+        
 
         Stock item;
         stringstream line;
