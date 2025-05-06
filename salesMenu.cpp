@@ -101,3 +101,23 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
 
     limh(81);
 }
+
+void removeProductCart(vector<CartItem> &cart)
+{
+    cout << "Insert product ID to remove: ";
+    int id;
+    cin >> id;
+
+    for (int i = 0; i < cart.size(); i++)
+    {
+        if (cart[i].getStockId() == id)
+        {
+            cart.erase(cart.begin() + i);
+            cout << "Product removed from cart." << endl;
+            pause();
+            break;
+        }
+        else
+            cout << "Product not found in cart." << endl;
+    }
+}
