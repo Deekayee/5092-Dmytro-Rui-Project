@@ -1,68 +1,75 @@
 #include "salesMenu.h"
 
-
 using namespace std;
 
-
 // Sales Menu
-void salesMenu(vector <Stock> &stockList, vector <CartItem> &cart)
+void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 {
-    bool salesMenu = true;
+    bool salesMenu = false;
+    // salesMenu:
+    //  0-Shows Products
+    //  1-Shows Cart
     string input;
-    int salesOpt;
+    int opt;
     do
     {
         do
         {
-            
-            
+            if (salesMenu == false)
+                printStock(stockList, "Products Menu:\n");
+            if (salesMenu == true)
+                printCart(stockList, cart);
             limh();
+
             cout << "Options:" << endl
-                 << "1. Add product to cart" << endl
-                 << "2. View Cart" << endl;
+                 << "1. Add product to cart" << endl;
+            if (salesMenu == 1)
+                cout << "2. View Cart" << endl;
+            if (salesMenu == 2)
+                cout << "2. View Products" << endl;
+            cout << "3. Go back" << endl;
             cout << "Option: ";
 
             getline(cin, input);
-        } while (!validateMenuInput(input, salesOpt));
+        } while (!validateMenuInput(input, opt));
 
-        switch (salesOpt)
+        switch (opt)
         {
         case 1:
-            productsMenu();
+            addProductCart(stockList, cart, salesMenu);
             break;
         case 2:
-            salesMenu = false;
+            salesMenu++;
             break;
+        case 3:
+            return;
+            break;
+
         default:
             cout << "Invalid input, try again." << endl;
             pause();
             break;
         }
 
-    } while (salesMenu);
+    } while (true);
 }
 
-// Products Menu
-int productsMenu() // TODO
+// Adds items to Cart similar to addPurchaseToStock()
+void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool salesMenu)
 {
-    bool productsMenu = true;
-    int productsOpt;
-    do
-    {
+    if (salesMenu == false)
+        printStock(stockList, "Products Menu:\n");
+    if (salesMenu == true)
+        printCart(stockList, cart);
+    /*TO DO*/
 
-        // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
-        cout << "Products" << endl;
-        limh();
+    return;
+}
 
-        /*Show products here*/
+// Prints items in cart similar to printStock()
+void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
+{
+    /*TO DO*/
 
-        cin >> productsOpt;
-        cout << endl
-             << "Press 0 to go cancel" << endl; // placeholder
-        cin.ignore();
-
-        if (productsOpt == 0)
-            productsMenu = false;
-
-    } while (productsMenu);
+    return;
 }
