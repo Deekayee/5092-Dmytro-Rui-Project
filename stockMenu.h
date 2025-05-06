@@ -7,7 +7,9 @@
 #include <cstdlib>
 #include <stdexcept>
 #include "utils.h"
+#include "salesMenu.h"
 
+void mainMenu(vector<Stock> &stockList);
 
 void stockMenu(vector<Stock> &stockList);
     void editStockMenu(vector<Stock> &stockList);

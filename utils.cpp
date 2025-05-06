@@ -480,7 +480,6 @@ void printStock(const vector<Stock> &stockList, const string &title)
     }
     
     limh();
-    pause();
 }
 
 void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode)
@@ -512,7 +511,7 @@ void printStock(const vector<Stock> &stockList, const string &title, vector<int>
     }
     
     limh();
-    pause();
+
 }
 /*
 void printStock(const vector<Stock> &stockList)
