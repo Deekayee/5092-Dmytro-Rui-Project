@@ -11,3 +11,4 @@
 void salesMenu(vector <Stock> &stockList, vector <CartItem> &cart); // TODO
     void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState);
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
+void removeProductCart(vector<CartItem> &cart);

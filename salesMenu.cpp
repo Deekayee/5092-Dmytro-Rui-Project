@@ -89,7 +89,7 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
          << setw(8) << right << "Quantity" << " | "
          << setw(10) << right << "Sale Value" << " eur |"
          << setw(8) << right << "Tax Rate" << "% |"
-         << setw(11) << right << "Sale w/ Tax" << " eur |" 
+         << setw(11) << right << "Sale w/ Tax" << " eur |"
          << endl;
     setColor("\033[0m");
     limh(81);
@@ -104,9 +104,7 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
 
 void removeProductCart(vector<CartItem> &cart)
 {
-    cout << "Insert product ID to remove: ";
-    int id;
-    cin >> id;
+    int id = getValidatedInt("Insert product ID to remove: ");
 
     for (int i = 0; i < cart.size(); i++)
     {
