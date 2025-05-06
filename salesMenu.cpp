@@ -20,20 +20,20 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             //   0 -> Shows Products (default)
             //   1 -> Shows Cart
             if (menuState == false)
-            // needs to print price for client, meaning, profit margin + maybe with tax
+                // needs to print price for client, meaning, profit margin + maybe with tax
                 printStock(stockList, "Products Menu:\n");
             if (menuState == true)
                 printCart(stockList, cart);
 
             cout << "Options:" << endl;
-            limh();
+            limh(81);
             cout << "1. Add product to cart" << endl;
             limh;
             if (menuState == 0)
                 cout << "2. View Cart" << endl;
             if (menuState == 1)
                 cout << "2. View Products" << endl;
-                limh;
+            limh;
             cout << "3. Go back" << endl;
             cout << "Option: ";
 
@@ -77,6 +77,27 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
 {
     /*TO DO*/
+    clearConsole();
+    setColor("\033[1,33m");
+    cout << "Your cart" << endl;
+    setColor("\033[0m");
 
-    return;
+    limh(81);
+    setColor("\033[1;36m");
+    cout << setw(2) << "ID" << " | "
+         << setw(22) << left << "Product Name" << " | "
+         << setw(8) << right << "Quantity" << " | "
+         << setw(10) << right << "Sale Value" << " eur |"
+         << setw(8) << right << "Tax Rate" << "% |"
+         << setw(11) << right << "Sale w/ Tax" << " eur |" 
+         << endl;
+    setColor("\033[0m");
+    limh(81);
+
+    for (const CartItem &cartItem : cart)
+    {
+        cout << cartItem.toDisplay() << endl;
+    }
+
+    limh(81);
 }

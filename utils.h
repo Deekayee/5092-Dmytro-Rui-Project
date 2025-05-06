@@ -11,7 +11,7 @@
 using namespace std;
 
 void pause();
-void limh();
+void limh(int n);
 void clearConsole();
 void setColor(const string &colorCode);
 

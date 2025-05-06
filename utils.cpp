@@ -7,15 +7,19 @@ int Stock::nextStockId = 1;
 int Receipt::nextReceiptId = 1;
 int Receipt::nextClientId = 1;
 
+int nDashStock = 31;
+int nDashSale = 81;
+int nDashMenu = 30;
+
 void pause() // pause the console
 {
     cout << "Press enter to continue...";
     cin.ignore();
 }
 
-void limh() // horizontal line with color
+void limh(int n) // horizontal line with color
 {
-    cout << "\033[0;35m---------------------------------------------------\033[0m" << endl;
+    cout << "\033[0;35m"<< string(n, '-') << "\033[0m" << endl;
 }
 
 void clearConsole() // clear the console
@@ -383,23 +387,23 @@ bool showSearchResults(vector<Stock> items)
     setColor("\033[0m");
     if (items.empty())
     {
-        limh();
+        limh(nDashSale);
         setColor("\033[1;36m");
         cout << "No matching results found" << endl;
         setColor("\033[0m");
-        limh();
+        limh(nDashSale);
     }
     else
     {
         setColor("\033[0;35m");
         cout << "Found " << items.size() << " matching results:" << endl;
         setColor("\033[0m");
-        limh();
+        limh(nDashSale);
 
         setColor("\033[1;36m");
         cout << "ID | Product Name           | Quantity | Cost eur" << endl;
         setColor("\033[0m");
-        limh();
+        limh(nDashSale);
 
         for (const Stock &item : items)
         {
@@ -411,7 +415,7 @@ bool showSearchResults(vector<Stock> items)
             if (item.getQuantity() == 0)
                 setColor("\033[0m"); // resets color
         }
-        limh();
+        limh(nDashSale);
     }
 
     char confirm;
@@ -463,11 +467,11 @@ void printStock(const vector<Stock> &stockList, const string &title)
     cout << title;
     setColor("\033[0m");
     
-    limh();
+    limh(nDashSale);
     setColor("\033[1;36m");
-    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
+    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
     setColor("\033[0m");
-    limh();
+    limh(nDashSale);
     
     for (const Stock &item : stockList)
     {
@@ -479,7 +483,7 @@ void printStock(const vector<Stock> &stockList, const string &title)
         setColor("\033[0m"); // resets color
     }
     
-    limh();
+    limh(nDashSale);
 }
 
 void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode)
@@ -489,11 +493,11 @@ void printStock(const vector<Stock> &stockList, const string &title, vector<int>
     cout << title;
     setColor("\033[0m");
     
-    limh();
+    limh(nDashSale);
     setColor("\033[1;36m");
     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
     setColor("\033[0m");
-    limh();
+    limh(nDashSale);
     
     for (const Stock &item : stockList)
     {
@@ -510,7 +514,7 @@ void printStock(const vector<Stock> &stockList, const string &title, vector<int>
         setColor("\033[0m"); // resets color
     }
     
-    limh();
+    limh(nDashSale);
 
 }
 /*
@@ -521,11 +525,11 @@ void printStock(const vector<Stock> &stockList)
     cout << "Stock:\n";
     setColor("\033[0m");
 
-    limh();
+    limh(nDashSale);
     setColor("\033[1;36m");
     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
     setColor("\033[0m");
-    limh();
+    limh(nDashSale);
 
     for (const Stock &item : stockList)
     {
@@ -538,7 +542,7 @@ void printStock(const vector<Stock> &stockList)
             setColor("\033[0m"); // resets color
     }
 
-    limh();
+    limh(nDashSale);
     pause();
 }
     */

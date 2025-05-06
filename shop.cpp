@@ -2,8 +2,6 @@
 #include "stockMenu.h"
 #include "salesMenu.h"
 
-void mainMenu(vector<Stock> &stockList);
-
 int main()
 {
     // Data init

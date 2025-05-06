@@ -142,6 +142,19 @@ public:
         return ss.str();
     }
 
+    string toDisplay() const
+    {
+        stringstream ss;
+        ss << setw(2) << stockId << " | "
+           << setw(22) << left << productName << " | "
+           << setw(8) << right << quantity << " | "
+           << fixed << setprecision(2) << getSaleWithoutTax() << " eur |"
+           << fixed << setprecision(2) << getTaxRatePercent() << "% |"
+           << fixed << setprecision(2) << getSaleWithTax() << " eur |";
+
+        return ss.str();
+    }
+
     // Parses a comma-separated string to initialize CartItem attributes.
     void fromString(string line)
     {

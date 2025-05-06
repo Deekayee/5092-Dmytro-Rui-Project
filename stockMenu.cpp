@@ -2,6 +2,56 @@
 
 using namespace std;
 
+void mainMenu(vector<Stock> &stockList)
+{
+    // main loop
+    // vars
+    bool run = true;
+    int opt;
+    string input;
+    vector <CartItem> cart;
+    do
+    {
+        do
+        {
+            clearConsole();
+            setColor("\033[0;36m");
+            cout << "Shop menu" << endl;
+            setColor("\033[0m");
+            limh(81);
+            cout << "1. Shop Sales" << endl;
+            limh(81);
+            cout << "2. Shop Stock" << endl;
+            limh(81);
+            cout << "3. Exit" << endl;
+            limh(81);
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            // show products, give an option to buy and checkout or cancel
+            salesMenu(stockList, cart);
+            break;
+        case 2:
+            // show stock, give an option to add or remove and cancel
+            stockMenu(stockList);
+            break;
+        case 3:
+            // exit
+            clearConsole();
+            run = false;
+            break;
+        default:
+            // user is a bit slow, what can we do
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    } while (run);
+}
 
 // Stock Menu
 // show stock, give an option to add or remove and cancel
@@ -19,13 +69,13 @@ void stockMenu(vector<Stock> &stockList)
             setColor("\033[0;36m");
             cout << "Stock Menu" << endl;
             setColor("\033[0m");
-            limh();
+            limh(81);
             cout << "1. Show Stock" << endl;
-            limh();
+            limh(81);
             cout << "2. Edit Stock" << endl;
-            limh();
+            limh(81);
             cout << "3. Go Back" << endl;
-            limh();
+            limh(81);
             cout << "Option: ";
             getline(cin, input);
         } while (!validateMenuInput(input, productsOpt));
@@ -66,17 +116,17 @@ void editStockMenu(vector<Stock> &stockList)
             setColor("\033[0;36m");
             cout << "Stock Editing Menu" << endl;
             setColor("\033[0m");
-            limh();
+            limh(81);
             cout << "1. Search Stock" << endl;
-            limh();
+            limh(81);
             cout << "2. Add purchase to Stock" << endl;
-            limh();
+            limh(81);
             cout << "3. Change purchase from Stock" << endl;
-            limh();
+            limh(81);
             cout << "4. Remove purchase from Stock" << endl;
-            limh();
+            limh(81);
             cout << "5. Go Back" << endl;
-            limh();
+            limh(81);
             cout << "Option: ";
             getline(cin, input);
 
@@ -122,7 +172,7 @@ void searchEditMenu(vector<Stock> &stockList)
         setColor("\033[0;36m");
         cout << "Stock Search Menu" << endl;
         setColor("\033[0m");
-        limh();
+        limh(81);
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
         getline(cin, name);
@@ -146,11 +196,11 @@ void changeEditMenu(vector<Stock> &stockList)
             cout << "Changing item from stock:\n";
             setColor("\033[0m");
 
-            limh();
+            limh(81);
             setColor("\033[1;36m");
             cout << "ID | Product Name           | Quantity | Cost eur" << endl;
             setColor("\033[0m");
-            limh();
+            limh(81);
 
             for (const Stock &item : stockList)
             {
@@ -176,7 +226,7 @@ void changeEditMenu(vector<Stock> &stockList)
                     setColor("\033[0m"); // resets color
             }*/
 
-            limh();
+            limh(81);
 
             cout << "Please enter the ID of the product you wish to change (Enter 0 to return)" << endl;
             cout << "ID: ";
@@ -205,7 +255,7 @@ void changeEditMenu(vector<Stock> &stockList)
         {
             continue;
         }
-        limh();
+        limh(81);
 
         stringstream itemString;
         itemString << item->getStockId() << ",";
@@ -242,11 +292,11 @@ void removeEditMenu(vector<Stock> &stockList)
             cout << "Removing from stock:\n";
             setColor("\033[0m");
 
-            limh();
+            limh(81);
             setColor("\033[1;36m");
             cout << "ID | Product Name           | Quantity | Cost eur" << endl;
             setColor("\033[0m");
-            limh();
+            limh(81);
 
             for (Stock &item : stockList)
             {
@@ -273,7 +323,7 @@ void removeEditMenu(vector<Stock> &stockList)
                     setColor("\033[0m"); // resets color
             }*/
 
-            limh();
+            limh(81);
 
             cout << "Please enter the ID of the product you wish to remove (Enter 0 to return)" << endl;
             cout << "ID: ";
@@ -301,7 +351,7 @@ void removeEditMenu(vector<Stock> &stockList)
         {
             continue;
         }
-        limh();
+        limh(81);
         
         Stock newItem;
         newItem.setStockId(item->getStockId());
