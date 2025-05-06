@@ -1,126 +1,7 @@
-#include "menu.h"
+#include "stockMenu.h"
 
 using namespace std;
 
-void mainMenu(vector<Stock> &stockList)
-{
-    // main loop
-    // vars
-    bool run = true;
-    int opt;
-    string input;
-
-    do
-    {
-        do
-        {
-            clearConsole();
-            setColor("\033[0;36m");
-            cout << "Shop menu" << endl;
-            setColor("\033[0m");
-            limh();
-            cout << "1. Shop Sales" << endl;
-            limh();
-            cout << "2. Shop Stock" << endl;
-            limh();
-            cout << "3. Exit" << endl;
-            limh();
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, opt));
-
-        switch (opt)
-        {
-        case 1:
-            // show products, give an option to buy and checkout or cancel
-            salesMenu();
-            break;
-        case 2:
-            // show stock, give an option to add or remove and cancel
-            stockMenu(stockList);
-            break;
-        case 3:
-            // exit
-            clearConsole();
-            run = false;
-            break;
-        default:
-            // user is a bit slow, what can we do
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-    } while (run);
-}
-
-// Sales Menu
-void salesMenu()
-{
-    bool salesMenu = true;
-    string input;
-    int salesOpt;
-    do
-    {
-        do
-        {
-            clearConsole();
-            setColor("\033[0;36m");
-            cout << "Sales Menu" << endl;
-            setColor("\033[0m");
-            limh();
-            cout << "1. Show Products" << endl;
-            limh();
-            cout << "2. Go Back" << endl;
-            limh();
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, salesOpt));
-
-        switch (salesOpt)
-        {
-        case 1:
-            cout << "Products" << endl;
-            limh();
-            // show products
-            productsMenu();
-            break;
-        case 2:
-            salesMenu = false;
-            break;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-
-    } while (salesMenu);
-}
-
-// Products Menu
-void productsMenu() // TODO
-{
-    bool productsMenu = true;
-    int productsOpt;
-    do
-    {
-        clearConsole();
-
-        // function to show products as selectable options, when selected, show more details and give option to add to cart (input quantity here), checkout or cancel
-        cout << "Products" << endl;
-        limh();
-
-        /*Show products here*/
-
-        cin >> productsOpt;
-        cout << endl
-             << "Press 0 to go cancel" << endl; // placeholder
-        cin.ignore();
-
-        if (productsOpt == 0)
-            productsMenu = false;
-
-    } while (productsMenu);
-}
 
 // Stock Menu
 // show stock, give an option to add or remove and cancel
@@ -152,7 +33,7 @@ void stockMenu(vector<Stock> &stockList)
         switch (productsOpt)
         {
         case 1:
-            printStock(stockList);
+            printStock(stockList, "Stock\n");
             break;
         case 2:
             editStockMenu(stockList);
@@ -252,14 +133,15 @@ void searchEditMenu(vector<Stock> &stockList)
 }
 void changeEditMenu(vector<Stock> &stockList)
 {
-    vector<int> ids;
+    vector <int> idColor;   // saves ids for marking when changed
     while (true)
     {
         string prompt;
         int id;
         do
         {
-            clearConsole();
+            printStock(stockList, "Change Item Menu", idColor, "\033[0;32m");
+            /*clearConsole();
             setColor("\033[1;33m");
             cout << "Changing item from stock:\n";
             setColor("\033[0m");
@@ -292,7 +174,7 @@ void changeEditMenu(vector<Stock> &stockList)
 
                 if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
-            }
+            }*/
 
             limh();
 
@@ -338,7 +220,7 @@ void changeEditMenu(vector<Stock> &stockList)
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
 
-        ids.push_back(item->getStockId());
+        idColor.push_back(item->getStockId());
         cout << "Do you wish to keep editing items? (y/n): ";
         getline(cin, prompt);
         if (prompt != "y")
@@ -347,14 +229,15 @@ void changeEditMenu(vector<Stock> &stockList)
 }
 void removeEditMenu(vector<Stock> &stockList)
 {
-    vector<int> ids; // stores recent changes for pretty printing
+    vector<int> idColor; // saves ids for marking when changed
     while (true)
     {
         string prompt;
         int id;
         do
         {
-            clearConsole();
+            printStock(stockList, "Remove Item Menu", idColor, "\033[0;33m");
+            /*clearConsole();
             setColor("\033[1;33m");
             cout << "Removing from stock:\n";
             setColor("\033[0m");
@@ -388,7 +271,7 @@ void removeEditMenu(vector<Stock> &stockList)
 
                 if (colorMarker != 0)
                     setColor("\033[0m"); // resets color
-            }
+            }*/
 
             limh();
 
@@ -425,7 +308,7 @@ void removeEditMenu(vector<Stock> &stockList)
         newItem.setProductName(item->getProductName());
         newItem.setCostValue(item->getCostValue());
         newItem.setQuantity(0);
-        ids.push_back(item->getStockId());
+        idColor.push_back(item->getStockId());
         changePurchaseFromStock(stockList, item, newItem);
 
         cout << "Do you wish to keep removing items? (y/n): ";

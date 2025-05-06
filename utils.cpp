@@ -246,11 +246,12 @@ void addPurchaseToStock(vector<Stock> &stockList)
     string filename = "output/stockList.csv";
     string confirm;
 
-    vector<int> ids; // saves ids for marking when changed
+    vector<int> idColor; // saves ids for marking when changed
 
     do
     {
-        clearConsole();
+        printStock(stockList, "Add Item Menu", idColor, "\033[0;32m");
+        /*clearConsole();
         setColor("\033[1;33m");
         cout << "Register a purchase: " << endl;
         setColor("\033[0m");
@@ -286,7 +287,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
             setColor("\033[0m"); // resets color
             colorMarker = 0;
         }
-        limh();
+        limh();*/
 
         Stock item;
         stringstream line;
@@ -331,7 +332,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
             stockList.push_back(item);
             updateFile(stockList);
         }
-        ids.push_back((item.getStockId()));
+        idColor.push_back((item.getStockId()));
 
         cout << "Do you want to register another item? (y/n): ";
         getline(cin, confirm);
@@ -490,6 +491,65 @@ void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock new
     updateFile(stockList);
 }
 
+void printStock(const vector<Stock> &stockList, const string &title)
+{
+    clearConsole();
+    setColor("\033[1;33m");
+    cout << title;
+    setColor("\033[0m");
+    
+    limh();
+    setColor("\033[1;36m");
+    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
+    setColor("\033[0m");
+    limh();
+    
+    for (const Stock &item : stockList)
+    {
+        if (item.getQuantity() == 0)
+        setColor("\033[1;31m"); // red for zero quantity
+        
+        cout << item.toDisplay() << endl;
+        
+        setColor("\033[0m"); // resets color
+    }
+    
+    limh();
+    pause();
+}
+
+void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode)
+{
+    clearConsole();
+    setColor("\033[1;33m");
+    cout << title;
+    setColor("\033[0m");
+    
+    limh();
+    setColor("\033[1;36m");
+    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
+    setColor("\033[0m");
+    limh();
+    
+    for (const Stock &item : stockList)
+    {
+        if (item.getQuantity() == 0)
+        setColor("\033[1;31m"); // red for zero quantity
+        for (int id : idColor)
+        {
+            if (item.getStockId() == id)
+            setColor(colorCode);    // <color> for when item matches vector idColor
+        }
+        
+        cout << item.toDisplay() << endl;
+        
+        setColor("\033[0m"); // resets color
+    }
+    
+    limh();
+    pause();
+}
+/*
 void printStock(const vector<Stock> &stockList)
 {
     clearConsole();
@@ -517,3 +577,4 @@ void printStock(const vector<Stock> &stockList)
     limh();
     pause();
 }
+    */
