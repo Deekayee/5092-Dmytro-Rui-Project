@@ -115,6 +115,41 @@ void removeProductCart(vector<CartItem> &cart)
             pause();
             break;
         }
+    }
+}
+
+void clearCart(vector<CartItem> &cart)
+{
+    cart.clear();
+    cout << "Cart cleared." << endl;
+}
+
+void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
+{
+    int id = getValidatedInt("Insert product ID to change: ");
+    int quantity = getValidatedInt("Insert new quantity: ");
+    if (quantity > stockList[id].getQuantity())
+    {
+        cout << "Not enough stock." << endl;
+        cout << "Brother we only have " << stockList[id].getQuantity() << " in stock." << endl;
+
+        cout << "Do you want to buy " << stockList[id].getQuantity() << " instead? (y/n): ";
+        string input;
+        cin >> input;
+        if (stringToLower(input) == "y")
+            quantity = stockList[id].getQuantity();
+        else
+            return;
+    }
+    for (int i = 0; i < cart.size(); i++)
+    {
+        if (cart[i].getStockId() == id)
+        {
+            cart[i].setQuantity(quantity);
+            cout << "Product quantity changed." << endl;
+            pause();
+            break;
+        }
         else
             cout << "Product not found in cart." << endl;
     }
