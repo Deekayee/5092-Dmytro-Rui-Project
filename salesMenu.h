@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include "utils.h"
 
-void salesMenu(vector <Stock> &stockList, vector <CartItem> &cart); // TODO
-    void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState);
+void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
+void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState);
+
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
+CartItem *findItemCart(vector<CartItem> &cart, Stock *item);

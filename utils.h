@@ -10,22 +10,26 @@
 #include "shopClasses.h" // my classes
 using namespace std;
 
+//CONSOLE UTILITY FUNCTIONS
 void pause();
 void limh(int n);
 void clearConsole();
 void setColor(const string &colorCode);
 
+//VALIDATION FUNCTIONS
 bool validateMenuInput(const string &input, int &opt);
 int getValidatedInt(const string &prompt);
 double getValidatedDouble(const string &prompt);
 string  stringToLower(string name);
 
+//FILE FUNCTIONS
 void writeToFile(string filename, const string &line);
 void createStockFile();
 bool openStockFile(vector<Stock> *stockList);
 bool updateFile(vector<Stock> &stockList);
 int dataInit(vector<Stock> &stockList);
 
+//STOCK FUNCTIONS
 void addPurchaseToStock(vector<Stock> &stockList);
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name);
 bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
