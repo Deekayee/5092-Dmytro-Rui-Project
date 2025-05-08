@@ -71,54 +71,93 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
     /*TO DO*/
     while (true)
     {
+        // prints visible menu
+        /********************************************************************** */
+
         clearConsole();
         if (menuState == false)
             printStock(stockList, "Products Menu:\n");
         else
             printCart(stockList, cart);
 
-        string input;
-        int id;
+        int id = getValidatedInt("Insert product ID to add to cart: ");
 
-        id = getValidatedInt("Add product by ID");
+        /*********************************************************************** */
 
+        // checks initial quantity in stock and its existence
         Stock *item = nullptr;
         if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
         {
-            cout << "Try another ID" << endl;
+            if (item->getQuantity() == 0)
+            {
+                cout << endl
+                     << "0 Stock Brotha ";
+            }
+
+            cout << endl
+                 << "Try another ID" << endl;
+            pause();
             continue;
         }
 
         int quantity = getValidatedInt("How many do you want good sir?: ");
-
         /*verify item quantity is valid*/
         // needs cycle to ensure cartitem is created, or function is exited
-
+        string input;
         CartItem *bagged_item = findItemCart(cart, item);
         if (bagged_item != nullptr) // verify item existence in cart
         {
-            // missing check condition for when bagged item already corresponds in quantity to stock item
-            if (item->getQuantity() >= quantity + bagged_item->getQuantity()) // verify quantity in stock before any operation
+            // checking if bagged item quantity matches stock item quantity, if so, refuse to add
+            if (item->getQuantity() == bagged_item->getQuantity())
+            {
+                cout << endl
+                     << "0 Stock Brotha" // needs to match earlier cout for immersion efforts
+                     << "Try another ID" << endl;
+                pause();
+                continue;
+            }
+            // checking if bagged item quantity + input quantity doesn't exceed quantity in stock
+            if (item->getQuantity() >= quantity + bagged_item->getQuantity())
             {
                 bagged_item->setQuantity(bagged_item->getQuantity() + quantity); // add the input quantity to existing quantity
             }
-            else // quantity exceeds
+            else // quantity exceeds, ask user if it should add all remaining quantity anyway
             {
                 cout << "Quantity asked exceeds quantity in stock."
                      << endl
-                     << "Do you wish to buy all " << item->getQuantity() << " items? (y/n):";
+                     << "Do you wish to buy all " << item->getQuantity() << " existing items instead? (y/n):";
+
                 getline(cin, input);
-                if (input == "y")
+                if (stringToLower(input) == "y")
                 {
-                    bagged_item->setQuantity(item->getQuantity());
+                    bagged_item->setQuantity(item->getQuantity()); // if confirmed will add all existing stock items to cart
                 }
             }
         }
         else // bagged item was not found (nullptr) and needs to be created
         {
-            CartItem newItemCart(*item, quantity);
-            cart.push_back(newItemCart); // add the produced cartIteminto the vector cart
+            // checks again if input quantity doesn't exceed stock quantity
+            if (item->getQuantity() >= quantity)
+            {
+                CartItem newItemCart(*item, quantity); // create the new bagged item
+                cart.push_back(newItemCart);           // add the new bagged item the vector cart
+            }
+            else // if exceeds
+            {
+                cout << "Quantity asked exceeds quantity in stock."
+                     << endl
+                     << "Do you wish to buy all " << item->getQuantity() << " existing items instead? (y/n):";
+
+                getline(cin, input);
+                if (stringToLower(input) == "y")
+                {
+                    CartItem newItemCart(*item, item->getQuantity()); // create the new bagged item
+                    cart.push_back(newItemCart);                      // add the new bagged item the vector cart
+                }
+            }
         }
+
+        //
         cout << "Cart Updated!" << endl;
         cout << "Continue? (y/n): ";
         getline(cin, input);
