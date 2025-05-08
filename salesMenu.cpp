@@ -285,24 +285,46 @@ void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
 
 void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked initial version
 {
+    string input;
     if (cart.size() == 0)
     {
         cout << "Cart is empty." << endl;
         pause();
         return;
     }
-    clearConsole();
-    cout << "Your cart:" << endl;
-    printCart(stockList, cart);
-    double total = 0;
-    for (const CartItem &cartItem : cart)
+    cout << "Continue? (y/n): ";
+    getline(cin, input);
+    if (stringToLower(input) == "y")
     {
-        total += cartItem.getTotalItemSellValue();
+        clearConsole();
+        cout << "Your cart:" << endl;
+        printCart(stockList, cart);
+        double total = 0;
+        for (const CartItem &cartItem : cart)
+        {
+            total += cartItem.getTotalItemSellValue();
+        }
+        cout << "Total: " << total << " eur" << endl;
+        pause(); // give option to cancel around here
+        double paymentAmount = getValidatedDouble("Insert payment amount: ");
+        do
+        {
+            if (paymentAmount < total)
+            {
+                cout << "Not enough money." << endl;
+                cout << "Do you want to try again? (y/n): ";
+                string input;
+                cin >> input;
+                if (stringToLower(input) == "y")
+                    paymentAmount = getValidatedDouble("Insert payment amount: ");
+                else
+                    return;
+            }
+        } while (paymentAmount < total);
+        Receipt receipt(cart, paymentAmount);
+        cout << receipt.toDisplay() << endl;
+        pause();
     }
-    cout << "Total: " << total << " eur" << endl;
-    pause();
-    double paymentAmount = getValidatedDouble("Insert payment amount: ");
-    Receipt receipt(cart, paymentAmount);
-    cout << receipt.toString() << endl;
-    pause();
+    else
+        return;
 }

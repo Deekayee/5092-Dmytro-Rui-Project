@@ -237,20 +237,20 @@ public:
     }
 
     // Returns a string representation of the receipt, including its ID, client ID, payment amount, date, items and total cost and change.
-    string toString() const
+    string toDisplay() const
     {
         stringstream ss;
         ss << "Receipt ID: " << receiptId << endl;
         ss << "Client ID: " << clientId << endl;
-        ss << "Payment Amount: eur" << fixed << setprecision(2) << paymentAmount << endl;
+        ss << "Payment Amount: " << fixed << setprecision(2) << paymentAmount << " eur" << endl;
         ss << "Date: " << date << endl;
-        ss << "Items:" << endl;
+        ss << "Items: " << endl;
         for (auto &item : items)
         {
-            ss << item.toString() << endl;
+            ss << item.toDisplay() << endl;
         }
-        ss << "Total Cost: eur" << fixed << setprecision(2) << getTotalCost() << endl;
-        ss << "Change: eur" << fixed << setprecision(2) << getChange() << endl;
+        ss << "Total Cost: " << fixed << setprecision(2) << getTotalCost() << " eur" << endl;
+        ss << "Change: " << fixed << setprecision(2) << getChange() << " eur" << endl;
         return ss.str();
     }
 
