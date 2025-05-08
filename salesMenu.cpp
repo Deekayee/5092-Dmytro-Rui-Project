@@ -28,13 +28,19 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             cout << "Options:" << endl;
             limh(81);
             cout << "1. Add product to cart" << endl;
-            limh;
+            limh(81);
+            cout << "2. Change product in cart" << endl;
+            limh(81);
+            cout << "3. Remove product from cart" << endl;
+            limh(81);
+            cout << "4. Clear cart" << endl;
+            limh(81);
             if (menuState == 0)
-                cout << "2. View Cart" << endl;
+                cout << "5. View Cart" << endl;
             if (menuState == 1)
-                cout << "2. View Products" << endl;
+                cout << "5. View Products" << endl;
             limh;
-            cout << "3. Go back" << endl;
+            cout << "0. Go back" << endl;
             cout << "Option: ";
 
             getline(cin, input);
@@ -46,9 +52,20 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             addProductCart(stockList, cart, menuState);
             break;
         case 2:
-            menuState = !menuState; // flips menuState
+            changeProductCart(cart, stockList);
             break;
         case 3:
+            removeProductCart(cart);
+            break;
+        case 4:
+            clearCart(cart);
+            break;
+
+        case 5:
+            menuState = !menuState; // flips menuState
+            break;
+
+        case 0:
             return;
 
         default:
@@ -88,21 +105,23 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         Stock *item = nullptr;
         if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
         {
-            if (item->getQuantity() == 0)
-            {
-                cout << endl
-                     << "0 Stock Brotha ";
-            }
 
             cout << endl
                  << "Try another ID" << endl;
             pause();
             continue;
         }
-
-        int quantity = getValidatedInt("How many do you want good sir?: ");
+        if (item->getQuantity() == 0)
+        {
+            cout << endl
+                 << "0 Stock Brotha ";
+            pause();
+            continue;
+        }
+        /*********************************************************************** */
         /*verify item quantity is valid*/
         // needs cycle to ensure cartitem is created, or function is exited
+        int quantity = getValidatedInt("How many do you want good sir?: ");
         string input;
         CartItem *bagged_item = findItemCart(cart, item);
         if (bagged_item != nullptr) // verify item existence in cart
