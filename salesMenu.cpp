@@ -52,10 +52,10 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             addProductCart(stockList, cart, menuState);
             break;
         case 2:
-            changeProductCart(cart, stockList);
+            changeProductCart(stockList, cart, menuState);
             break;
         case 3:
-            removeProductCart(cart);
+            removeProductCart(stockList, cart, menuState);
             break;
         case 4:
             clearCart(cart);
@@ -225,8 +225,14 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
     limh(81);
 }
 
-void removeProductCart(vector<CartItem> &cart)
+void removeProductCart(vector <Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
+    clearConsole();
+    if (menuState == false)
+        printStock(stockList, "Products Menu:\n");
+    else
+        printCart(stockList, cart);
+
     int id = getValidatedInt("Insert product ID to remove: ");
 
     for (int i = 0; i < cart.size(); i++)
@@ -247,19 +253,25 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
+void changeProductCart( vector <Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
+    clearConsole();
+    if (menuState == false)
+        printStock(stockList, "Products Menu:\n");
+    else
+        printCart(stockList, cart);
+
+        //
     int id = getValidatedInt("Insert product ID to change: ");
-    id = id - 1; // fixes index beeing off by one
     int quantity = getValidatedInt("Insert new quantity: ");
-    if (quantity > stockList[id].getQuantity())
+    if (quantity > stockList.at(id-1).getQuantity())
     {
         cout << "Not enough stock." << endl;
         cout << "Brother we only have " << stockList[id].getQuantity() << " in stock." << endl;
 
         cout << "Do you want to buy " << stockList[id].getQuantity() << " instead? (y/n): ";
         string input;
-        cin >> input;
+        getline(cin, input);
         if (stringToLower(input) == "y")
             quantity = stockList[id].getQuantity();
         else
@@ -275,6 +287,10 @@ void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
             break;
         }
         else
+        {
             cout << "Product not found in cart." << endl;
+            pause();
+        }
+
     }
 }
