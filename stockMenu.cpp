@@ -84,6 +84,7 @@ void stockMenu(vector<Stock> &stockList)
         {
         case 1:
             printStock(stockList, "Stock\n");
+            pause();
             break;
         case 2:
             editStockMenu(stockList);
