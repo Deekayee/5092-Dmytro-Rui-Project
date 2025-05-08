@@ -39,8 +39,9 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
                 cout << "5. View Cart" << endl;
             if (menuState == 1)
                 cout << "5. View Products" << endl;
-            limh;
+            limh(81);
             cout << "0. Go back" << endl;
+            limh(81);
             cout << "Option: ";
 
             getline(cin, input);
@@ -201,12 +202,12 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
 {
     /*TO DO*/
     clearConsole();
-    setColor("\033[1,33m");
+    setColor(YELLOW);
     cout << "Your cart" << endl;
-    setColor("\033[0m");
+    setColor(RESET);
 
     limh(81);
-    setColor("\033[1;36m");
+    setColor(CYAN);
     cout << setw(2) << "ID" << " | "
          << setw(22) << left << "Product Name" << " | "
          << setw(8) << right << "Quantity" << " | "
@@ -214,7 +215,7 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
          << setw(8) << right << "Tax Rate" << "% |"
          << setw(11) << right << "Sale w/ Tax" << " eur |"
          << endl;
-    setColor("\033[0m");
+    setColor(RESET);
     limh(81);
 
     for (const CartItem &cartItem : cart)

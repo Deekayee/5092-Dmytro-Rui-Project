@@ -15,9 +15,9 @@ void mainMenu(vector<Stock> &stockList)
         do
         {
             clearConsole();
-            setColor("\033[0;36m");
+            setColor(Cyan);
             cout << "Shop menu" << endl;
-            setColor("\033[0m");
+            setColor(RESET);
             limh(81);
             cout << "1. Shop Sales" << endl;
             limh(81);
@@ -66,9 +66,9 @@ void stockMenu(vector<Stock> &stockList)
         do
         {
             clearConsole();
-            setColor("\033[0;36m");
+            setColor(Cyan);
             cout << "Stock Menu" << endl;
-            setColor("\033[0m");
+            setColor(RESET);
             limh(81);
             cout << "1. Show Stock" << endl;
             limh(81);
@@ -114,9 +114,9 @@ void editStockMenu(vector<Stock> &stockList)
         {
             clearConsole();
 
-            setColor("\033[0;36m");
+            setColor(Cyan);
             cout << "Stock Editing Menu" << endl;
-            setColor("\033[0m");
+            setColor(RESET);
             limh(81);
             cout << "1. Search Stock" << endl;
             limh(81);
@@ -170,9 +170,9 @@ void searchEditMenu(vector<Stock> &stockList)
         string name;
 
         clearConsole();
-        setColor("\033[0;36m");
+        setColor(Cyan);
         cout << "Stock Search Menu" << endl;
-        setColor("\033[0m");
+        setColor(RESET);
         limh(81);
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
@@ -195,12 +195,12 @@ void changeEditMenu(vector<Stock> &stockList)
             /*clearConsole();
             setColor("\033[1;33m");
             cout << "Changing item from stock:\n";
-            setColor("\033[0m");
+            setColor(RESET);
 
             limh(81);
-            setColor("\033[1;36m");
+            setColor(CYAN);
             cout << "ID | Product Name           | Quantity | Cost eur" << endl;
-            setColor("\033[0m");
+            setColor(RESET);
             limh(81);
 
             for (const Stock &item : stockList)
@@ -224,7 +224,7 @@ void changeEditMenu(vector<Stock> &stockList)
                 cout << item.toDisplay() << endl;
 
                 if (colorMarker != 0)
-                    setColor("\033[0m"); // resets color
+                    setColor(RESET); // resets color
             }*/
 
             limh(81);
@@ -246,9 +246,9 @@ void changeEditMenu(vector<Stock> &stockList)
         }
         clearConsole();
 
-        setColor("\033[0;36m");
+        setColor(Cyan);
         cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
-        setColor("\033[0m");
+        setColor(RESET);
 
         cout << "Do you wish to proceed? (y/n):";
         getline(cin, prompt);
@@ -291,12 +291,12 @@ void removeEditMenu(vector<Stock> &stockList)
             /*clearConsole();
             setColor("\033[1;33m");
             cout << "Removing from stock:\n";
-            setColor("\033[0m");
+            setColor(RESET);
 
             limh(81);
-            setColor("\033[1;36m");
+            setColor(CYAN);
             cout << "ID | Product Name           | Quantity | Cost eur" << endl;
-            setColor("\033[0m");
+            setColor(RESET);
             limh(81);
 
             for (Stock &item : stockList)
@@ -321,7 +321,7 @@ void removeEditMenu(vector<Stock> &stockList)
                 cout << item.toDisplay() << endl;
 
                 if (colorMarker != 0)
-                    setColor("\033[0m"); // resets color
+                    setColor(RESET); // resets color
             }*/
 
             limh(81);
@@ -343,9 +343,9 @@ void removeEditMenu(vector<Stock> &stockList)
         }
         clearConsole();
 
-        setColor("\033[0;36m");
+        setColor(Cyan);
         cout << "Removing product: " << item->getStockId() << "-" << item->getProductName() << endl;
-        setColor("\033[0m");
+        setColor(RESET);
         cout << "Do you wish to proceed? (y/n):";
         getline(cin, prompt);
         if (prompt != "y")
