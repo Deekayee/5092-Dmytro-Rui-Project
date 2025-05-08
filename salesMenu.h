@@ -10,6 +10,8 @@
 
 void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
 void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState);
-
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
 CartItem *findItemCart(vector<CartItem> &cart, Stock *item);
+void removeProductCart(vector<CartItem> &cart);
+void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList);
+void clearCart(vector<CartItem> &cart);
