@@ -292,20 +292,19 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
         pause();
         return;
     }
+    clearConsole();
+    cout << "Your cart:" << endl;
+    printCart(stockList, cart);
+    double total = 0;
+    for (const CartItem &cartItem : cart)
+    {
+        total += cartItem.getTotalItemSellValue();
+    }
+    cout << "Total: " << total << " eur" << endl;
     cout << "Continue? (y/n): ";
     getline(cin, input);
     if (stringToLower(input) == "y")
     {
-        clearConsole();
-        cout << "Your cart:" << endl;
-        printCart(stockList, cart);
-        double total = 0;
-        for (const CartItem &cartItem : cart)
-        {
-            total += cartItem.getTotalItemSellValue();
-        }
-        cout << "Total: " << total << " eur" << endl;
-        pause(); // give option to cancel around here
         double paymentAmount = getValidatedDouble("Insert payment amount: ");
         do
         {
@@ -313,8 +312,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
             {
                 cout << "Not enough money." << endl;
                 cout << "Do you want to try again? (y/n): ";
-                string input;
-                cin >> input;
+                getline(cin, input);
                 if (stringToLower(input) == "y")
                     paymentAmount = getValidatedDouble("Insert payment amount: ");
                 else
@@ -322,6 +320,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
             }
         } while (paymentAmount < total);
         Receipt receipt(cart, paymentAmount);
+        clearConsole();
         cout << receipt.toDisplay() << endl;
         pause();
     }
