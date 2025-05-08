@@ -33,12 +33,14 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             limh(81);
             cout << "3. Remove product from cart" << endl;
             limh(81);
-            cout << "4. Clear cart" << endl;
+            cout << "4. Checkout" << endl;
+            limh(81);
+            cout << "5. Clear cart" << endl;
             limh(81);
             if (menuState == 0)
-                cout << "5. View Cart" << endl;
+                cout << "6. View Cart" << endl;
             if (menuState == 1)
-                cout << "5. View Products" << endl;
+                cout << "6. View Products" << endl;
             limh;
             cout << "0. Go back" << endl;
             cout << "Option: ";
@@ -58,10 +60,12 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             removeProductCart(cart);
             break;
         case 4:
+            checkout(stockList, cart);
+            break;
+        case 5:
             clearCart(cart);
             break;
-
-        case 5:
+        case 6:
             menuState = !menuState; // flips menuState
             break;
 
@@ -277,4 +281,28 @@ void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
         else
             cout << "Product not found in cart." << endl;
     }
+}
+
+void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked initial version
+{
+    if (cart.size() == 0)
+    {
+        cout << "Cart is empty." << endl;
+        pause();
+        return;
+    }
+    clearConsole();
+    cout << "Your cart:" << endl;
+    printCart(stockList, cart);
+    double total = 0;
+    for (const CartItem &cartItem : cart)
+    {
+        total += cartItem.getTotalItemSellValue();
+    }
+    cout << "Total: " << total << " eur" << endl;
+    pause();
+    double paymentAmount = getValidatedDouble("Insert payment amount: ");
+    Receipt receipt(cart, paymentAmount);
+    cout << receipt.toString() << endl;
+    pause();
 }
