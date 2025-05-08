@@ -231,6 +231,7 @@ void clearCart(vector<CartItem> &cart)
 void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
 {
     int id = getValidatedInt("Insert product ID to change: ");
+    id = id - 1; // fixes index beeing off by one
     int quantity = getValidatedInt("Insert new quantity: ");
     if (quantity > stockList[id].getQuantity())
     {
