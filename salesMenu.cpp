@@ -44,8 +44,9 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
                 cout << "6. View Cart" << endl;
             if (menuState == 1)
                 cout << "6. View Products" << endl;
-            limh;
+            limh(81);
             cout << "0. Go back" << endl;
+            limh(81);
             cout << "Option: ";
 
             getline(cin, input);
@@ -57,10 +58,10 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             addProductCart(stockList, cart, menuState);
             break;
         case 2:
-            changeProductCart(cart, stockList);
+            changeProductCart(stockList, cart, menuState);
             break;
         case 3:
-            removeProductCart(cart);
+            removeProductCart(stockList, cart, menuState);
             break;
         case 4:
             checkout(stockList, cart);
@@ -208,12 +209,12 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
 {
     /*TO DO*/
     clearConsole();
-    setColor("\033[1,33m");
+    setColor(YELLOW);
     cout << "Your cart" << endl;
-    setColor("\033[0m");
+    setColor(RESET);
 
     limh(81);
-    setColor("\033[1;36m");
+    setColor(CYAN);
     cout << setw(2) << "ID" << " | "
          << setw(22) << left << "Product Name" << " | "
          << setw(8) << right << "Quantity" << " | "
@@ -221,7 +222,7 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
          << setw(8) << right << "Tax Rate" << "% |"
          << setw(11) << right << "Sale w/ Tax" << " eur |"
          << endl;
-    setColor("\033[0m");
+    setColor(RESET);
     limh(81);
 
     for (const CartItem &cartItem : cart)
@@ -232,8 +233,14 @@ void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
     limh(81);
 }
 
-void removeProductCart(vector<CartItem> &cart)
+void removeProductCart(vector <Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
+    clearConsole();
+    if (menuState == false)
+        printStock(stockList, "Products Menu:\n");
+    else
+        printCart(stockList, cart);
+
     int id = getValidatedInt("Insert product ID to remove: ");
 
     for (int i = 0; i < cart.size(); i++)
@@ -256,6 +263,13 @@ void clearCart(vector<CartItem> &cart)
 
 void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList)
 {
+    clearConsole();
+    if (menuState == false)
+        printStock(stockList, "Products Menu:\n");
+    else
+        printCart(stockList, cart);
+
+        //
     int id = getValidatedInt("Insert product ID to change: ");
     int quantity = getValidatedInt("Insert new quantity: ");
     const Stock *stockPtr = nullptr; // blank pointer to be used later
@@ -280,7 +294,7 @@ void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList)
 
         cout << "Do you want to buy " << stockPtr->getQuantity() << " instead? (y/n): ";
         string input;
-        cin >> input;
+        getline(cin, input);
         if (stringToLower(input) == "y")
             quantity = stockPtr->getQuantity();
         else
