@@ -446,6 +446,31 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
         return false;
 }
 
+bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
+{
+    Stock *item;
+    if (findPurchaseFromStock(stockList, item, id))
+    {
+        item->setQuantity(quantity);
+
+        updateFile(stockList);
+        return true;
+    }
+    else
+        return false;
+}
+
+Stock* findStockById(vector<Stock> &stockList, int stockId)
+{
+    for (Stock &stock : stockList)
+    {
+        if (stock.getStockId() == stockId)
+            return &stock;
+    }
+    return nullptr;
+}
+
+
 // searches for name and changes
 //  Will use to replace object in stockList vector
 //  uses item argument to search in stock for same !!!NAME!!!, and updates if found

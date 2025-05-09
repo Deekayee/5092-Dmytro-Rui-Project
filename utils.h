@@ -36,6 +36,8 @@ bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id);
 vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name);
 bool showSearchResults(vector<Stock> items);
 bool removePurchaseFromStock(vector<Stock> &stockList, int id);
+bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity);
+Stock* findStockById(vector<Stock> &stockList, int stockId);
 void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem);
 void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode);
 void printStock(const vector<Stock> &stockList, const string &title);
