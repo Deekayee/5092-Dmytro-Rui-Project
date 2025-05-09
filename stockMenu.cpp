@@ -186,9 +186,9 @@ void changeEditMenu(vector<Stock> &stockList)
     vector<int> idColor; // saves ids for marking when changed
     while (true)
     {
-        clearConsole();        
+        clearConsole();
         printStock(stockList, "Change Item Menu", idColor, Green);
-        
+
         string prompt;
         int id;
         cout << "Please enter the ID of the product you wish to change (Enter 0 to return)" << endl;

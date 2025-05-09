@@ -12,7 +12,7 @@
 void mainMenu(vector<Stock> &stockList);
 
 void stockMenu(vector<Stock> &stockList);
-    void editStockMenu(vector<Stock> &stockList);
-        void searchEditMenu(vector<Stock> &stockList);
-        void changeEditMenu(vector<Stock> &stockList);
-        void removeEditMenu(vector<Stock> &stockList);
+void editStockMenu(vector<Stock> &stockList);
+void searchEditMenu(vector<Stock> &stockList);
+void changeEditMenu(vector<Stock> &stockList);
+void removeEditMenu(vector<Stock> &stockList);

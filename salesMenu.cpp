@@ -192,7 +192,6 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
     }
 }
 
-
 CartItem *findItemCart(vector<CartItem> &cart, Stock *item)
 {
     for (CartItem &checker : cart)
@@ -232,7 +231,7 @@ void printCart(vector<CartItem> &cart) // TODO
     limh(81);
 }
 
-void removeProductCart(vector <Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void removeProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
     clearConsole();
     if (menuState == false)
@@ -260,7 +259,7 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart( const vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void changeProductCart(const vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
     clearConsole();
     if (menuState == false)
@@ -268,7 +267,7 @@ void changeProductCart( const vector<Stock> &stockList, vector<CartItem> &cart, 
     else
         printCart(cart);
 
-        //
+    //
     int id = getValidatedInt("Insert product ID to change: ");
     int quantity = getValidatedInt("Insert new quantity: ");
     const Stock *stockPtr = nullptr; // blank pointer to be used later

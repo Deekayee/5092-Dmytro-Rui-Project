@@ -19,7 +19,7 @@ void pause() // pause the console
 
 void limh(int n) // horizontal line with color
 {
-    cout << Magenta<< string(n, '-') << RESET << endl;
+    cout << Magenta << string(n, '-') << RESET << endl;
 }
 
 void clearConsole() // clear the console
@@ -256,7 +256,6 @@ void addPurchaseToStock(vector<Stock> &stockList)
     do
     {
         printStock(stockList, "Add Item Menu", idColor, "\033[0;32m");
-        
 
         Stock item;
         stringstream line;
@@ -460,7 +459,7 @@ bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
         return false;
 }
 
-Stock* findStockById(vector<Stock> &stockList, int stockId)
+Stock *findStockById(vector<Stock> &stockList, int stockId)
 {
     for (Stock &stock : stockList)
     {
@@ -469,7 +468,6 @@ Stock* findStockById(vector<Stock> &stockList, int stockId)
     }
     return nullptr;
 }
-
 
 // searches for name and changes
 //  Will use to replace object in stockList vector
@@ -491,23 +489,23 @@ void printStock(const vector<Stock> &stockList, const string &title)
     setColor("\033[1;33m");
     cout << title;
     setColor(RESET);
-    
+
     limh(nDashSale);
     setColor(CYAN);
     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
     setColor(RESET);
     limh(nDashSale);
-    
+
     for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
-        setColor("\033[1;31m"); // red for zero quantity
-        
+            setColor("\033[1;31m"); // red for zero quantity
+
         cout << item.toDisplay() << endl;
-        
+
         setColor(RESET); // resets color
     }
-    
+
     limh(nDashSale);
 }
 
@@ -517,28 +515,27 @@ void printStock(const vector<Stock> &stockList, const string &title, vector<int>
     setColor("\033[1;33m");
     cout << title;
     setColor(RESET);
-    
+
     limh(nDashSale);
     setColor(CYAN);
     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
     setColor(RESET);
     limh(nDashSale);
-    
+
     for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
-        setColor("\033[1;31m"); // red for zero quantity
+            setColor("\033[1;31m"); // red for zero quantity
         for (int id : idColor)
         {
             if (item.getStockId() == id)
-            setColor(colorCode);    // <color> for when item matches vector idColor
+                setColor(colorCode); // <color> for when item matches vector idColor
         }
-        
+
         cout << item.toDisplay() << endl;
-        
+
         setColor(RESET); // resets color
     }
-    
-    limh(nDashSale);
 
+    limh(nDashSale);
 }

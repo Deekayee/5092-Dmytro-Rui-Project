@@ -14,6 +14,4 @@ int main()
 
     // Main menu
     mainMenu(stockList);
-    
 }
-
