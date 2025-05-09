@@ -9,7 +9,7 @@ void mainMenu(vector<Stock> &stockList)
     bool run = true;
     int opt;
     string input;
-    vector <CartItem> cart;
+    vector<CartItem> cart;
     do
     {
         do
@@ -63,41 +63,44 @@ void stockMenu(vector<Stock> &stockList)
 
     do
     {
-        do
-        {
-            clearConsole();
-            setColor(Cyan);
-            cout << "Stock Menu" << endl;
-            setColor(RESET);
-            limh(81);
-            cout << "1. Show Stock" << endl;
-            limh(81);
-            cout << "2. Edit Stock" << endl;
-            limh(81);
-            cout << "3. Go Back" << endl;
-            limh(81);
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, productsOpt));
+        //added printstock here
+        clearConsole();
+        printStock(stockList,"Stock View");
+
+        setColor(Cyan);
+        cout << "Stock Menu" << endl;
+        setColor(RESET);
+        limh(81);
+        cout << "1. Show Stock" << endl;
+        limh(81);
+        cout << "2. Edit Stock" << endl;
+        limh(81);
+        cout << "3. Go Back" << endl;
+        limh(81);
+        cout << "Option: ";
+        getline(cin, input);
+        // changing from cycle to if statement
+        if (!validateMenuInput(input, productsOpt))
+            continue;   //if menu option doesnt check out, will repeat our functio, needed to more easily print stock
 
         switch (productsOpt)
-        {
-        case 1:
-            printStock(stockList, "Stock\n");
-            pause();
-            break;
-        case 2:
-            editStockMenu(stockList);
-            break;
+            {
+            case 1:
+                printStock(stockList, "Stock\n");
+                pause();
+                break;
+            case 2:
+                editStockMenu(stockList);
+                break;
 
-        case 3:
-            stockMenu = false;
-            break;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
+            case 3:
+                stockMenu = false;
+                break;
+            default:
+                cout << "Invalid input, try again." << endl;
+                pause();
+                break;
+            }
 
     } while (stockMenu);
 }
@@ -184,7 +187,7 @@ void searchEditMenu(vector<Stock> &stockList)
 }
 void changeEditMenu(vector<Stock> &stockList)
 {
-    vector <int> idColor;   // saves ids for marking when changed
+    vector<int> idColor; // saves ids for marking when changed
     while (true)
     {
         string prompt;
@@ -353,7 +356,7 @@ void removeEditMenu(vector<Stock> &stockList)
             continue;
         }
         limh(81);
-        
+
         Stock newItem;
         newItem.setStockId(item->getStockId());
         newItem.setProductName(item->getProductName());

@@ -17,8 +17,8 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             // Depending on the state of the menu
             // will print either the products in stock or in cart
             //   menuState:
-            //   0 -> Shows Products (default)
-            //   1 -> Shows Cart
+            //   false -> Shows Products (default)
+            //   true -> Shows Cart
             if (menuState == false)
                 // needs to print price for client, meaning, profit margin + maybe with tax
                 printStock(stockList, "Products Menu:\n");
@@ -187,6 +187,8 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
             return;
     }
 }
+
+
 CartItem *findItemCart(vector<CartItem> &cart, Stock *item)
 {
     for (CartItem &checker : cart)
