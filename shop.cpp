@@ -8,6 +8,9 @@ int main()
     vector<Stock> stockList;
     vector<CartItem> cart;
 
+    
+
+
     // Exit if data loading failed
     if (dataInit(stockList) != 0)
         return 1;

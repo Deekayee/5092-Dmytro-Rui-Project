@@ -10,6 +10,12 @@ void mainMenu(vector<Stock> &stockList)
     int opt;
     string input;
     vector<CartItem> cart;
+    // adding copy of stockList to shelf
+    vector<Stock> shelf = stockList;
+        // this will display items to user in specified order:
+    // -will not show unavailable STOCK items
+    // -will remove and add back items whenever user adds or removes items to cart
+    // -will be used to then update the stockList on checkout
     do
     {
         do
@@ -33,7 +39,7 @@ void mainMenu(vector<Stock> &stockList)
         {
         case 1:
             // show products, give an option to buy and checkout or cancel
-            salesMenu(stockList, cart);
+            salesMenu(stockList, shelf, cart);
             break;
         case 2:
             // show stock, give an option to add or remove and cancel

@@ -3,13 +3,14 @@
 using namespace std;
 
 // Sales Menu
-void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
+void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart)
 {
     bool menuState = false;
     string input;
     int opt;
     do
     {
+
         do
         {
             clearConsole();
@@ -21,7 +22,7 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             //   true -> Shows Cart
             if (menuState == false)
                 // needs to print price for client, meaning, profit margin + maybe with tax
-                printStock(stockList, "Products Menu:\n");
+                printStock(shelf, "Products Menu:\n");
             if (menuState == true)
                 printCart(cart);
 
@@ -52,7 +53,7 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
         switch (opt)
         {
         case 1:
-            addProductCart(stockList, cart, menuState);
+            addProductCart(stockList, shelf, cart, menuState);
             break;
         case 2:
             changeProductCart(stockList, cart, menuState);
@@ -88,17 +89,12 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 //  -update stock (but only on checkout, a later task)
 //  -check if stock is empty before adding the item and display appropriate output
 //  -a checkout option
-void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<CartItem> &cart, bool menuState)
 {
     /*TO DO*/
     while (true)
     {
-        // adding copy of stockList to shelf
-        vector <Stock> shelf = stockList;
-        // this will display items to user in specified order:
-        // -will not show unavailable STOCK items
-        // -will remove and add back items whenever user adds or removes items to cart
-        // -will be used to then update the stockList on checkout
+        
         // prints visible menu
         /********************************************************************** */
 
@@ -113,7 +109,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         /*********************************************************************** */
 
         // checks initial quantity in stock and its existence
-        Stock *item = findStock(stockList, id);
+        Stock *item = findStock(shelf, id);
         if (item == nullptr)
         {
 
@@ -125,32 +121,35 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         if (item->getQuantity() == 0)
         {
             cout << endl
-                 << "0 Stock Brotha ";
+                 << "Out of Stock. " << endl;
             pause();
             continue;
         }
         /*********************************************************************** */
+
         /*verify item quantity is valid*/
         // needs cycle to ensure cartitem is created, or function is exited
         int quantity = getValidatedInt("How many do you want good sir?: ");
         string input;
-        CartItem *bagged_item = findItemCart(cart, item->getStockId());
-        if (bagged_item != nullptr) // verify item existence in cart
-        {
-            // checking if bagged item quantity matches stock item quantity, if so, refuse to add
-            if (item->getQuantity() == bagged_item->getQuantity())
-            {
-                cout << endl
-                     << "0 Stock Brotha" // needs to match earlier cout for immersion efforts
-                     << "Try another ID" << endl;
-                pause();
-                continue;
-            }
 
-            // checking if bagged item quantity + input quantity doesn't exceed quantity in stock
-            if (item->getQuantity() >= quantity + bagged_item->getQuantity())
+        CartItem *bagged_item = findItemCart(cart, item->getStockId());
+        if (bagged_item != nullptr) // item exists in cart
+        {
+            // // checking if bagged item quantity matches stock item quantity, if so, refuse to add
+            // if (item->getQuantity() == bagged_item->getQuantity())
+            // {
+            //     cout << endl
+            //          << "0 Stock Brotha" // needs to match earlier cout for immersion efforts
+            //          << "Try another ID" << endl;
+            //     pause();
+            //     continue;
+            // }
+
+            // checking if input quantity doesn't exceed quantity in shelf
+            if (item->getQuantity() >= quantity)
             {
                 bagged_item->setQuantity(bagged_item->getQuantity() + quantity); // add the input quantity to existing quantity
+                item->setQuantity(item->getQuantity() - quantity);               // remove the input quantity from shelf
             }
             else // quantity exceeds, ask user if it should add all remaining quantity anyway
             {
@@ -162,6 +161,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
                 if (stringToLower(input) == "y")
                 {
                     bagged_item->setQuantity(item->getQuantity()); // if confirmed will add all existing stock items to cart
+                    item->setQuantity(0);                          // as we add to cart, we remove from shelf
                 }
             }
         }
@@ -172,6 +172,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
             {
                 CartItem newItemCart(*item, quantity); // create the new bagged item
                 cart.push_back(newItemCart);           // add the new bagged item the vector cart
+                item->setQuantity(item->getQuantity() - quantity);
             }
             else // if exceeds
             {
@@ -184,11 +185,12 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
                 {
                     CartItem newItemCart(*item, item->getQuantity()); // create the new bagged item
                     cart.push_back(newItemCart);                      // add the new bagged item the vector cart
+                    item->setQuantity(0);
                 }
             }
         }
 
-        //
+
         cout << "Cart Updated!" << endl;
         cout << "Continue? (y/n): ";
         getline(cin, input);
@@ -242,11 +244,11 @@ void printCart(vector<CartItem> &cart) // TODO
     limh(81);
 }
 
-void removeProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState)
 {
     clearConsole();
     if (menuState == false)
-        printStock(stockList, "Products Menu:\n");
+        printStock(shelf, "Products Menu:\n");
     else
         printCart(cart);
 
@@ -268,11 +270,11 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart(const vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void changeProductCart(const vector<Stock> &shelf, vector<CartItem> &cart, bool menuState)
 {
     clearConsole();
     if (menuState == false)
-        printStock(stockList, "Products Menu:\n");
+        printStock(shelf, "Products Menu:\n");
     else
         printCart(cart);
 
@@ -280,7 +282,7 @@ void changeProductCart(const vector<Stock> &stockList, vector<CartItem> &cart, b
     int id = getValidatedInt("Insert product ID to change: ");
     int quantity = getValidatedInt("Insert new quantity: ");
     const Stock *stockPtr = nullptr; // blank pointer to be used later
-    for (const auto &stock : stockList)
+    for (const auto &stock : shelf)
     {
         if (stock.getStockId() == id)
         {
