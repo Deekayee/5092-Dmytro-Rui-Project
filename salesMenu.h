@@ -13,6 +13,6 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
 void printCart(vector<Stock> &stockList, vector<CartItem> &cart); // TODO
 CartItem *findItemCart(vector<CartItem> &cart, Stock *item);
 void removeProductCart(vector<CartItem> &cart);
-void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList);
+void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList);
 void clearCart(vector<CartItem> &cart);
 void checkout(vector<Stock> &stockList, vector<CartItem> &cart);

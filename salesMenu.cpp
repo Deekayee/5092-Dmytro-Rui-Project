@@ -2,6 +2,9 @@
 
 using namespace std;
 
+#define underline "\033[4m"
+#define reset "\033[0m"
+
 // Sales Menu
 void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 {
@@ -251,36 +254,52 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart(vector<CartItem> &cart, vector<Stock> &stockList)
+void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList)
 {
     int id = getValidatedInt("Insert product ID to change: ");
-    id = id - 1; // fixes index beeing off by one
     int quantity = getValidatedInt("Insert new quantity: ");
-    if (quantity > stockList[id].getQuantity())
+    const Stock *stockPtr = nullptr; // blank pointer to be used later
+    for (const auto &stock : stockList)
+    {
+        if (stock.getStockId() == id)
+        {
+            stockPtr = &stock; // sets stockPtr to address of wanted stock thingy
+            break;
+        }
+    }
+    if (!stockPtr)
+    {
+        cout << "Product not found in stock." << endl;
+        pause();
+        return;
+    }
+    if (quantity > stockPtr->getQuantity())
     {
         cout << "Not enough stock." << endl;
-        cout << "Brother we only have " << stockList[id].getQuantity() << " in stock." << endl;
+        cout << "Brother we only have " << stockPtr->getQuantity() << " in stock." << endl;
 
-        cout << "Do you want to buy " << stockList[id].getQuantity() << " instead? (y/n): ";
+        cout << "Do you want to buy " << stockPtr->getQuantity() << " instead? (y/n): ";
         string input;
         cin >> input;
         if (stringToLower(input) == "y")
-            quantity = stockList[id].getQuantity();
+            quantity = stockPtr->getQuantity();
         else
             return;
     }
-    for (int i = 0; i < cart.size(); i++)
+    bool found = false;
+    for (CartItem &cartItem : cart)
     {
-        if (cart[i].getStockId() == id)
+        if (cartItem.getStockId() == id)
         {
-            cart[i].setQuantity(quantity);
+            cartItem.setQuantity(quantity);
             cout << "Product quantity changed." << endl;
-            pause();
+            found = true;
             break;
         }
-        else
-            cout << "Product not found in cart." << endl;
     }
+    if (!found)
+        cout << "Product not found in cart." << endl;
+    pause();
 }
 
 void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked initial version
@@ -301,16 +320,17 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
         total += cartItem.getTotalItemSellValue();
     }
     cout << "Total: " << total << " eur" << endl;
-    cout << "Continue? (y/n): ";
+    // cout << "Continue? (y/n): ";
+    cout << "Continue? (" << underline << "Y" << reset << "/n): ";
     getline(cin, input);
-    if (stringToLower(input) == "y")
+    if (stringToLower(input) == "y" || input.empty())
     {
         double paymentAmount = getValidatedDouble("Insert payment amount: ");
         do
         {
             if (paymentAmount < total)
             {
-                cout << "Not enough money." << endl;
+                cout << "Nice joke, that's not enough." << endl;
                 cout << "Do you want to try again? (y/n): ";
                 getline(cin, input);
                 if (stringToLower(input) == "y")
@@ -321,7 +341,18 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
         } while (paymentAmount < total);
         Receipt receipt(cart, paymentAmount);
         clearConsole();
-        cout << receipt.toDisplay() << endl;
+        cout << receipt.toDisplay();
+        for (const CartItem &cartItem : cart)
+        {
+            Stock *stockPtr = findStockById(stockList, cartItem.getStockId());
+            if (stockPtr)
+            {
+                int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
+                changeQuantityFromStock(stockList, cartItem.getStockId(), newQuantity);
+            }
+        }
+
+        cart.clear();
         pause();
     }
     else
