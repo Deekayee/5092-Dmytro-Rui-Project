@@ -29,6 +29,9 @@ using namespace std;
 //COLOR RESET
 #define RESET "\033[0m"
 
+//UNDERLINE
+#define underline "\033[4m"
+
 //CONSOLE UTILITY FUNCTIONS
 void pause();
 void limh(int n);

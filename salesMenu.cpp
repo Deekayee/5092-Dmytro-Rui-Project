@@ -2,9 +2,6 @@
 
 using namespace std;
 
-#define underline "\033[4m"
-#define reset "\033[0m"
-
 // Sales Menu
 void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 {
@@ -337,7 +334,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
     }
     cout << "Total: " << total << " eur" << endl;
     // cout << "Continue? (y/n): ";
-    cout << "Continue? (" << underline << "Y" << reset << "/n): ";
+    cout << "Continue? (" << underline << "Y" << RESET << "/n): ";
     getline(cin, input);
     if (stringToLower(input) == "y" || input.empty())
     {
