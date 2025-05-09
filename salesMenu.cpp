@@ -93,6 +93,12 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
     /*TO DO*/
     while (true)
     {
+        // adding copy of stockList to shelf
+        vector <Stock> shelf = stockList;
+        // this will display items to user in specified order:
+        // -will not show unavailable STOCK items
+        // -will remove and add back items whenever user adds or removes items to cart
+        // -will be used to then update the stockList on checkout
         // prints visible menu
         /********************************************************************** */
 
