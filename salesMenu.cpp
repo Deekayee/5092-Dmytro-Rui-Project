@@ -104,7 +104,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
 
         clearConsole();
         if (menuState == false)
-            printStock(stockList, "Products Menu:\n");
+            printStock(shelf, "Products Menu:\n");
         else
             printCart(cart);
 
