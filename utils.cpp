@@ -517,32 +517,3 @@ void printStock(const vector<Stock> &stockList, const string &title, vector<int>
     limh(nDashSale);
 
 }
-/*
-void printStock(const vector<Stock> &stockList)
-{
-    clearConsole();
-    setColor("\033[1;33m");
-    cout << "Stock:\n";
-    setColor(RESET);
-
-    limh(nDashSale);
-    setColor(CYAN);
-    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
-    setColor(RESET);
-    limh(nDashSale);
-
-    for (const Stock &item : stockList)
-    {
-        if (item.getQuantity() == 0)
-            setColor("\033[1;31m"); // red for zero quantity
-
-        cout << item.toDisplay() << endl;
-
-        if (item.getQuantity() == 0)
-            setColor(RESET); // resets color
-    }
-
-    limh(nDashSale);
-    pause();
-}
-    */
