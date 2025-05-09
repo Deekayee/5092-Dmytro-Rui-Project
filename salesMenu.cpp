@@ -107,8 +107,8 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         /*********************************************************************** */
 
         // checks initial quantity in stock and its existence
-        Stock *item = nullptr;
-        if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
+        Stock *item = findStock(stockList, id);
+        if ( item == nullptr)
         {
 
             cout << endl
@@ -356,7 +356,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
         cout << receipt.toDisplay();
         for (const CartItem &cartItem : cart)
         {
-            Stock *stockPtr = findStockById(stockList, cartItem.getStockId());
+            Stock *stockPtr = findStock(stockList, cartItem.getStockId());
             if (stockPtr)
             {
                 int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();

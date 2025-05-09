@@ -267,9 +267,9 @@ void addPurchaseToStock(vector<Stock> &stockList)
             return;
         item.setProductName(field);
 
-        Stock *findItem;
         string name = item.getProductName();
-        if (findPurchaseFromStock(stockList, findItem, name) && findItem != nullptr)
+        Stock *findItem = findStock(stockList, name);
+        if ( findItem != nullptr) //if product found
         {
             cout << endl
                  << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
@@ -290,7 +290,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
                 pause();
             }
         }
-        else
+        else //if not found
         {
             item.setStockId(Stock::getNextStockId());
             Stock::incrementStockId();
@@ -313,53 +313,40 @@ void addPurchaseToStock(vector<Stock> &stockList)
 // passes item by reference:
 // item --> item in vector
 // returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, int id)
+Stock *findStock(vector<Stock> &stockList, int stockId)
 {
-    // ID == vector index
-    item = nullptr;
-    if (stockList.empty())
+    for (Stock &stock : stockList)
     {
-        cout << "Stock is empty!" << endl;
-        return false;
+        if (stock.getStockId() == stockId)
+            return &stock;
     }
-    if (id > stockList.size())
-    {
-        cout << "No matching ID in stock" << endl;
-        return false;
-    }
-    item = &stockList.at(id - 1); // copies address of corresponding <Stock> object to <Stock> pointer item
-
-    return true;
+    return nullptr;
 }
 
 // OVERLOADED
 // finds product in vector by name
-// passes item by reference:
+// returns item address in stock:
 // item --> item in vector
-// returns true if found, false if not found
-bool findPurchaseFromStock(vector<Stock> &stockList, Stock *&item, const string &name)
+// returns nullptr if not found
+Stock *findStock(vector<Stock> &stockList, const string &name)
 {
-    item = nullptr;
     if (stockList.empty())
     {
-        return false;
+        return nullptr;
     }
     // Read the stockList vector and search for the item by name
     string tolowerName = stringToLower(name);
 
-    //  problem -> for cycle was copying the value of the found item to <findItem>, instead of copying the reference
-    //  to avoid this, we cycle through items in stock using references, thus not making any copies, using the correct value
     for (Stock &findItem : stockList)
     {
         //  checking if any item matches argument name
         string tolowerProduct = stringToLower(findItem.getProductName());
         if (tolowerProduct == tolowerName)
         {
-            item = &findItem; // copies address of corresponding <Stock> object to <Stock> pointer item
-            return true;
+            return &findItem; // returns address of corresponding <Stock> object storing it in a pointer
         }
     }
-    return false;
+    return nullptr;
 }
 
 //  not asked for, just sorta useful
@@ -428,13 +415,13 @@ bool showSearchResults(vector<Stock> items)
         return false;
 }
 
-//  Will use to delete a deleteNo from an item, (setQuantity to 0) in stockList vector
+//  Will use to delete an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
 //  updates file
 bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 {
-    Stock *item;
-    if (findPurchaseFromStock(stockList, item, id))
+    Stock *item = findStock(stockList, id);
+    if (item != nullptr)
     {
         item->setQuantity(0);
 
@@ -447,8 +434,8 @@ bool removePurchaseFromStock(vector<Stock> &stockList, int id)
 
 bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
 {
-    Stock *item;
-    if (findPurchaseFromStock(stockList, item, id))
+    Stock *item = findStock(stockList, id);
+    if (item != nullptr)
     {
         item->setQuantity(quantity);
 
@@ -459,15 +446,6 @@ bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
         return false;
 }
 
-Stock *findStockById(vector<Stock> &stockList, int stockId)
-{
-    for (Stock &stock : stockList)
-    {
-        if (stock.getStockId() == stockId)
-            return &stock;
-    }
-    return nullptr;
-}
 
 // searches for name and changes
 //  Will use to replace object in stockList vector

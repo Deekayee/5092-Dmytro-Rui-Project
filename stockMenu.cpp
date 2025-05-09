@@ -132,7 +132,7 @@ void editStockMenu(vector<Stock> &stockList)
         limh(81);
         cout << "Option: ";
         getline(cin, input);
-        if (validateMenuInput(input, opt))
+        if (!validateMenuInput(input, opt))
             continue;
 
         switch (opt)
@@ -201,8 +201,8 @@ void changeEditMenu(vector<Stock> &stockList)
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item;
-        if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
+        Stock* item = findStock(stockList, id);
+        if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
             pause();
@@ -265,8 +265,8 @@ void removeEditMenu(vector<Stock> &stockList)
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item;
-        if (!findPurchaseFromStock(stockList, item, id) || item == nullptr)
+        Stock *item = findStock(stockList, id);
+        if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
             pause();
