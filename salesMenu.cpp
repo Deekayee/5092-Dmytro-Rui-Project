@@ -2,6 +2,9 @@
 
 using namespace std;
 
+#define underline "\033[4m"
+#define reset "\033[0m"
+
 // Sales Menu
 void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
 {
@@ -33,12 +36,14 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             limh(81);
             cout << "3. Remove product from cart" << endl;
             limh(81);
-            cout << "4. Clear cart" << endl;
+            cout << "4. Checkout" << endl;
+            limh(81);
+            cout << "5. Clear cart" << endl;
             limh(81);
             if (menuState == 0)
-                cout << "5. View Cart" << endl;
+                cout << "6. View Cart" << endl;
             if (menuState == 1)
-                cout << "5. View Products" << endl;
+                cout << "6. View Products" << endl;
             limh(81);
             cout << "0. Go back" << endl;
             limh(81);
@@ -59,10 +64,12 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
             removeProductCart(stockList, cart, menuState);
             break;
         case 4:
+            checkout(stockList, cart);
+            break;
+        case 5:
             clearCart(cart);
             break;
-
-        case 5:
+        case 6:
             menuState = !menuState; // flips menuState
             break;
 
@@ -254,7 +261,7 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart( vector <Stock> &stockList, vector<CartItem> &cart, bool menuState)
+void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList)
 {
     clearConsole();
     if (menuState == false)
@@ -265,33 +272,103 @@ void changeProductCart( vector <Stock> &stockList, vector<CartItem> &cart, bool 
         //
     int id = getValidatedInt("Insert product ID to change: ");
     int quantity = getValidatedInt("Insert new quantity: ");
-    if (quantity > stockList.at(id-1).getQuantity())
+    const Stock *stockPtr = nullptr; // blank pointer to be used later
+    for (const auto &stock : stockList)
+    {
+        if (stock.getStockId() == id)
+        {
+            stockPtr = &stock; // sets stockPtr to address of wanted stock thingy
+            break;
+        }
+    }
+    if (!stockPtr)
+    {
+        cout << "Product not found in stock." << endl;
+        pause();
+        return;
+    }
+    if (quantity > stockPtr->getQuantity())
     {
         cout << "Not enough stock." << endl;
-        cout << "Brother we only have " << stockList[id].getQuantity() << " in stock." << endl;
+        cout << "Brother we only have " << stockPtr->getQuantity() << " in stock." << endl;
 
-        cout << "Do you want to buy " << stockList[id].getQuantity() << " instead? (y/n): ";
+        cout << "Do you want to buy " << stockPtr->getQuantity() << " instead? (y/n): ";
         string input;
         getline(cin, input);
         if (stringToLower(input) == "y")
-            quantity = stockList[id].getQuantity();
+            quantity = stockPtr->getQuantity();
         else
             return;
     }
-    for (int i = 0; i < cart.size(); i++)
+    bool found = false;
+    for (CartItem &cartItem : cart)
     {
-        if (cart[i].getStockId() == id)
+        if (cartItem.getStockId() == id)
         {
-            cart[i].setQuantity(quantity);
+            cartItem.setQuantity(quantity);
             cout << "Product quantity changed." << endl;
-            pause();
+            found = true;
             break;
         }
-        else
+    }
+    if (!found)
+        cout << "Product not found in cart." << endl;
+    pause();
+}
+
+void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked initial version
+{
+    string input;
+    if (cart.size() == 0)
+    {
+        cout << "Cart is empty." << endl;
+        pause();
+        return;
+    }
+    clearConsole();
+    cout << "Your cart:" << endl;
+    printCart(stockList, cart);
+    double total = 0;
+    for (const CartItem &cartItem : cart)
+    {
+        total += cartItem.getTotalItemSellValue();
+    }
+    cout << "Total: " << total << " eur" << endl;
+    // cout << "Continue? (y/n): ";
+    cout << "Continue? (" << underline << "Y" << reset << "/n): ";
+    getline(cin, input);
+    if (stringToLower(input) == "y" || input.empty())
+    {
+        double paymentAmount = getValidatedDouble("Insert payment amount: ");
+        do
         {
-            cout << "Product not found in cart." << endl;
-            pause();
+            if (paymentAmount < total)
+            {
+                cout << "Nice joke, that's not enough." << endl;
+                cout << "Do you want to try again? (y/n): ";
+                getline(cin, input);
+                if (stringToLower(input) == "y")
+                    paymentAmount = getValidatedDouble("Insert payment amount: ");
+                else
+                    return;
+            }
+        } while (paymentAmount < total);
+        Receipt receipt(cart, paymentAmount);
+        clearConsole();
+        cout << receipt.toDisplay();
+        for (const CartItem &cartItem : cart)
+        {
+            Stock *stockPtr = findStockById(stockList, cartItem.getStockId());
+            if (stockPtr)
+            {
+                int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
+                changeQuantityFromStock(stockList, cartItem.getStockId(), newQuantity);
+            }
         }
 
+        cart.clear();
+        pause();
     }
+    else
+        return;
 }

@@ -83,8 +83,6 @@ public:
         getline(ss, field);
         costValue = stod(field);
     }
-
-    
 };
 
 class CartItem
@@ -237,20 +235,41 @@ public:
     }
 
     // Returns a string representation of the receipt, including its ID, client ID, payment amount, date, items and total cost and change.
-    string toString() const
+    string toDisplay() const
     {
         stringstream ss;
+        ss << "Receipt: " << endl;
+        ss << string(80, '-') << endl;
         ss << "Receipt ID: " << receiptId << endl;
         ss << "Client ID: " << clientId << endl;
-        ss << "Payment Amount: eur" << fixed << setprecision(2) << paymentAmount << endl;
         ss << "Date: " << date << endl;
-        ss << "Items:" << endl;
-        for (auto &item : items)
+        ss << "Items: " << endl;
+
+        ss << string(80, '-') << endl;
+
+        // Add table header
+        ss << setw(2) << "ID" << " | "
+           << setw(22) << left << "Product Name" << " | "
+           << setw(8) << right << "Qty" << " | "
+           << "Price   |"
+           << "Tax % |"
+           << "Total  |" << endl;
+
+        // Divider
+        ss << string(80, '-') << endl;
+
+        // List each item
+        for (const auto &item : items)
         {
-            ss << item.toString() << endl;
+            ss << item.toDisplay() << endl;
         }
-        ss << "Total Cost: eur" << fixed << setprecision(2) << getTotalCost() << endl;
-        ss << "Change: eur" << fixed << setprecision(2) << getChange() << endl;
+
+        // Divider and totals
+        ss << string(80, '-') << endl;
+        ss << "Total Cost:     " << fixed << setprecision(2) << getTotalCost() << " eur" << endl;
+        ss << "Payment Amount: " << fixed << setprecision(2) << paymentAmount << " eur" << endl;
+        ss << "Change:         " << fixed << setprecision(2) << getChange() << " eur" << endl;
+
         return ss.str();
     }
 
