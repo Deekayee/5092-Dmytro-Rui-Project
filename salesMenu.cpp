@@ -26,7 +26,7 @@ void salesMenu(vector<Stock> &stockList, vector<CartItem> &cart)
                 // needs to print price for client, meaning, profit margin + maybe with tax
                 printStock(stockList, "Products Menu:\n");
             if (menuState == true)
-                printCart(stockList, cart);
+                printCart(cart);
 
             cout << "Options:" << endl;
             limh(81);
@@ -103,7 +103,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         if (menuState == false)
             printStock(stockList, "Products Menu:\n");
         else
-            printCart(stockList, cart);
+            printCart(cart);
 
         int id = getValidatedInt("Insert product ID to add to cart: ");
 
@@ -207,7 +207,7 @@ CartItem *findItemCart(vector<CartItem> &cart, Stock *item)
 }
 
 // Prints items in cart similar to printStock()
-void printCart(vector<Stock> &stockList, vector<CartItem> &cart) // TODO
+void printCart(vector<CartItem> &cart) // TODO
 {
     /*TO DO*/
     clearConsole();
@@ -241,7 +241,7 @@ void removeProductCart(vector <Stock> &stockList, vector<CartItem> &cart, bool m
     if (menuState == false)
         printStock(stockList, "Products Menu:\n");
     else
-        printCart(stockList, cart);
+        printCart(cart);
 
     int id = getValidatedInt("Insert product ID to remove: ");
 
@@ -263,13 +263,13 @@ void clearCart(vector<CartItem> &cart)
     cout << "Cart cleared." << endl;
 }
 
-void changeProductCart(vector<CartItem> &cart, const vector<Stock> &stockList)
+void changeProductCart( const vector<Stock> &stockList, vector<CartItem> &cart, bool menuState)
 {
     clearConsole();
     if (menuState == false)
         printStock(stockList, "Products Menu:\n");
     else
-        printCart(stockList, cart);
+        printCart(cart);
 
         //
     int id = getValidatedInt("Insert product ID to change: ");
@@ -329,7 +329,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
     }
     clearConsole();
     cout << "Your cart:" << endl;
-    printCart(stockList, cart);
+    printCart(cart);
     double total = 0;
     for (const CartItem &cartItem : cart)
     {
