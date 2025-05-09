@@ -108,7 +108,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
 
         // checks initial quantity in stock and its existence
         Stock *item = findStock(stockList, id);
-        if ( item == nullptr)
+        if (item == nullptr)
         {
 
             cout << endl
@@ -128,7 +128,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
         // needs cycle to ensure cartitem is created, or function is exited
         int quantity = getValidatedInt("How many do you want good sir?: ");
         string input;
-        CartItem *bagged_item = findItemCart(cart, item);
+        CartItem *bagged_item = findItemCart(cart, item->getStockId());
         if (bagged_item != nullptr) // verify item existence in cart
         {
             // checking if bagged item quantity matches stock item quantity, if so, refuse to add
@@ -140,6 +140,7 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
                 pause();
                 continue;
             }
+
             // checking if bagged item quantity + input quantity doesn't exceed quantity in stock
             if (item->getQuantity() >= quantity + bagged_item->getQuantity())
             {
@@ -192,12 +193,16 @@ void addProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool menuS
     }
 }
 
-CartItem *findItemCart(vector<CartItem> &cart, Stock *item)
+CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
 {
-    for (CartItem &checker : cart)
+    for (int i = 0; i < cart.size(); i++)
     {
-        if (checker.getStockId() == item->getStockId())
-            return &checker;
+        if (cart.at(i).getStockId() == id)
+        {
+            if (index != nullptr)
+                *index = i;
+            return &cart.at(i); // finds and returns reference to item
+        }
     }
     return nullptr;
 }
@@ -241,15 +246,13 @@ void removeProductCart(vector<Stock> &stockList, vector<CartItem> &cart, bool me
 
     int id = getValidatedInt("Insert product ID to remove: ");
 
-    for (int i = 0; i < cart.size(); i++)
+    int index;
+    CartItem *bagged_item = findItemCart(cart, id, &index);
+    if (bagged_item != nullptr)
     {
-        if (cart[i].getStockId() == id)
-        {
-            cart.erase(cart.begin() + i);
-            cout << "Product removed from cart." << endl;
-            pause();
-            break;
-        }
+        cart.erase(cart.begin() + index);
+        cout << "Product removed from cart." << endl;
+        pause();
     }
 }
 
