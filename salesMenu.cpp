@@ -53,13 +53,13 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
         switch (opt)
         {
         case 1:
-            addProductCart(stockList, shelf, cart, menuState);
+            addProductCart(shelf, cart, menuState);
             break;
         case 2:
-            changeProductCart(stockList, cart, menuState);
+            changeProductCart(shelf, cart, menuState);
             break;
         case 3:
-            removeProductCart(stockList, cart, menuState);
+            removeProductCart(shelf, cart, menuState);
             break;
         case 4:
             checkout(stockList, cart);
@@ -83,20 +83,62 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
     } while (true);
 }
 
+CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
+{
+    for (int i = 0; i < cart.size(); i++)
+    {
+        if (cart.at(i).getStockId() == id)
+        {
+            if (index != nullptr)
+                *index = i;
+            return &cart.at(i); // finds and returns reference to item
+        }
+    }
+    return nullptr;
+}
+
+// Prints items in cart similar to printStock()
+void printCart(vector<CartItem> &cart) // TODO
+{
+    /*TO DO*/
+    clearConsole();
+    setColor(YELLOW);
+    cout << "Your cart" << endl;
+    setColor(RESET);
+
+    limh(81);
+    setColor(CYAN);
+    cout << setw(2) << "ID" << " | "
+         << setw(22) << left << "Product Name" << " | "
+         << setw(8) << right << "Quantity" << " | "
+         << setw(10) << right << "Sale Value" << " eur |"
+         << setw(8) << right << "Tax Rate" << "% |"
+         << setw(11) << right << "Sale w/ Tax" << " eur |"
+         << endl;
+    setColor(RESET);
+    limh(81);
+
+    for (const CartItem &cartItem : cart)
+    {
+        cout << cartItem.toDisplay() << endl;
+    }
+
+    limh(81);
+}
+
 // Adds items to Cart similar to addPurchaseToStock()
 // adding items works, it checks for a valid quantity and never adds more than what stock can take, except for that it doesnt update stock yet
 // to dos:
 //  -update stock (but only on checkout, a later task)
 //  -check if stock is empty before adding the item and display appropriate output
 //  -a checkout option
-void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<CartItem> &cart, bool menuState)
+void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState)
 {
     /*TO DO*/
     while (true)
     {
-        
+
         // prints visible menu
-        /********************************************************************** */
 
         clearConsole();
         if (menuState == false)
@@ -105,8 +147,6 @@ void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<Cart
             printCart(cart);
 
         int id = getValidatedInt("Insert product ID to add to cart: ");
-
-        /*********************************************************************** */
 
         // checks initial quantity in stock and its existence
         Stock *item = findStock(shelf, id);
@@ -125,7 +165,6 @@ void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<Cart
             pause();
             continue;
         }
-        /*********************************************************************** */
 
         /*verify item quantity is valid*/
         // needs cycle to ensure cartitem is created, or function is exited
@@ -135,15 +174,6 @@ void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<Cart
         CartItem *bagged_item = findItemCart(cart, item->getStockId());
         if (bagged_item != nullptr) // item exists in cart
         {
-            // // checking if bagged item quantity matches stock item quantity, if so, refuse to add
-            // if (item->getQuantity() == bagged_item->getQuantity())
-            // {
-            //     cout << endl
-            //          << "0 Stock Brotha" // needs to match earlier cout for immersion efforts
-            //          << "Try another ID" << endl;
-            //     pause();
-            //     continue;
-            // }
 
             // checking if input quantity doesn't exceed quantity in shelf
             if (item->getQuantity() >= quantity)
@@ -190,7 +220,6 @@ void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<Cart
             }
         }
 
-
         cout << "Cart Updated!" << endl;
         cout << "Continue? (y/n): ";
         getline(cin, input);
@@ -201,66 +230,48 @@ void addProductCart(vector<Stock> &stockList, vector <Stock> &shelf, vector<Cart
     }
 }
 
-CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
-{
-    for (int i = 0; i < cart.size(); i++)
-    {
-        if (cart.at(i).getStockId() == id)
-        {
-            if (index != nullptr)
-                *index = i;
-            return &cart.at(i); // finds and returns reference to item
-        }
-    }
-    return nullptr;
-}
-
-// Prints items in cart similar to printStock()
-void printCart(vector<CartItem> &cart) // TODO
-{
-    /*TO DO*/
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Your cart" << endl;
-    setColor(RESET);
-
-    limh(81);
-    setColor(CYAN);
-    cout << setw(2) << "ID" << " | "
-         << setw(22) << left << "Product Name" << " | "
-         << setw(8) << right << "Quantity" << " | "
-         << setw(10) << right << "Sale Value" << " eur |"
-         << setw(8) << right << "Tax Rate" << "% |"
-         << setw(11) << right << "Sale w/ Tax" << " eur |"
-         << endl;
-    setColor(RESET);
-    limh(81);
-
-    for (const CartItem &cartItem : cart)
-    {
-        cout << cartItem.toDisplay() << endl;
-    }
-
-    limh(81);
-}
-
 void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState)
 {
-    clearConsole();
-    if (menuState == false)
-        printStock(shelf, "Products Menu:\n");
-    else
-        printCart(cart);
-
-    int id = getValidatedInt("Insert product ID to remove: ");
-
-    int index;
-    CartItem *bagged_item = findItemCart(cart, id, &index);
-    if (bagged_item != nullptr)
+    while (true)
     {
-        cart.erase(cart.begin() + index);
-        cout << "Product removed from cart." << endl;
-        pause();
+        clearConsole();
+
+        if (menuState == false)
+            printStock(shelf, "Products Menu:\n");
+        else
+            printCart(cart);
+        int id = getValidatedInt("Insert product ID to remove: ");
+
+        int index;
+        CartItem *bagged_item = findItemCart(cart, id, &index);
+        Stock *item = findStock(shelf, id);
+
+        string input;
+        if (bagged_item != nullptr)
+        {
+            cart.erase(cart.begin() + index);
+            item->setQuantity(item->getQuantity()+bagged_item->getQuantity());
+
+            cout << "Product removed from cart." << endl
+                 << "Do you wish to continue removing ? (y/n): ";
+
+            getline(cin, input);
+            if (stringToLower(input) != "y" && !input.empty())
+            {
+                break;
+            }
+        }
+        else
+        {
+            cout << "Item not found." << endl
+                 << "Do you wish to continue removing? (y/n): "; // assumes 'y' as default
+
+            getline(cin, input);
+            if (stringToLower(input) != "y" && !input.empty())
+            {
+                break;
+            }
+        }
     }
 }
 
