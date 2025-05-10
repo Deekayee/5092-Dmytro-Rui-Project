@@ -14,7 +14,7 @@ CartItem *findItemCart(vector<CartItem> &cart, int id, int *index = nullptr);
 
 void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
 void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
-void changeProductCart(const vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
-void clearCart(vector<CartItem> &cart);
+void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
+void clearCart(vector<Stock> &shelf, vector<CartItem> &cart);
 
 void checkout(vector<Stock> &stockList, vector<CartItem> &cart);
