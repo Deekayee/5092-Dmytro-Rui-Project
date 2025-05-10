@@ -333,14 +333,14 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
                 item->setQuantity(item_quantity - quantity);
             }
             cout << "Product quantity changed." << endl;
-            if (!promptyesOrNO("Do you want to continue adjusting? (y/n): "))
+            if (!promptyesOrNO("Do you want to continue adjusting?: "))
                 return;
         }
         else // if it doesn't exist in cart, refuse to update
         {
             string input;
             cout << "Product not found in cart. Please select a valid ID" << endl;
-            if (!promptyesOrNO("Do you want to continue adjusting? (y/n): "))
+            if (!promptyesOrNO("Do you want to continue adjusting?: "))
                 return;
         }
     }
