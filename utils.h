@@ -12,30 +12,35 @@
 using namespace std;
 
 // COLOR DEFINES
-#define Red "\033[0;31m"
-#define Green "\033[0;32m"
-#define Yellow "\033[0;33m"
-#define Blue "\033[0;34m"
-#define Magenta "\033[0;35m"
-#define Cyan "\033[0;36m"
+#define Red         "\033[0;31m"
+#define Green       "\033[0;32m"
+#define Yellow      "\033[0;33m"
+#define Blue        "\033[0;34m"
+#define Magenta     "\033[0;35m"
+#define Cyan        "\033[0;36m"
 
 // COLOR DEFINES - Bright Variant
-#define RED "\033[1;31m"
-#define GREEN "\033[1;32m"
-#define YELLOW "\033[1;33m"
-#define BLUE "\033[1;34m"
-#define MAGENTA "\033[1;35m"
-#define CYAN "\033[1;36m"
+#define RED         "\033[1;31m"
+#define GREEN       "\033[1;32m"
+#define YELLOW      "\033[1;33m"
+#define BLUE        "\033[1;34m"
+#define MAGENTA     "\033[1;35m"
+#define CYAN        "\033[1;36m"
 
 // COLOR RESET
-#define RESET "\033[0m"
+#define RESET       "\033[0m"
 
 // UNDERLINE
-#define underline "\033[4m"
+#define UNDERLINE   "\033[4m"
+//---------------------------------------------------------------------------------
+//-----------------------------------------------------------------------
+#define STOCK_DASH   71
+#define MENU_DASH    81
+#define SALES_DASH   30
 
 // CONSOLE UTILITY FUNCTIONS
 void pause();
-void limh(int n);
+void limh(int n = MENU_DASH);
 void clearConsole();
 void setColor(const string &colorCode);
 
@@ -44,6 +49,8 @@ bool validateMenuInput(const string &input, int &opt);
 int getValidatedInt(const string &prompt);
 double getValidatedDouble(const string &prompt);
 string stringToLower(string name);
+bool YESOrNo(string prompt = "Do you wish to continue?");
+bool yesOrNO(string prompt = "Do you wish to continue?");
 
 // FILE FUNCTIONS
 void writeToFile(string filename, const string &line);

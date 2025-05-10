@@ -12,10 +12,7 @@ void mainMenu(vector<Stock> &stockList)
     vector<CartItem> cart;
     // adding copy of stockList to shelf
     vector<Stock> shelf = stockList;
-        // this will display items to user in specified order:
-    // -will not show unavailable STOCK items
-    // -will remove and add back items whenever user adds or removes items to cart
-    // -will be used to then update the stockList on checkout
+    // this will display items to user in specified order:
     do
     {
         do
@@ -24,13 +21,13 @@ void mainMenu(vector<Stock> &stockList)
             setColor(Cyan);
             cout << "Shop menu" << endl;
             setColor(RESET);
-            limh(81);
+            limh(MENU_DASH);
             cout << "1. Shop Sales" << endl;
-            limh(81);
+            limh(MENU_DASH);
             cout << "2. Shop Stock" << endl;
-            limh(81);
+            limh(MENU_DASH);
             cout << "3. Exit" << endl;
-            limh(81);
+            limh(MENU_DASH);
             cout << "Option: ";
             getline(cin, input);
         } while (!validateMenuInput(input, opt));
@@ -42,8 +39,8 @@ void mainMenu(vector<Stock> &stockList)
             salesMenu(stockList, shelf, cart);
             break;
         case 2:
-            // show stock, give an option to add or remove and cancel
-            stockMenu(stockList);
+            // show stock, give an option to add or remove and cancel, among some other bonus features
+            editStockMenu(stockList);
             break;
         case 3:
             // exit
@@ -57,58 +54,6 @@ void mainMenu(vector<Stock> &stockList)
             break;
         }
     } while (run);
-}
-
-// Stock Menu
-// show stock, give an option to add or remove and cancel
-void stockMenu(vector<Stock> &stockList)
-{
-    bool stockMenu = true;
-    string input;
-    int productsOpt;
-
-    do
-    {
-        // added printstock here
-        clearConsole();
-        printStock(stockList, "Stock View");
-
-        setColor(Cyan);
-        cout << "Stock Menu" << endl;
-        setColor(RESET);
-        limh(81);
-        cout << "1. Show Stock" << endl;
-        limh(81);
-        cout << "2. Edit Stock" << endl;
-        limh(81);
-        cout << "3. Go Back" << endl;
-        limh(81);
-        cout << "Option: ";
-        getline(cin, input);
-        // changing from cycle to if statement
-        if (!validateMenuInput(input, productsOpt))
-            continue; // if menu option doesnt check out, will repeat our functio, needed to more easily print stock
-
-        switch (productsOpt)
-        {
-        case 1:
-            printStock(stockList, "Stock\n");
-            pause();
-            break;
-        case 2:
-            editStockMenu(stockList);
-            break;
-
-        case 3:
-            stockMenu = false;
-            break;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-
-    } while (stockMenu);
 }
 
 //  In charge of Adding, Changing, Removing and Searching in stock (search is for fun!)
@@ -125,17 +70,17 @@ void editStockMenu(vector<Stock> &stockList)
         setColor(Cyan);
         cout << "Stock Editing Menu" << endl;
         setColor(RESET);
-        limh(81);
+        limh(MENU_DASH);
         cout << "1. Search Stock" << endl;
-        limh(81);
+        limh(MENU_DASH);
         cout << "2. Add purchase to Stock" << endl;
-        limh(81);
+        limh(MENU_DASH);
         cout << "3. Change purchase from Stock" << endl;
-        limh(81);
+        limh(MENU_DASH);
         cout << "4. Remove purchase from Stock" << endl;
-        limh(81);
-        cout << "5. Go Back" << endl;
-        limh(81);
+        limh(MENU_DASH);
+        cout << "0. Go Back" << endl;
+        limh(MENU_DASH);
         cout << "Option: ";
         getline(cin, input);
         if (!validateMenuInput(input, opt))
@@ -155,7 +100,7 @@ void editStockMenu(vector<Stock> &stockList)
         case 4:
             removeEditMenu(stockList);
             break;
-        case 5:
+        case 0:
             editMenu = false;
             break;
         default:
@@ -178,7 +123,7 @@ void searchEditMenu(vector<Stock> &stockList)
         setColor(Cyan);
         cout << "Stock Search Menu" << endl;
         setColor(RESET);
-        limh(81);
+        limh(MENU_DASH);
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
         getline(cin, name);
@@ -207,7 +152,7 @@ void changeEditMenu(vector<Stock> &stockList)
         if (id <= 0) // go back in menu
             return;
 
-        Stock* item = findStock(stockList, id);
+        Stock *item = findStock(stockList, id);
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
@@ -222,13 +167,13 @@ void changeEditMenu(vector<Stock> &stockList)
         setColor(RESET);
         limh(86);
 
-        cout << "Do you wish to proceed? (y/n):";
+        cout << "Do you wish to proceed? (" << UNDERLINE << "y" << RESET << endl;
         getline(cin, prompt);
         if (prompt != "y")
         {
             continue;
         }
-        limh(81);
+        limh(MENU_DASH);
 
         stringstream itemString;
         itemString << item->getStockId() << ",";
@@ -261,7 +206,7 @@ void removeEditMenu(vector<Stock> &stockList)
         {
             printStock(stockList, "Remove Item Menu", idColor, Yellow);
 
-            limh(81);
+            limh(MENU_DASH);
 
             cout << "Please enter the ID of the product you wish to remove (Enter 0 to return)" << endl;
             cout << "ID: ";
@@ -289,7 +234,7 @@ void removeEditMenu(vector<Stock> &stockList)
         {
             continue;
         }
-        limh(81);
+        limh(MENU_DASH);
 
         Stock newItem;
         newItem.setStockId(item->getStockId());
@@ -305,3 +250,55 @@ void removeEditMenu(vector<Stock> &stockList)
             return;
     }
 }
+
+// Stock Menu
+// show stock, give an option to add or remove and cancel
+// void stockMenu(vector<Stock> &stockList)
+// {
+//     bool stockMenu = true;
+//     string input;
+//     int productsOpt;
+
+//     do
+//     {
+//         // added printstock here
+//         clearConsole();
+//         printStock(stockList, "Stock View");
+
+//         setColor(Cyan);
+//         cout << "Stock Menu" << endl;
+//         setColor(RESET);
+//         limh(MENU_DASH);
+//         cout << "1. Show Stock" << endl;
+//         limh(MENU_DASH);
+//         cout << "2. Edit Stock" << endl;
+//         limh(MENU_DASH);
+//         cout << "3. Go Back" << endl;
+//         limh(MENU_DASH);
+//         cout << "Option: ";
+//         getline(cin, input);
+//         // changing from cycle to if statement
+//         if (!validateMenuInput(input, productsOpt))
+//             continue; // if menu option doesnt check out, will repeat our functio, needed to more easily print stock
+
+//         switch (productsOpt)
+//         {
+//         case 1:
+//             printStock(stockList, "Stock\n");
+//             pause();
+//             break;
+//         case 2:
+//             editStockMenu(stockList);
+//             break;
+
+//         case 3:
+//             stockMenu = false;
+//             break;
+//         default:
+//             cout << "Invalid input, try again." << endl;
+//             pause();
+//             break;
+//         }
+
+//     } while (stockMenu);
+// }
