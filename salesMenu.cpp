@@ -1,5 +1,4 @@
 #include "salesMenu.h"
-
 using namespace std;
 
 // Sales Menu
@@ -62,7 +61,7 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             removeProductCart(shelf, cart, menuState);
             break;
         case 4:
-            checkout(stockList, cart);
+            checkout(stockList, shelf, cart);
             break;
         case 5:
             clearCart(shelf, cart);
@@ -184,11 +183,11 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
             else // quantity exceeds, ask user if it should add all remaining quantity anyway
             {
                 cout << "Quantity asked exceeds quantity in stock."
-                     << endl
-                     << "Do you wish to buy all " << item->getQuantity() << " existing items instead? (y/n):";
+                     << endl;
 
-                getline(cin, input);
-                if (stringToLower(input) == "y")
+                stringstream ss;
+                ss << "Do you wish to buy all " << item->getQuantity() << " existing items instead?";
+                if (promptYESOrNo(ss.str()))
                 {
                     bagged_item->setQuantity(item->getQuantity()); // if confirmed will add all existing stock items to cart
                     item->setQuantity(0);                          // as we add to cart, we remove from shelf
@@ -207,11 +206,11 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
             else // if exceeds
             {
                 cout << "Quantity asked exceeds quantity in stock."
-                     << endl
-                     << "Do you wish to buy all " << item->getQuantity() << " existing items instead? (y/n):";
+                     << endl;
 
-                getline(cin, input);
-                if (stringToLower(input) == "y")
+                stringstream ss;
+                ss << "Do you wish to buy all " << item->getQuantity() << " existing items instead?";
+                if (promptYESOrNo(ss.str()))
                 {
                     CartItem newItemCart(*item, item->getQuantity()); // create the new bagged item
                     cart.push_back(newItemCart);                      // add the new bagged item the vector cart
@@ -221,9 +220,8 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
         }
 
         cout << "Cart Updated!" << endl;
-        cout << "Continue? (y/n): ";
-        getline(cin, input);
-        if (input == "y")
+
+        if (promptyesOrNO())
             continue;
         else
             return;
@@ -252,22 +250,16 @@ void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
             cart.erase(cart.begin() + index);
             item->setQuantity(item->getQuantity() + bagged_item->getQuantity());
 
-            cout << "Product removed from cart." << endl
-                 << "Do you wish to continue removing ? (y/n): ";
-
-            getline(cin, input);
-            if (stringToLower(input) != "y" || !input.empty())
+            cout << "Product removed from cart." << endl;
+            if (!promptyesOrNO("Do you wish to continue removing?"))
             {
                 break;
             }
         }
         else
         {
-            cout << "Item not found." << endl
-                 << "Do you wish to continue removing? (y/n): "; // assumes 'y' as default
-
-            getline(cin, input);
-            if (stringToLower(input) != "y" && !input.empty())
+            cout << "Item not found." << endl;
+            if (!promptyesOrNO("Do you wish to continue removing?"))
             {
                 break;
             }
@@ -322,11 +314,12 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 
             if (quantity > item->getQuantity())
             {
-                cout << "Not enough stock." << endl
-                     << "Do you want to buy all " << item->getQuantity() << " remaining items instead? (y/n): "; // needs coolass underline
-                string input;
-                getline(cin, input);
-                if (stringToLower(input) == "y" || input.empty())
+                cout << "Not enough stock."
+                     << endl;
+
+                stringstream ss;
+                ss << "Do you wish to buy all " << item->getQuantity() << " remaining items instead?";
+                if (promptYESOrNo(ss.str()))
                 {
                     bagged_item->setQuantity(item_quantity + bagged_quantity);
                     item->setQuantity(0);
@@ -339,26 +332,21 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
                 bagged_item->setQuantity(quantity + bagged_quantity);
                 item->setQuantity(item_quantity - quantity);
             }
-            cout << "Product quantity changed." << endl
-                 << "Do you want to continue adjusting? (y/n): "; // needs coolass underline
-            string input;
-            getline(cin, input);
-            if (stringToLower(input) != "y" && !input.empty())
+            cout << "Product quantity changed." << endl;
+            if (!promptyesOrNO("Do you want to continue adjusting? (y/n): "))
                 return;
         }
         else // if it doesn't exist in cart, refuse to update
         {
             string input;
-            cout << "Product not found in cart. Please select a valid ID (Maybe switch to Cart View)" << endl
-                 << "Do you wish to continue adjusting? (y/n): "; // needs coolass underline
-            getline(cin, input);
-            if (stringToLower(input) != "y" && input.empty())
+            cout << "Product not found in cart. Please select a valid ID" << endl;
+            if (!promptyesOrNO("Do you want to continue adjusting? (y/n): "))
                 return;
         }
     }
 }
 
-void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked initial version
+void checkout(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart) // Very fucked initial version
 {
     string input;
     if (cart.size() == 0)
@@ -371,15 +359,13 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
     cout << "Your cart:" << endl;
     printCart(cart);
     double total = 0;
-    for (const CartItem &cartItem : cart)
+    for (CartItem &cartItem : cart)
     {
         total += cartItem.getTotalItemSellValue();
     }
     cout << "Total: " << total << " eur" << endl;
-    // cout << "Continue? (y/n): ";
-    cout << "Continue? (" << underline << "Y" << RESET << "/n): ";
-    getline(cin, input);
-    if (stringToLower(input) == "y" || input.empty())
+
+    if (promptYESOrNo("Do you wish to confirm?"))
     {
         double paymentAmount = getValidatedDouble("Insert payment amount: ");
         do
@@ -387,9 +373,7 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
             if (paymentAmount < total)
             {
                 cout << "Nice joke, that's not enough." << endl;
-                cout << "Do you want to try again? (y/n): ";
-                getline(cin, input);
-                if (stringToLower(input) == "y")
+                if (promptYESOrNo("Do you want to try again?"))
                     paymentAmount = getValidatedDouble("Insert payment amount: ");
                 else
                     return;
@@ -401,14 +385,11 @@ void checkout(vector<Stock> &stockList, vector<CartItem> &cart) // Very fucked i
         for (const CartItem &cartItem : cart)
         {
             Stock *stockPtr = findStock(stockList, cartItem.getStockId());
-            if (stockPtr)
-            {
-                int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
-                changeQuantityFromStock(stockList, cartItem.getStockId(), newQuantity);
-            }
+            int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
+            changeQuantityFromStock(stockList, stockPtr, newQuantity);
         }
 
-        cart.clear();
+        clearCart(shelf, cart);
         pause();
     }
     else

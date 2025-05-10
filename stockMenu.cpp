@@ -165,11 +165,9 @@ void changeEditMenu(vector<Stock> &stockList)
         setColor(Cyan);
         cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
         setColor(RESET);
-        limh(86);
+        limh();
 
-        cout << "Do you wish to proceed? (" << UNDERLINE << "y" << RESET << endl;
-        getline(cin, prompt);
-        if (prompt != "y")
+        if (!promptYESOrNo("Do you wish to proceed?"))
         {
             continue;
         }
@@ -189,9 +187,8 @@ void changeEditMenu(vector<Stock> &stockList)
         changePurchaseFromStock(stockList, item, newItem);
 
         idColor.push_back(item->getStockId());
-        cout << "Do you wish to keep editing items? (y/n): ";
-        getline(cin, prompt);
-        if (prompt != "y")
+        
+        if (!promptyesOrNO("Do you wish to keep editing items?"))
             return;
     }
 }
@@ -223,30 +220,19 @@ void removeEditMenu(vector<Stock> &stockList)
             pause();
             continue;
         }
-        clearConsole();
 
         setColor(Cyan);
         cout << "Removing product: " << item->getStockId() << "-" << item->getProductName() << endl;
         setColor(RESET);
-        cout << "Do you wish to proceed? (y/n):";
-        getline(cin, prompt);
-        if (prompt != "y")
+        if (!promptYESOrNo())
         {
             continue;
         }
         limh(MENU_DASH);
 
-        Stock newItem;
-        newItem.setStockId(item->getStockId());
-        newItem.setProductName(item->getProductName());
-        newItem.setCostValue(item->getCostValue());
-        newItem.setQuantity(0);
-        idColor.push_back(item->getStockId());
-        changePurchaseFromStock(stockList, item, newItem);
+        removePurchaseFromStock(stockList, item);
 
-        cout << "Do you wish to keep removing items? (y/n): ";
-        getline(cin, prompt);
-        if (prompt != "y")
+        if (!promptyesOrNO("Do you wish to keep removing items?"))
             return;
     }
 }
