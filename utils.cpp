@@ -29,7 +29,7 @@ void clearConsole() // clear the console
 
 // default prompt -> "Do you wish to continue?"
 // prints as -> "Do you wish to continue (y̲/n)?"
-bool YESOrNo(string prompt)
+bool promptYESOrNo(string prompt)
 {
     cout << prompt
          << "(" << UNDERLINE << "y" << RESET << "/n):" << endl;
@@ -43,7 +43,7 @@ bool YESOrNo(string prompt)
 }
 // default prompt -> "Do you wish to continue?"
 // prints as -> "Do you wish to continue (y/n̲)?"
-bool yesOrNO(string prompt)
+bool promptyesOrNO(string prompt)
 {
     cout << prompt
          << "(y/" << UNDERLINE << "n" << RESET << "):" << endl;
@@ -280,7 +280,7 @@ void addPurchaseToStock(vector<Stock> &stockList)
 
     do
     {
-        printStock(stockList, "Add Item Menu", idColor, "\033[0;32m");
+        printStock(stockList, "Stock View", idColor, Green);
 
         Stock item;
         stringstream line;
@@ -296,23 +296,13 @@ void addPurchaseToStock(vector<Stock> &stockList)
         Stock *findItem = findStock(stockList, name);
         if (findItem != nullptr) // if product found
         {
-            cout << endl
-                 << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
-            getline(cin, confirm);
-            confirm = stringToLower(confirm);
-            if (confirm == "y")
+            // default yes
+            if (promptYESOrNo("Product Name was found in stockpile, do you want to add to product quantity?"))
             {
-                item.setStockId(findItem->getStockId());
-                item.setCostValue(findItem->getCostValue());
-                item.setProductName(findItem->getProductName());
-
                 int addedQuantity = getValidatedInt("Quantity to add: ");
-                item.setQuantity(findItem->getQuantity() + addedQuantity);
-
-                changePurchaseFromStock(stockList, findItem, item);
+                changeQuantityFromStock(stockList, findItem, addedQuantity + findItem->getQuantity());
                 cout << endl
-                     << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
-                pause();
+                     << "Item ID: " << findItem->getStockId() << " changed in stockpile!" << endl;
             }
         }
         else // if not found
@@ -324,13 +314,13 @@ void addPurchaseToStock(vector<Stock> &stockList)
 
             stockList.push_back(item);
             updateFile(stockList);
+            cout << endl
+                 << "Item ID: " << item.getStockId() << " added in stockpile!" << endl;
         }
         idColor.push_back((item.getStockId()));
 
-        cout << "Do you want to register another item? (y/n): ";
-        getline(cin, confirm);
-        confirm = stringToLower(confirm);
-    } while (confirm == "y");
+        // default no
+    } while (promptyesOrNO("Do you want to register another item?"));
 }
 
 // OVERLOADED
@@ -419,7 +409,7 @@ bool showSearchResults(vector<Stock> items)
         for (const Stock &item : items)
         {
             if (item.getQuantity() == 0)
-                setColor("\033[1;31m"); // red for zero quantity
+                setColor(RED); // red for zero quantity
 
             cout << item.toDisplay() << endl;
 
@@ -429,12 +419,8 @@ bool showSearchResults(vector<Stock> items)
         limh();
     }
 
-    char confirm;
-    cout << "Do you wish to keep searching? (y/n): ";
-    cin >> confirm;
-    confirm = tolower(confirm);
-    cin.ignore();
-    if (confirm == 'y')
+    // default NO
+    if (promptyesOrNO("Do you wish to keep searching?"))
         return true;
     else
         return false;
@@ -443,32 +429,17 @@ bool showSearchResults(vector<Stock> items)
 //  Will use to delete an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
 //  updates file
-bool removePurchaseFromStock(vector<Stock> &stockList, int id)
+void removePurchaseFromStock(vector<Stock> &stockList, Stock *item)
 {
-    Stock *item = findStock(stockList, id);
-    if (item != nullptr)
-    {
-        item->setQuantity(0);
-
-        updateFile(stockList);
-        return true;
-    }
-    else
-        return false;
+    item->setQuantity(0);
+    updateFile(stockList);
 }
 
-bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
+void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity)
 {
-    Stock *item = findStock(stockList, id);
-    if (item != nullptr)
-    {
-        item->setQuantity(quantity);
+    item->setQuantity(quantity);
 
-        updateFile(stockList);
-        return true;
-    }
-    else
-        return false;
+    updateFile(stockList);
 }
 
 // searches for name and changes
@@ -501,7 +472,7 @@ void printStock(const vector<Stock> &stockList, const string &title)
     for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
-            setColor("\033[1;31m"); // red for zero quantity
+            setColor(RED); // red for zero quantity
 
         cout << item.toDisplay() << endl;
 

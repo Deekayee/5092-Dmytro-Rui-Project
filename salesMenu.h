@@ -17,4 +17,4 @@ void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
 void clearCart(vector<Stock> &shelf, vector<CartItem> &cart);
 
-void checkout(vector<Stock> &stockList, vector<CartItem> &cart);
+void checkout(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart);
