@@ -399,16 +399,42 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
         cout << receipt.toDisplay();
         updateStockFromShelf(stockList, shelf);
 
-        // for (const CartItem &cartItem : cart)
-        // {
-        //     Stock *stockPtr = findStock(stockList, cartItem.getStockId());
-        //     int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
-        //     changeQuantityFromStock(stockList, stockPtr, newQuantity);
-        // }
-
         clearCart(cart);
         pause();
     }
     else
         return;
 }
+
+void gambling(Receipt &sale, int chance)
+{
+    srand(time(0));
+    int badLuck = (rand() % 101); // luck goes from 0 to 100
+    if (badLuck < chance)
+    {
+        vector<CartItem> roster = sale.getItems();
+
+        srand(time(0));
+        int sortedIndex = rand() % roster.size();
+        
+    }
+}
+
+// bool registerLogin()
+// {
+//     clearConsole();
+//     setColor(YELLOW);
+//     cout << "Registering Client";
+//     setColor(RESET);
+//     limh();
+
+//     fstream credentials("loginInfo.csv", ios::app);
+
+//     cout << "Please insert name: ";
+//     string name;
+//     getline(cin, name);
+// }
+// bool login()
+// {
+
+// }
