@@ -12,35 +12,36 @@
 using namespace std;
 
 // COLOR DEFINES
-#define Red         "\033[0;31m"
-#define Green       "\033[0;32m"
-#define Yellow      "\033[0;33m"
-#define Blue        "\033[0;34m"
-#define Magenta     "\033[0;35m"
-#define Cyan        "\033[0;36m"
+#define Red "\033[0;31m"
+#define Green "\033[0;32m"
+#define Yellow "\033[0;33m"
+#define Blue "\033[0;34m"
+#define Magenta "\033[0;35m"
+#define Cyan "\033[0;36m"
 
 // COLOR DEFINES - Bright Variant
-#define RED         "\033[1;31m"
-#define GREEN       "\033[1;32m"
-#define YELLOW      "\033[1;33m"
-#define BLUE        "\033[1;34m"
-#define MAGENTA     "\033[1;35m"
-#define CYAN        "\033[1;36m"
+#define RED "\033[1;31m"
+#define GREEN "\033[1;32m"
+#define YELLOW "\033[1;33m"
+#define BLUE "\033[1;34m"
+#define MAGENTA "\033[1;35m"
+#define CYAN "\033[1;36m"
 
 // COLOR RESET
-#define RESET       "\033[0m"
+#define RESET "\033[0m"
 
 // UNDERLINE
-#define UNDERLINE   "\033[4m"
-//---------------------------------------------------------------------------------
+#define UNDERLINE "\033[4m"
+//-----------------------------------------------------
 //-----------------------------------------------------------------------
-#define STOCK_DASH   71
-#define MENU_DASH    81
-#define SALES_DASH   30
+//---------------------------------------------------------------------------------
+//-------------------------------------------------------------------
+#define STOCK_DASH 63
+#define SALES_DASH 67
 
 // CONSOLE UTILITY FUNCTIONS
 void pause();
-void limh(int n = MENU_DASH);
+void limh(int n = STOCK_DASH);
 void clearConsole();
 void setColor(const string &colorCode);
 
@@ -57,7 +58,8 @@ void writeToFile(string filename, const string &line);
 void createStockFile();
 bool openStockFile(vector<Stock> *stockList);
 bool updateFile(vector<Stock> &stockList);
-int dataInit(vector<Stock> &stockList);
+bool dataInit(vector<Stock> &stockList);
+void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &shelf);
 
 // STOCK FUNCTIONS
 void addPurchaseToStock(vector<Stock> &stockList);
@@ -68,5 +70,6 @@ bool showSearchResults(vector<Stock> items);
 void removePurchaseFromStock(vector<Stock> &stockList, Stock *item);
 void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity);
 void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem);
-void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode);
-void printStock(const vector<Stock> &stockList, const string &title);
+void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
+void printProducts(const vector<Stock> &shelf);
+void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf);

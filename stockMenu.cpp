@@ -10,24 +10,25 @@ void mainMenu(vector<Stock> &stockList)
     int opt;
     string input;
     vector<CartItem> cart;
+    vector<Stock> shelf;
     // adding copy of stockList to shelf
-    vector<Stock> shelf = stockList;
     // this will display items to user in specified order:
     do
-    {
+    {   
+        shelfInit(stockList, cart, shelf);
         do
         {
             clearConsole();
             setColor(Cyan);
             cout << "Shop menu" << endl;
             setColor(RESET);
-            limh(MENU_DASH);
+            limh(STOCK_DASH);
             cout << "1. Shop Sales" << endl;
-            limh(MENU_DASH);
+            limh(STOCK_DASH);
             cout << "2. Shop Stock" << endl;
-            limh(MENU_DASH);
+            limh(STOCK_DASH);
             cout << "3. Exit" << endl;
-            limh(MENU_DASH);
+            limh(STOCK_DASH);
             cout << "Option: ";
             getline(cin, input);
         } while (!validateMenuInput(input, opt));
@@ -40,6 +41,14 @@ void mainMenu(vector<Stock> &stockList)
             break;
         case 2:
             // show stock, give an option to add or remove and cancel, among some other bonus features
+            // bar access to stock if a sale is in process, in order to prevent mismanagement of stock and shelf items
+            if (!cart.empty())
+            {
+                cout << "You have products in cart! Clear the cart or finish checking out to proceed" << endl
+                     << "Unable to access stock menu" << endl;
+                pause();
+                break;
+            }
             editStockMenu(stockList);
             break;
         case 3:
@@ -70,17 +79,17 @@ void editStockMenu(vector<Stock> &stockList)
         setColor(Cyan);
         cout << "Stock Editing Menu" << endl;
         setColor(RESET);
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "1. Search Stock" << endl;
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "2. Add purchase to Stock" << endl;
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "3. Change purchase from Stock" << endl;
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "4. Remove purchase from Stock" << endl;
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "0. Go Back" << endl;
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "Option: ";
         getline(cin, input);
         if (!validateMenuInput(input, opt))
@@ -123,7 +132,7 @@ void searchEditMenu(vector<Stock> &stockList)
         setColor(Cyan);
         cout << "Stock Search Menu" << endl;
         setColor(RESET);
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
         cout << "Please enter a product name to search in stock:" << endl;
         cout << "Name: ";
         getline(cin, name);
@@ -138,7 +147,7 @@ void changeEditMenu(vector<Stock> &stockList)
     while (true)
     {
         clearConsole();
-        printStock(stockList, "Change Item Menu", idColor, Green);
+        printStock(stockList, "Change Item Menu", &idColor, Green);
 
         string prompt;
         int id;
@@ -171,7 +180,7 @@ void changeEditMenu(vector<Stock> &stockList)
         {
             continue;
         }
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
 
         stringstream itemString;
         itemString << item->getStockId() << ",";
@@ -185,9 +194,10 @@ void changeEditMenu(vector<Stock> &stockList)
         Stock newItem;
         newItem.fromString(itemString.str());
         changePurchaseFromStock(stockList, item, newItem);
+        cout << "Stock Updated!" << endl;
 
         idColor.push_back(item->getStockId());
-        
+
         if (!promptyesOrNO("Do you wish to keep editing items?"))
             return;
     }
@@ -201,9 +211,9 @@ void removeEditMenu(vector<Stock> &stockList)
         int id;
         do
         {
-            printStock(stockList, "Remove Item Menu", idColor, Yellow);
+            printStock(stockList, "Remove Item Menu", &idColor, Yellow);
 
-            limh(MENU_DASH);
+            limh(STOCK_DASH);
 
             cout << "Please enter the ID of the product you wish to remove (Enter 0 to return)" << endl;
             cout << "ID: ";
@@ -228,9 +238,10 @@ void removeEditMenu(vector<Stock> &stockList)
         {
             continue;
         }
-        limh(MENU_DASH);
+        limh(STOCK_DASH);
 
         removePurchaseFromStock(stockList, item);
+        cout << "Stock Updated!" << endl;
 
         if (!promptyesOrNO("Do you wish to keep removing items?"))
             return;
