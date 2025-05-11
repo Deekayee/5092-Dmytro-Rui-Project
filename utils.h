@@ -32,12 +32,13 @@ using namespace std;
 
 // UNDERLINE
 #define UNDERLINE "\033[4m"
-//-----------------------------------------------------
-//-----------------------------------------------------------------------
-//---------------------------------------------------------------------------------
-//-------------------------------------------------------------------
+
+// HORIZONTAL LIMITERS SIZES
 #define STOCK_DASH 63
 #define SALES_DASH 67
+
+// MAX PRODUCT NAME SIZE
+#define STRING_PRODUCT_MAX 22
 
 // CONSOLE UTILITY FUNCTIONS
 void pause();
@@ -53,23 +54,25 @@ string stringToLower(string name);
 bool promptYESOrNo(string prompt = "Do you wish to continue?");
 bool promptyesOrNO(string prompt = "Do you wish to continue?");
 
-// FILE FUNCTIONS
+// DATA INIT AND UPDATE FUNCTIONS
 void writeToFile(string filename, const string &line);
 void createStockFile();
 bool openStockFile(vector<Stock> *stockList);
 bool updateFile(vector<Stock> &stockList);
+void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf);
 bool dataInit(vector<Stock> &stockList);
 void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &shelf);
 
 // STOCK FUNCTIONS
-void addPurchaseToStock(vector<Stock> &stockList);
 Stock *findStock(vector<Stock> &stockList, const string &name); // by name
 Stock *findStock(vector<Stock> &stockList, int id);             // by id
 vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name);
-bool showSearchResults(vector<Stock> items);
 void removePurchaseFromStock(vector<Stock> &stockList, Stock *item);
 void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity);
 void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem);
 void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
+
+// CART FUNCTIONS
 void printProducts(const vector<Stock> &shelf);
-void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf);
+void printCart(vector<CartItem> &cart);
+CartItem *findItemCart(vector<CartItem> &cart, int id, int *index = nullptr);

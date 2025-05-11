@@ -120,6 +120,67 @@ void editStockMenu(vector<Stock> &stockList)
 
     } while (editMenu);
 }
+
+void addPurchaseToStock(vector<Stock> &stockList)
+{
+    string filename = "output/stockList.csv";
+    string confirm;
+
+    vector<int> idColor; // saves ids for marking when changed
+
+    do
+    {
+        printStock(stockList, "Stock View", &idColor, Green);
+
+        Stock item;
+        stringstream line;
+        string field;
+        cout << "Product Name (leave empty to go back): ";
+
+        getline(cin, field);
+        if (field.empty())
+            return;
+        if (field.length() > STRING_PRODUCT_MAX) // to ensure name fits in tightly with the menu structure
+        {
+            cout << "Please enter a shorter name." << endl;
+            pause();
+            break;
+        }
+
+        item.setProductName(field);
+
+        string name = item.getProductName();
+        Stock *findItem = findStock(stockList, name);
+        if (findItem != nullptr) // if product found
+        {
+            // default yes
+            if (promptYESOrNo("Product Name was found in stockpile, do you want to add to product quantity?"))
+            {
+                int addedQuantity = getValidatedInt("Quantity to add: ");
+                changeQuantityFromStock(stockList, findItem, addedQuantity + findItem->getQuantity());
+                cout << endl
+                     << "Item ID: " << findItem->getStockId() << " changed in stockpile!" << endl;
+            }
+        }
+        else // if not found
+        {
+            item.setStockId(Stock::getNextStockId());
+            Stock::incrementStockId();
+            item.setQuantity(getValidatedInt("Quantity: "));
+            item.setCostValue(getValidatedDouble("Cost Value: "));
+
+            stockList.push_back(item);
+            if (updateFile(stockList))
+                cout << "Stock Updated!" << endl;
+            cout << endl
+                 << "Item ID: " << item.getStockId() << " added in stockpile!" << endl;
+        }
+        idColor.push_back((item.getStockId()));
+
+        // default no
+    } while (promptyesOrNO("Do you want to register another item?"));
+}
+
 void searchEditMenu(vector<Stock> &stockList)
 {
     bool run;
@@ -141,6 +202,53 @@ void searchEditMenu(vector<Stock> &stockList)
         run = showSearchResults(items);
     } while (run);
 }
+
+bool showSearchResults(vector<Stock> items)
+{
+    clearConsole();
+    setColor(YELLOW);
+    cout << "Search Results:" << endl;
+    setColor(RESET);
+    if (items.empty())
+    {
+        limh();
+        setColor(CYAN);
+        cout << "No matching results found" << endl;
+        setColor(RESET);
+        limh();
+    }
+    else
+    {
+        setColor(Magenta);
+        cout << "Found " << items.size() << " matching results:" << endl;
+        setColor(RESET);
+        limh();
+
+        setColor(CYAN);
+        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+        setColor(RESET);
+        limh();
+
+        for (const Stock &item : items)
+        {
+            if (item.getQuantity() == 0)
+                setColor(RED); // red for zero quantity
+
+            cout << item.toDisplay() << endl;
+
+            if (item.getQuantity() == 0)
+                setColor(RESET); // resets color
+        }
+        limh();
+    }
+
+    // default NO
+    if (promptyesOrNO("Do you wish to keep searching?"))
+        return true;
+    else
+        return false;
+}
+
 void changeEditMenu(vector<Stock> &stockList)
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -202,6 +310,7 @@ void changeEditMenu(vector<Stock> &stockList)
             return;
     }
 }
+
 void removeEditMenu(vector<Stock> &stockList)
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -247,55 +356,3 @@ void removeEditMenu(vector<Stock> &stockList)
             return;
     }
 }
-
-// Stock Menu
-// show stock, give an option to add or remove and cancel
-// void stockMenu(vector<Stock> &stockList)
-// {
-//     bool stockMenu = true;
-//     string input;
-//     int productsOpt;
-
-//     do
-//     {
-//         // added printstock here
-//         clearConsole();
-//         printStock(stockList, "Stock View");
-
-//         setColor(Cyan);
-//         cout << "Stock Menu" << endl;
-//         setColor(RESET);
-//         limh(MENU_DASH);
-//         cout << "1. Show Stock" << endl;
-//         limh(MENU_DASH);
-//         cout << "2. Edit Stock" << endl;
-//         limh(MENU_DASH);
-//         cout << "3. Go Back" << endl;
-//         limh(MENU_DASH);
-//         cout << "Option: ";
-//         getline(cin, input);
-//         // changing from cycle to if statement
-//         if (!validateMenuInput(input, productsOpt))
-//             continue; // if menu option doesnt check out, will repeat our functio, needed to more easily print stock
-
-//         switch (productsOpt)
-//         {
-//         case 1:
-//             printStock(stockList, "Stock\n");
-//             pause();
-//             break;
-//         case 2:
-//             editStockMenu(stockList);
-//             break;
-
-//         case 3:
-//             stockMenu = false;
-//             break;
-//         default:
-//             cout << "Invalid input, try again." << endl;
-//             pause();
-//             break;
-//         }
-
-//     } while (stockMenu);
-// }
