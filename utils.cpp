@@ -304,65 +304,7 @@ void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &
     }
 }
 
-void addPurchaseToStock(vector<Stock> &stockList)
-{
-    string filename = "output/stockList.csv";
-    string confirm;
 
-    vector<int> idColor; // saves ids for marking when changed
-
-    do
-    {
-        printStock(stockList, "Stock View", &idColor, Green);
-
-        Stock item;
-        stringstream line;
-        string field;
-        cout << "Product Name (leave empty to go back): ";
-
-        getline(cin, field);
-        if (field.empty())
-            return;
-        if (field.length() > 22) // to ensure name fits in tightly with the menu structure
-        {
-            cout << "Please enter a shorter name." << endl;
-            pause();
-            break;
-        }
-
-        item.setProductName(field);
-
-        string name = item.getProductName();
-        Stock *findItem = findStock(stockList, name);
-        if (findItem != nullptr) // if product found
-        {
-            // default yes
-            if (promptYESOrNo("Product Name was found in stockpile, do you want to add to product quantity?"))
-            {
-                int addedQuantity = getValidatedInt("Quantity to add: ");
-                changeQuantityFromStock(stockList, findItem, addedQuantity + findItem->getQuantity());
-                cout << endl
-                     << "Item ID: " << findItem->getStockId() << " changed in stockpile!" << endl;
-            }
-        }
-        else // if not found
-        {
-            item.setStockId(Stock::getNextStockId());
-            Stock::incrementStockId();
-            item.setQuantity(getValidatedInt("Quantity: "));
-            item.setCostValue(getValidatedDouble("Cost Value: "));
-
-            stockList.push_back(item);
-            if (updateFile(stockList))
-                cout << "Stock Updated!" << endl;
-            cout << endl
-                 << "Item ID: " << item.getStockId() << " added in stockpile!" << endl;
-        }
-        idColor.push_back((item.getStockId()));
-
-        // default no
-    } while (promptyesOrNO("Do you want to register another item?"));
-}
 
 // OVERLOADED
 // finds product in vector by id
@@ -421,51 +363,7 @@ vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
     return items;
 }
 
-bool showSearchResults(vector<Stock> items)
-{
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Search Results:" << endl;
-    setColor(RESET);
-    if (items.empty())
-    {
-        limh();
-        setColor(CYAN);
-        cout << "No matching results found" << endl;
-        setColor(RESET);
-        limh();
-    }
-    else
-    {
-        setColor(Magenta);
-        cout << "Found " << items.size() << " matching results:" << endl;
-        setColor(RESET);
-        limh();
 
-        setColor(CYAN);
-        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
-        setColor(RESET);
-        limh();
-
-        for (const Stock &item : items)
-        {
-            if (item.getQuantity() == 0)
-                setColor(RED); // red for zero quantity
-
-            cout << item.toDisplay() << endl;
-
-            if (item.getQuantity() == 0)
-                setColor(RESET); // resets color
-        }
-        limh();
-    }
-
-    // default NO
-    if (promptyesOrNO("Do you wish to keep searching?"))
-        return true;
-    else
-        return false;
-}
 
 //  Will use to delete an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
@@ -544,7 +442,7 @@ void printProducts(const vector<Stock> &shelf)
     limh(STOCK_DASH - titleLength);
 
     setColor(CYAN);
-    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
+    cout << "ID | Product Name           | Quantity | Price w/Tax (eur)" << endl;
     setColor(RESET);
     limh();
 
@@ -553,7 +451,12 @@ void printProducts(const vector<Stock> &shelf)
         if (item.getQuantity() == 0)
             setColor(RED); // red for zero quantity
 
-        cout << item.toDisplay() << endl;
+        stringstream ss;
+        cout << setw(2) << item.getStockId() << " | "
+             << setw(22) << left << item.getProductName() << " | "
+             << setw(8) << right << item.getQuantity() << " | "
+             << fixed << setprecision(2) << item.getSaleValue() * 1.23 << " eur"
+             << endl;
 
         setColor(RESET); // resets color
     }

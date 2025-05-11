@@ -21,7 +21,7 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             //   true -> Shows Cart
             if (menuState == false)
                 // needs to print price for client, meaning, profit margin + maybe with tax
-                printStock(shelf, "Products Menu");
+                printProducts(shelf);
             if (menuState == true)
                 printCart(cart);
 
@@ -61,7 +61,7 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             removeProductCart(shelf, cart, menuState);
             break;
         case 4:
-            checkout(stockList, shelf, cart);
+            checkoutMenu(stockList, shelf, cart);
             break;
         case 5:
             clearCart(cart, &shelf);
@@ -109,14 +109,14 @@ void printCart(vector<CartItem> &cart) // TODO
     setColor(CYAN);
     cout << setw(2) << "ID" << " | "
          << setw(22) << left << "Product Name" << " | "
-         << setw(8) << right << "Quantity" << " | "
-         << setw(10) << right << "Sale Value" << " eur |"
-         << setw(8) << right << "Tax Rate" << "% |"
-         << setw(11) << right << "Sale w/ Tax" << " eur |"
+         << setw(4) << right << "Qtty" << " | "
+         << setw(8) << right << "S. Val." << " |"
+         << setw(6) << right << "Tax" << "% |"
+         << setw(11) << right << "S. w/Tax" << " |"
          << endl;
     setColor(RESET);
     limh(SALES_DASH);
-    if(cart.empty())
+    if (cart.empty())
     {
         cout << "Cart is empty." << endl;
         limh(SALES_DASH);
@@ -146,7 +146,7 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
 
         clearConsole();
         if (menuState == false)
-            printStock(shelf, "Products Menu:");
+            printProducts(shelf);
         else
             printCart(cart);
 
@@ -240,7 +240,7 @@ void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
         clearConsole();
 
         if (menuState == false)
-            printStock(shelf, "Products Menu:");
+            printProducts(shelf);
         else
             printCart(cart);
         int id = getValidatedInt("Insert product ID to remove: ");
@@ -284,7 +284,7 @@ void clearCart(vector<CartItem> &cart, vector<Stock> *shelf)
             Stock *item = findStock(*shelf, bagged_item.getStockId());
             item->setQuantity(bagged_item.getQuantity() + item->getQuantity());
         }
-    // *otherwise, if shelf isnt specified, it means checkout is happening, so 
+    // *otherwise, if shelf isnt specified, it means checkout is happening, so
     // the shelf already owns the correct quantities and is ready to update our
     // stockList
     cart.clear();
@@ -298,7 +298,7 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 
         clearConsole();
         if (menuState == false)
-            printStock(shelf, "Products Menu:");
+            printProducts(shelf);
         else
             printCart(cart);
 
@@ -357,7 +357,7 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
     }
 }
 
-void checkout(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart) // Very fucked initial version
+void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart) // Very fucked initial version
 {
     string input;
     if (cart.size() == 0)
