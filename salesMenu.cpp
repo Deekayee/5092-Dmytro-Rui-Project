@@ -21,7 +21,7 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             //   true -> Shows Cart
             if (menuState == false)
                 // needs to print price for client, meaning, profit margin + maybe with tax
-                printStock(shelf, "Products Menu:");
+                printStock(shelf, "Products Menu");
             if (menuState == true)
                 printCart(cart);
 
@@ -99,13 +99,13 @@ CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
 // Prints items in cart similar to printStock()
 void printCart(vector<CartItem> &cart) // TODO
 {
-    /*TO DO*/
+    int titleDASH = SALES_DASH - 9; // to make sure it fits the rest of the horizontal lims
     clearConsole();
     setColor(YELLOW);
-    cout << "Your cart" << endl;
+    cout << "Your cart";
     setColor(RESET);
 
-    limh(SALES_DASH);
+    limh(titleDASH);
     setColor(CYAN);
     cout << setw(2) << "ID" << " | "
          << setw(22) << left << "Product Name" << " | "

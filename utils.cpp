@@ -287,15 +287,15 @@ void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &
     shelf.clear();
     for (Stock &stock_item : stockList)
     {
-        if(stock_item.getQuantity() == 0)
+        if (stock_item.getQuantity() == 0)
             continue;
-        
+
         shelf.push_back(stock_item); // all items in shelf will be of quantity > 0
     }
     // once shelf is filled up, compare with cart, if its not empty
-    if(!cart.empty())
+    if (!cart.empty())
     {
-        for(CartItem & cart_item : cart)
+        for (CartItem &cart_item : cart)
         {
             Stock *shelf_item = findStock(shelf, cart_item.getStockId());
             int quantity = shelf_item->getQuantity() - cart_item.getQuantity();
@@ -323,6 +323,13 @@ void addPurchaseToStock(vector<Stock> &stockList)
         getline(cin, field);
         if (field.empty())
             return;
+        if (field.length() > 22) // to ensure name fits in tightly with the menu structure
+        {
+            cout << "Please enter a shorter name." << endl;
+            pause();
+            break;
+        }
+
         item.setProductName(field);
 
         string name = item.getProductName();
