@@ -109,10 +109,9 @@ void printCart(vector<CartItem> &cart) // TODO
     setColor(CYAN);
     cout << setw(2) << "ID" << " | "
          << setw(22) << left << "Product Name" << " | "
-         << setw(4) << right << "Qtty" << " | "
-         << setw(8) << right << "S. Val." << " |"
-         << setw(6) << right << "Tax" << "% |"
-         << setw(11) << right << "S. w/Tax" << " |"
+         << setw(5) << right << "Qtty" << " | "
+         << setw(12) << right << "Price" << " | "
+         << setw(12) << right << "Total"
          << endl;
     setColor(RESET);
     limh(SALES_DASH);

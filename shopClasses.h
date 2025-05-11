@@ -146,10 +146,9 @@ public:
         stringstream ss;
         ss << setw(2) << stockId << " | "
            << setw(22) << left << productName << " | "
-           << setw(4) << right << quantity << " | "
-           << setw(4) <<right << fixed << setprecision(2) << getSaleWithoutTax() << " eur |"
-           << setw(6) <<right << fixed << setprecision(2) << getTaxRatePercent() << "% |"
-           << setw(5) <<right << fixed << setprecision(2) << getSaleWithTax() << " eur |";
+           << setw(5) << right << quantity << " | "
+           << setw(8) << right << fixed << setprecision(2) << getSaleWithTax() << " eur | "
+           << setw(9) << right << fixed << setprecision(2) << getTotalItemSellValue() << " eur";
 
         return ss.str();
     }
