@@ -20,36 +20,33 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             //   false -> Shows Products (default)
             //   true -> Shows Cart
             int limiterType;
+            string switchName;
             if (menuState == false)
             {
                 // needs to print price for client, meaning, profit margin + maybe with tax
                 printProducts(shelf);
                 limiterType = PRODUCTS_DASH;
+                switchName = "4. View Cart";
             }
-            if (menuState == true)
+            else
             {
                 printCart(cart);
                 limiterType = CART_DASH;
+                switchName = "4. View Products";
             }
 
-            setColor(BLUE);
+            setColor(Cyan);
             cout << "Sales Options:" << endl;
             setColor(RESET);
             limh(limiterType);
-            cout << "1. Add product to cart" << endl;
+            cout << setw(limiterType - 20) << left << "1. Add product to cart" << setw(20) << left << switchName << endl;
             limh(limiterType);
-            cout << "2. Change product in cart" << endl;
+            cout << setw(limiterType - 20) << left << "2. Change product in cart" << setw(20) << left << "5. Clear cart" << endl;
             limh(limiterType);
-            cout << "3. Remove product from cart" << endl;
-            limh(limiterType);
-            cout << "4. Checkout" << endl;
-            limh(limiterType);
-            cout << "5. Clear cart" << endl;
-            limh(limiterType);
-            if (menuState == 0)
-                cout << "6. View Cart" << endl;
-            if (menuState == 1)
-                cout << "6. View Products" << endl;
+            cout << setw(limiterType - 20) << left << "3. Remove product from cart" << setw(20) << left << "6. Checkout" << endl;
+            // limh(limiterType);
+            // limh(limiterType);
+            // limh(limiterType);
             limh(limiterType);
             cout << "0. Go back" << endl;
             limh(limiterType);
@@ -69,16 +66,15 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
         case 3:
             removeProductCart(shelf, cart, menuState);
             break;
-        case 4:
-            checkoutMenu(stockList, shelf, cart);
+        case 6:
+            menuState = !menuState; // flips menuState
             break;
         case 5:
             clearCart(cart, &shelf);
             break;
-        case 6:
-            menuState = !menuState; // flips menuState
+        case 4:
+            checkoutMenu(stockList, shelf, cart);
             break;
-
         case 0:
             return;
 
