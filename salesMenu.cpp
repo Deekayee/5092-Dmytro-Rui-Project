@@ -392,9 +392,11 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
             }
         } while (paymentAmount < total);
 
-        Receipt receipt(cart, paymentAmount);
         clearConsole();
-
+        
+        gambling(cart);
+        Receipt receipt(cart, paymentAmount);
+        
         cout << receipt.toDisplay();
         updateStockFromShelf(stockList, shelf);
 
@@ -405,14 +407,14 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
         return;
 }
 
-void gambling(Receipt &sale, int chance)
+void gambling(vector<CartItem> &sale, int chance)
 {
     srand(time(0));
     int badLuck = (rand() % 101); // badluck goes from 0 to 100
 
     if (badLuck < chance)         // if the "bad luck" is less than the chance, win
     {
-        vector<CartItem> roster = sale.getItems();
+        vector<CartItem> roster = sale;
 
         srand(time(0));                           // reinitializing seed
         int sortedIndex = rand() % roster.size(); // randomizing index
@@ -424,9 +426,32 @@ void gambling(Receipt &sale, int chance)
         int resetPrice = 0 - jackpot.getSaleWithoutTax(); //price is negative to subtract total
         jackpot.setSaleWithoutTax(resetPrice);
 
-        sale.getItems().push_back(jackpot); //item gets added at end of receipt for display
+        sale.push_back(jackpot); //item gets added at end of receipt for display
     }
 }
+
+// void gambling(Receipt &sale, int chance)
+// {
+//     srand(time(0));
+//     int badLuck = (rand() % 101); // badluck goes from 0 to 100
+
+//     if (badLuck < chance)         // if the "bad luck" is less than the chance, win
+//     {
+//         vector<CartItem> roster = sale.getItems();
+
+//         srand(time(0));                           // reinitializing seed
+//         int sortedIndex = rand() % roster.size(); // randomizing index
+
+//         CartItem jackpot = roster.at(sortedIndex);
+//         cout << "You won a free " << jackpot.getProductName() << "!" << endl;
+//         jackpot.setQuantity(1); // client only gets one, >:(
+
+//         int resetPrice = 0 - jackpot.getSaleWithoutTax(); //price is negative to subtract total
+//         jackpot.setSaleWithoutTax(resetPrice);
+
+//         sale.getItems().push_back(jackpot); //item gets added at end of receipt for display
+//     }
+// }
 
 // bool registerLogin()
 // {

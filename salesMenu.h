@@ -17,6 +17,6 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 void clearCart(vector<CartItem> &cart, vector<Stock> *shelf = nullptr);
 
 void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart);
-bool gambling(Receipt sale);
+void gambling(vector<CartItem> &sale, int chance = 50);
 bool login();
 bool registerLogin();
