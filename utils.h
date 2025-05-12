@@ -31,11 +31,18 @@ using namespace std;
 #define RESET "\033[0m"
 
 // UNDERLINE
-#define underline "\033[4m"
+#define UNDERLINE "\033[4m"
+
+// HORIZONTAL LIMITERS SIZES
+#define STOCK_DASH 63
+#define SALES_DASH 67
+
+// MAX PRODUCT NAME SIZE
+#define STRING_PRODUCT_MAX 22
 
 // CONSOLE UTILITY FUNCTIONS
 void pause();
-void limh(int n);
+void limh(int n = STOCK_DASH);
 void clearConsole();
 void setColor(const string &colorCode);
 
@@ -44,22 +51,28 @@ bool validateMenuInput(const string &input, int &opt);
 int getValidatedInt(const string &prompt);
 double getValidatedDouble(const string &prompt);
 string stringToLower(string name);
+bool promptYESOrNo(string prompt = "Do you wish to continue?");
+bool promptyesOrNO(string prompt = "Do you wish to continue?");
 
-// FILE FUNCTIONS
+// DATA INIT AND UPDATE FUNCTIONS
 void writeToFile(string filename, const string &line);
 void createStockFile();
 bool openStockFile(vector<Stock> *stockList);
 bool updateFile(vector<Stock> &stockList);
-int dataInit(vector<Stock> &stockList);
+void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf);
+bool dataInit(vector<Stock> &stockList);
+void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &shelf);
 
 // STOCK FUNCTIONS
-void addPurchaseToStock(vector<Stock> &stockList);
 Stock *findStock(vector<Stock> &stockList, const string &name); // by name
 Stock *findStock(vector<Stock> &stockList, int id);             // by id
 vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name);
-bool showSearchResults(vector<Stock> items);
-bool removePurchaseFromStock(vector<Stock> &stockList, int id);
-bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity);
+void removePurchaseFromStock(vector<Stock> &stockList, Stock *item);
+void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity);
 void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem);
-void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode);
-void printStock(const vector<Stock> &stockList, const string &title);
+void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
+
+// CART FUNCTIONS
+void printProducts(const vector<Stock> &shelf);
+void printCart(vector<CartItem> &cart);
+CartItem *findItemCart(vector<CartItem> &cart, int id, int *index = nullptr);

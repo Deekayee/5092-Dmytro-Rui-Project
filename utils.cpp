@@ -7,10 +7,6 @@ int Stock::nextStockId = 1;
 int Receipt::nextReceiptId = 1;
 int Receipt::nextClientId = 1;
 
-int nDashStock = 31;
-int nDashSale = 81;
-int nDashMenu = 30;
-
 void pause() // pause the console
 {
     cout << "Press enter to continue...";
@@ -29,6 +25,35 @@ void clearConsole() // clear the console
 #else
     system("clear"); // For Linux and macOS
 #endif
+}
+
+// default prompt -> "Do you wish to continue?"
+// prints as -> "Do you wish to continue (y̲/n)?"
+bool promptYESOrNo(string prompt)
+{
+    cout << prompt
+         << "(" << UNDERLINE << "y" << RESET << "/n):"; // << endl;
+    getline(cin, prompt);
+    if (stringToLower(prompt) == "y" || prompt.empty())
+    {
+        return true;
+    }
+    else
+        return false;
+}
+// default prompt -> "Do you wish to continue?"
+// prints as -> "Do you wish to continue (y/n̲)?"
+bool promptyesOrNO(string prompt)
+{
+    cout << prompt
+         << "(y/" << UNDERLINE << "n" << RESET << "):" << endl;
+    getline(cin, prompt);
+    if (stringToLower(prompt) == "n" || prompt.empty())
+    {
+        return false;
+    }
+    else
+        return true;
 }
 
 // returns true if number is validated, false if not
@@ -218,7 +243,6 @@ bool updateFile(vector<Stock> &stockList)
         {
             file << item.toString() << endl;
         }
-        cout << "Stock Updated!" << endl;
         return true;
     }
     else
@@ -228,7 +252,18 @@ bool updateFile(vector<Stock> &stockList)
     }
 }
 
-int dataInit(vector<Stock> &stockList)
+void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf)
+{
+    for (Stock &shelf_item : shelf)
+    {
+        int id = shelf_item.getStockId();
+        Stock *stock_item = findStock(stockList, id);
+        changePurchaseFromStock(stockList, stock_item, shelf_item);
+    }
+    cout << "Stock Updated!" << endl;
+}
+
+bool dataInit(vector<Stock> &stockList)
 {
     cout << "Opening Stock File... ";
     createStockFile();
@@ -236,77 +271,40 @@ int dataInit(vector<Stock> &stockList)
     {
         cout << "Success!" << endl;
         pause();
-        return 0;
+        return false;
     }
     else
     {
         cout << "Error!" << endl;
         pause();
-        return 1;
+        return true;
     }
 }
 
-void addPurchaseToStock(vector<Stock> &stockList)
+void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &shelf)
 {
-    string filename = "output/stockList.csv";
-    string confirm;
-
-    vector<int> idColor; // saves ids for marking when changed
-
-    do
+    // only allow client to view and select available stock through shelf
+    shelf.clear();
+    for (Stock &stock_item : stockList)
     {
-        printStock(stockList, "Add Item Menu", idColor, "\033[0;32m");
+        if (stock_item.getQuantity() == 0)
+            continue;
 
-        Stock item;
-        stringstream line;
-        string field;
-        cout << "Product Name (leave empty to go back): ";
-
-        getline(cin, field);
-        if (field.empty())
-            return;
-        item.setProductName(field);
-
-        string name = item.getProductName();
-        Stock *findItem = findStock(stockList, name);
-        if ( findItem != nullptr) //if product found
+        shelf.push_back(stock_item); // all items in shelf will be of quantity > 0
+    }
+    // once shelf is filled up, compare with cart, if its not empty
+    if (!cart.empty())
+    {
+        for (CartItem &cart_item : cart)
         {
-            cout << endl
-                 << "Product Name was found in stockpile, do you want to add to product quantity? (y/n): ";
-            getline(cin, confirm);
-            confirm = stringToLower(confirm);
-            if (confirm == "y")
-            {
-                item.setStockId(findItem->getStockId());
-                item.setCostValue(findItem->getCostValue());
-                item.setProductName(findItem->getProductName());
-
-                int addedQuantity = getValidatedInt("Quantity to add: ");
-                item.setQuantity(findItem->getQuantity() + addedQuantity);
-
-                changePurchaseFromStock(stockList, findItem, item);
-                cout << endl
-                     << "Item ID: " << item.getStockId() << " changed in stockpile!" << endl;
-                pause();
-            }
+            Stock *shelf_item = findStock(shelf, cart_item.getStockId());
+            int quantity = shelf_item->getQuantity() - cart_item.getQuantity();
+            shelf_item->setQuantity(quantity);
         }
-        else //if not found
-        {
-            item.setStockId(Stock::getNextStockId());
-            Stock::incrementStockId();
-            item.setQuantity(getValidatedInt("Quantity: "));
-            item.setCostValue(getValidatedDouble("Cost Value: "));
-
-            stockList.push_back(item);
-            updateFile(stockList);
-        }
-        idColor.push_back((item.getStockId()));
-
-        cout << "Do you want to register another item? (y/n): ";
-        getline(cin, confirm);
-        confirm = stringToLower(confirm);
-    } while (confirm == "y");
+    }
 }
+
+
 
 // OVERLOADED
 // finds product in vector by id
@@ -365,87 +363,22 @@ vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
     return items;
 }
 
-bool showSearchResults(vector<Stock> items)
-{
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Search Results:" << endl;
-    setColor(RESET);
-    if (items.empty())
-    {
-        limh(nDashSale);
-        setColor(CYAN);
-        cout << "No matching results found" << endl;
-        setColor(RESET);
-        limh(nDashSale);
-    }
-    else
-    {
-        setColor(Magenta);
-        cout << "Found " << items.size() << " matching results:" << endl;
-        setColor(RESET);
-        limh(nDashSale);
 
-        setColor(CYAN);
-        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
-        setColor(RESET);
-        limh(nDashSale);
-
-        for (const Stock &item : items)
-        {
-            if (item.getQuantity() == 0)
-                setColor("\033[1;31m"); // red for zero quantity
-
-            cout << item.toDisplay() << endl;
-
-            if (item.getQuantity() == 0)
-                setColor(RESET); // resets color
-        }
-        limh(nDashSale);
-    }
-
-    char confirm;
-    cout << "Do you wish to keep searching? (y/n): ";
-    cin >> confirm;
-    confirm = tolower(confirm);
-    cin.ignore();
-    if (confirm == 'y')
-        return true;
-    else
-        return false;
-}
 
 //  Will use to delete an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
 //  updates file
-bool removePurchaseFromStock(vector<Stock> &stockList, int id)
+void removePurchaseFromStock(vector<Stock> &stockList, Stock *item)
 {
-    Stock *item = findStock(stockList, id);
-    if (item != nullptr)
-    {
-        item->setQuantity(0);
-
-        updateFile(stockList);
-        return true;
-    }
-    else
-        return false;
+    item->setQuantity(0);
+    updateFile(stockList);
 }
 
-bool changeQuantityFromStock(vector<Stock> &stockList, int id, int quantity)
+void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity)
 {
-    Stock *item = findStock(stockList, id);
-    if (item != nullptr)
-    {
-        item->setQuantity(quantity);
-
-        updateFile(stockList);
-        return true;
-    }
-    else
-        return false;
+    item->setQuantity(quantity);
+    updateFile(stockList);
 }
-
 
 // searches for name and changes
 //  Will use to replace object in stockList vector
@@ -461,59 +394,72 @@ void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock new
     updateFile(stockList);
 }
 
-void printStock(const vector<Stock> &stockList, const string &title)
+void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor, const string colorCode)
 {
     clearConsole();
-    setColor("\033[1;33m");
+    int titleDASH = STOCK_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
+
+    setColor(YELLOW);
     cout << title;
     setColor(RESET);
+    limh(titleDASH);
 
-    limh(nDashSale);
     setColor(CYAN);
     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
     setColor(RESET);
-    limh(nDashSale);
+    limh();
 
     for (const Stock &item : stockList)
     {
         if (item.getQuantity() == 0)
-            setColor("\033[1;31m"); // red for zero quantity
+            setColor(RED); // red for zero quantity
+        if (idColor != nullptr)
+            for (int id : *idColor)
+            {
+                if (item.getStockId() == id)
+                    setColor(colorCode); // <color> for when item matches vector idColor
+            }
 
         cout << item.toDisplay() << endl;
 
         setColor(RESET); // resets color
     }
 
-    limh(nDashSale);
+    limh();
 }
 
-void printStock(const vector<Stock> &stockList, const string &title, vector<int> idColor, const string colorCode)
+// this function will only show relevant information to client
+// ie.: client doesn't need to know the purchase value, only the sale value
+void printProducts(const vector<Stock> &shelf)
 {
+    // just for pretty formatting
+    int titleLength = 13;
+
     clearConsole();
-    setColor("\033[1;33m");
-    cout << title;
+    setColor(YELLOW);
+    cout << "Products View";
     setColor(RESET);
+    limh(STOCK_DASH - titleLength);
 
-    limh(nDashSale);
     setColor(CYAN);
-    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl; // fix euro symbol €
+    cout << "ID | Product Name           | Quantity | Price w/Tax (eur)" << endl;
     setColor(RESET);
-    limh(nDashSale);
+    limh();
 
-    for (const Stock &item : stockList)
+    for (const Stock &item : shelf)
     {
         if (item.getQuantity() == 0)
-            setColor("\033[1;31m"); // red for zero quantity
-        for (int id : idColor)
-        {
-            if (item.getStockId() == id)
-                setColor(colorCode); // <color> for when item matches vector idColor
-        }
+            setColor(RED); // red for zero quantity
 
-        cout << item.toDisplay() << endl;
+        stringstream ss;
+        cout << setw(2) << item.getStockId() << " | "
+             << setw(22) << left << item.getProductName() << " | "
+             << setw(8) << right << item.getQuantity() << " | "
+             << fixed << setprecision(2) << item.getSaleValue() * 1.23 << " eur"
+             << endl;
 
         setColor(RESET); // resets color
     }
 
-    limh(nDashSale);
+    limh();
 }

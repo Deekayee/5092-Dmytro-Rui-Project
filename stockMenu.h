@@ -10,9 +10,10 @@
 #include "salesMenu.h"
 
 void mainMenu(vector<Stock> &stockList);
-
-void stockMenu(vector<Stock> &stockList);
 void editStockMenu(vector<Stock> &stockList);
+
+void addPurchaseToStock(vector<Stock> &stockList);
 void searchEditMenu(vector<Stock> &stockList);
+bool showSearchResults(vector<Stock> items);
 void changeEditMenu(vector<Stock> &stockList);
 void removeEditMenu(vector<Stock> &stockList);
