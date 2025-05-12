@@ -194,17 +194,18 @@ void writeToFile(string filename, const string &line)
 //  if the file doesn't exist, we create it, returns false if error
 void createStockFile()
 {
-    if (!ifstream("output/stockList.csv"))
+    if (!ifstream("stockList.csv"))
     {
         // gives the file a header
-        writeToFile("output/stockList.csv", "StockId,ProductName,Quantity,CostValue");
+        cout << "Creating file..." << endl;
+        writeToFile("stockList.csv", "StockId,ProductName,Quantity,CostValue");
     }
 }
 
 //  will validate pointer to vector and returns stockList by reference
 bool openStockFile(vector<Stock> *stockList)
 {
-    fstream file("output/stockList.csv", ios::in);
+    fstream file("stockList.csv", ios::in);
     if (file.is_open() && stockList != nullptr)
     {
         string line;
@@ -235,7 +236,7 @@ bool openStockFile(vector<Stock> *stockList)
 bool updateFile(vector<Stock> &stockList)
 {
     //  opens in truncate mode (overwrites)
-    ofstream file("output/stockList.csv");
+    ofstream file("stockList.csv");
     if (file.is_open())
     {
         file << "StockId,ProductName,Quantity,CostValue" << endl;
@@ -265,7 +266,7 @@ void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf)
 
 bool dataInit(vector<Stock> &stockList)
 {
-    cout << "Opening Stock File... ";
+    cout << "Opening Stock File... " << endl;
     createStockFile();
     if (openStockFile(&stockList))
     {

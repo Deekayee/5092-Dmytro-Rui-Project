@@ -46,7 +46,9 @@
         "bitset": "cpp",
         "cstring": "cpp",
         "map": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "ios": "cpp",
+        "xiosbase": "cpp"
     },
     "github.copilot.enable": {
         "*": false,

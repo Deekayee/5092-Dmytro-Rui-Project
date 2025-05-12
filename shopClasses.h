@@ -127,6 +127,12 @@ public:
         return saleWithoutTax * (1 + taxRatePercent / 100.0);
     }
 
+    // Returns the total value of the item in the cart, without tax.
+    double getTotalSaleWithoutTax() const
+    {
+        return saleWithoutTax * quantity;
+    }
+
     // Returns the total value of the item in the cart, including tax.
     double getTotalItemSellValue() const
     {
@@ -146,10 +152,9 @@ public:
         stringstream ss;
         ss << setw(2) << stockId << " | "
            << setw(22) << left << productName << " | "
-           << setw(4) << right << quantity << " | "
-           << setw(4) <<right << fixed << setprecision(2) << getSaleWithoutTax() << " eur |"
-           << setw(6) <<right << fixed << setprecision(2) << getTaxRatePercent() << "% |"
-           << setw(5) <<right << fixed << setprecision(2) << getSaleWithTax() << " eur |";
+           << setw(5) << right << quantity << " | "
+           << setw(8) << right << fixed << setprecision(2) << getSaleWithTax() << " eur | "
+           << setw(9) << right << fixed << setprecision(2) << getTotalItemSellValue() << " eur";
 
         return ss.str();
     }
@@ -218,6 +223,16 @@ public:
         items.push_back(item);
     }
 
+    double getTotalCostWithoutTax() const
+    {
+        double total = 0;
+        for (const auto &item : items)
+        {
+            total += item.getTotalSaleWithoutTax();
+        }
+        return total;
+    }
+
     // Calculates the total cost of all items in the receipt by summing the total value of each item, including tax.
     double getTotalCost() const
     {
@@ -225,6 +240,17 @@ public:
         for (const auto &item : items)
         {
             total += item.getTotalItemSellValue();
+        }
+        return total;
+    }
+
+    // Calculates the total tax amount of all items in the receipt by summing the tax amount of each item.
+    double getTotalTax() const
+    {
+        double total = 0;
+        for (const auto &item : items)
+        {
+            total += item.getTotalItemSellValue() - item.getTotalSaleWithoutTax();
         }
         return total;
     }
@@ -239,37 +265,51 @@ public:
     string toDisplay() const
     {
         stringstream ss;
-        ss << "Receipt: " << endl;
-        ss << string(80, '-') << endl;
+        ss << "Receipt:" << endl;
+        ss << string(81, '-') << endl;
         ss << "Receipt ID: " << receiptId << endl;
-        ss << "Client ID: " << clientId << endl;
-        ss << "Date: " << date << endl;
-        ss << "Items: " << endl;
+        ss << "Client ID:  " << clientId << endl;
+        ss << "Date:       " << date << endl;
+        ss << "Items:" << endl;
 
-        ss << string(80, '-') << endl;
+        ss << string(81, '-') << endl;
 
-        // Add table header
+        // Table header
         ss << setw(2) << "ID" << " | "
            << setw(22) << left << "Product Name" << " | "
-           << setw(8) << right << "Qty" << " | "
-           << "Price   |"
-           << "Tax % |"
-           << "Total  |" << endl;
+           << setw(5) << right << "Qtty" << " | "
+           << setw(12) << right << "Price" << " | "
+           << setw(12) << right << "Total"
+           << endl;
 
-        // Divider
-        ss << string(80, '-') << endl;
+        ss << string(81, '-') << endl;
 
-        // List each item
+        // Items
         for (const auto &item : items)
         {
             ss << item.toDisplay() << endl;
         }
 
-        // Divider and totals
-        ss << string(80, '-') << endl;
-        ss << "Total Cost:     " << fixed << setprecision(2) << getTotalCost() << " eur" << endl;
-        ss << "Payment Amount: " << fixed << setprecision(2) << paymentAmount << " eur" << endl;
-        ss << "Change:         " << fixed << setprecision(2) << getChange() << " eur" << endl;
+        ss << string(81, '-') << endl;
+
+        // Totals
+        ss << setw(25) << right << "Total w/o Tax: "
+           << setw(9) << fixed << setprecision(2) << getTotalCostWithoutTax() << " eur" << endl;
+
+        ss << setw(25) << right << "Total Tax (23%): "
+           << setw(9) << fixed << setprecision(2) << getTotalTax() << " eur" << endl;
+
+        ss << setw(25) << right << "Total Cost: "
+           << setw(9) << fixed << setprecision(2) << getTotalCost() << " eur" << endl;
+
+        ss << setw(25) << right << "Payment Amount: "
+           << setw(9) << fixed << setprecision(2) << paymentAmount << " eur" << endl;
+
+        ss << setw(25) << right << "Change: "
+           << setw(9) << fixed << setprecision(2) << getChange() << " eur" << endl;
+
+        ss << string(81, '-') << endl
+           << endl;
 
         return ss.str();
     }
