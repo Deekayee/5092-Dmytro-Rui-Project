@@ -19,31 +19,37 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             //   menuState:
             //   false -> Shows Products (default)
             //   true -> Shows Cart
+            int limiterType;
+            string switchName;
             if (menuState == false)
+            {
                 // needs to print price for client, meaning, profit margin + maybe with tax
                 printProducts(shelf);
-            if (menuState == true)
+                limiterType = PRODUCTS_DASH;
+                switchName = "4. View Cart";
+            }
+            else
+            {
                 printCart(cart);
+                limiterType = CART_DASH;
+                switchName = "4. View Products";
+            }
 
-            cout << "Options:" << endl;
-            limh(SALES_DASH);
-            cout << "1. Add product to cart" << endl;
-            limh(SALES_DASH);
-            cout << "2. Change product in cart" << endl;
-            limh(SALES_DASH);
-            cout << "3. Remove product from cart" << endl;
-            limh(SALES_DASH);
-            cout << "4. Checkout" << endl;
-            limh(SALES_DASH);
-            cout << "5. Clear cart" << endl;
-            limh(SALES_DASH);
-            if (menuState == 0)
-                cout << "6. View Cart" << endl;
-            if (menuState == 1)
-                cout << "6. View Products" << endl;
-            limh(SALES_DASH);
+            setColor(Cyan);
+            cout << "Sales Options:" << endl;
+            setColor(RESET);
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "1. Add product to cart" << setw(20) << left << switchName << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "2. Change product in cart" << setw(20) << left << "5. Clear cart" << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "3. Remove product from cart" << setw(20) << left << "6. Checkout" << endl;
+            // limh(limiterType);
+            // limh(limiterType);
+            // limh(limiterType);
+            limh(limiterType);
             cout << "0. Go back" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "Option: ";
 
             getline(cin, input);
@@ -60,16 +66,15 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
         case 3:
             removeProductCart(shelf, cart, menuState);
             break;
-        case 4:
-            checkoutMenu(stockList, shelf, cart);
+        case 6:
+            menuState = !menuState; // flips menuState
             break;
         case 5:
             clearCart(cart, &shelf);
             break;
-        case 6:
-            menuState = !menuState; // flips menuState
+        case 4:
+            checkoutMenu(stockList, shelf, cart);
             break;
-
         case 0:
             return;
 
@@ -94,39 +99,6 @@ CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
         }
     }
     return nullptr;
-}
-
-// Prints items in cart similar to printStock()
-void printCart(vector<CartItem> &cart) // TODO
-{
-    int titleDASH = SALES_DASH - 9; // to make sure it fits the rest of the horizontal lims
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Your cart";
-    setColor(RESET);
-
-    limh(titleDASH);
-    setColor(CYAN);
-    cout << setw(2) << "ID" << " | "
-         << setw(22) << left << "Product Name" << " | "
-         << setw(5) << right << "Qtty" << " | "
-         << setw(12) << right << "Price" << " | "
-         << setw(12) << right << "Total"
-         << endl;
-    setColor(RESET);
-    limh(SALES_DASH);
-    if (cart.empty())
-    {
-        cout << "Cart is empty." << endl;
-        limh(SALES_DASH);
-        return;
-    }
-    for (const CartItem &cartItem : cart)
-    {
-        cout << cartItem.toDisplay() << endl;
-    }
-
-    limh(SALES_DASH);
 }
 
 // Adds items to Cart similar to addPurchaseToStock()
@@ -392,18 +364,13 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
             }
         } while (paymentAmount < total);
 
-        Receipt receipt(cart, paymentAmount);
         clearConsole();
+
+        gambling(cart);
+        Receipt receipt(cart, paymentAmount);
 
         cout << receipt.toDisplay();
         updateStockFromShelf(stockList, shelf);
-
-        // for (const CartItem &cartItem : cart)
-        // {
-        //     Stock *stockPtr = findStock(stockList, cartItem.getStockId());
-        //     int newQuantity = stockPtr->getQuantity() - cartItem.getQuantity();
-        //     changeQuantityFromStock(stockList, stockPtr, newQuantity);
-        // }
 
         clearCart(cart);
         pause();
@@ -411,3 +378,68 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
     else
         return;
 }
+
+void gambling(vector<CartItem> &sale, int chance)
+{
+    srand(time(0));
+    int badLuck = (rand() % 101); // badluck goes from 0 to 100
+
+    if (badLuck < chance) // if the "bad luck" is less than the chance, win
+    {
+        vector<CartItem> roster = sale;
+
+        srand(time(0));                           // reinitializing seed
+        int sortedIndex = rand() % roster.size(); // randomizing index
+
+        CartItem jackpot = roster.at(sortedIndex);
+        cout << "You won a free " << jackpot.getProductName() << "!" << endl;
+        jackpot.setQuantity(1); // client only gets one, >:(
+
+        int resetPrice = 0 - jackpot.getSaleWithoutTax(); // price is negative to subtract total
+        jackpot.setSaleWithoutTax(resetPrice);
+
+        sale.push_back(jackpot); // item gets added at end of receipt for display
+    }
+}
+
+// void gambling(Receipt &sale, int chance)
+// {
+//     srand(time(0));
+//     int badLuck = (rand() % 101); // badluck goes from 0 to 100
+
+//     if (badLuck < chance)         // if the "bad luck" is less than the chance, win
+//     {
+//         vector<CartItem> roster = sale.getItems();
+
+//         srand(time(0));                           // reinitializing seed
+//         int sortedIndex = rand() % roster.size(); // randomizing index
+
+//         CartItem jackpot = roster.at(sortedIndex);
+//         cout << "You won a free " << jackpot.getProductName() << "!" << endl;
+//         jackpot.setQuantity(1); // client only gets one, >:(
+
+//         int resetPrice = 0 - jackpot.getSaleWithoutTax(); //price is negative to subtract total
+//         jackpot.setSaleWithoutTax(resetPrice);
+
+//         sale.getItems().push_back(jackpot); //item gets added at end of receipt for display
+//     }
+// }
+
+// bool registerLogin()
+// {
+//     clearConsole();
+//     setColor(YELLOW);
+//     cout << "Registering Client";
+//     setColor(RESET);
+//     limh();
+
+//     fstream credentials("loginInfo.csv", ios::app);
+
+//     cout << "Please insert name: ";
+//     string name;
+//     getline(cin, name);
+// }
+// bool login()
+// {
+
+// }

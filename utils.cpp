@@ -440,12 +440,12 @@ void printProducts(const vector<Stock> &shelf)
     setColor(YELLOW);
     cout << "Products View";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(PRODUCTS_DASH - titleLength);
 
     setColor(CYAN);
     cout << "ID | Product Name           | Quantity | Price w/Tax (eur)" << endl;
     setColor(RESET);
-    limh();
+    limh(PRODUCTS_DASH);
 
     for (const Stock &item : shelf)
     {
@@ -462,5 +462,38 @@ void printProducts(const vector<Stock> &shelf)
         setColor(RESET); // resets color
     }
 
-    limh();
+    limh(PRODUCTS_DASH);
+}
+
+// Prints items in cart similar to printStock()
+void printCart(vector<CartItem> &cart) // TODO
+{
+    int titleDASH = CART_DASH - 9; // to make sure it fits the rest of the horizontal lims
+    clearConsole();
+    setColor(YELLOW);
+    cout << "Your cart";
+    setColor(RESET);
+
+    limh(titleDASH);
+    setColor(CYAN);
+    cout << setw(2) << "ID" << " | "
+         << setw(22) << left << "Product Name" << " | "
+         << setw(5) << right << "Qtty" << " | "
+         << setw(12) << right << "Price" << " | "
+         << setw(12) << right << "Total"
+         << endl;
+    setColor(RESET);
+    limh(CART_DASH);
+    if (cart.empty())
+    {
+        cout << "Cart is empty." << endl;
+        limh(CART_DASH);
+        return;
+    }
+    for (const CartItem &cartItem : cart)
+    {
+        cout << cartItem.toDisplay() << endl;
+    }
+
+    limh(CART_DASH);
 }
