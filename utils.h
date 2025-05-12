@@ -34,8 +34,9 @@ using namespace std;
 #define UNDERLINE "\033[4m"
 
 // HORIZONTAL LIMITERS SIZES
-#define STOCK_DASH 63
-#define SALES_DASH 67
+#define STOCK_DASH 53
+#define PRODUCTS_DASH 59
+#define CART_DASH 66
 
 // MAX PRODUCT NAME SIZE
 #define STRING_PRODUCT_MAX 22

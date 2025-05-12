@@ -19,31 +19,40 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             //   menuState:
             //   false -> Shows Products (default)
             //   true -> Shows Cart
+            int limiterType;
             if (menuState == false)
+            {
                 // needs to print price for client, meaning, profit margin + maybe with tax
                 printProducts(shelf);
+                limiterType = PRODUCTS_DASH;
+            }
             if (menuState == true)
+            {
                 printCart(cart);
+                limiterType = CART_DASH;
+            }
 
-            cout << "Options:" << endl;
-            limh(SALES_DASH);
+            setColor(BLUE);
+            cout << "Sales Options:" << endl;
+            setColor(RESET);
+            limh(limiterType);
             cout << "1. Add product to cart" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "2. Change product in cart" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "3. Remove product from cart" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "4. Checkout" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "5. Clear cart" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             if (menuState == 0)
                 cout << "6. View Cart" << endl;
             if (menuState == 1)
                 cout << "6. View Products" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "0. Go back" << endl;
-            limh(SALES_DASH);
+            limh(limiterType);
             cout << "Option: ";
 
             getline(cin, input);
@@ -94,39 +103,6 @@ CartItem *findItemCart(vector<CartItem> &cart, int id, int *index)
         }
     }
     return nullptr;
-}
-
-// Prints items in cart similar to printStock()
-void printCart(vector<CartItem> &cart) // TODO
-{
-    int titleDASH = SALES_DASH - 9; // to make sure it fits the rest of the horizontal lims
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Your cart";
-    setColor(RESET);
-
-    limh(titleDASH);
-    setColor(CYAN);
-    cout << setw(2) << "ID" << " | "
-         << setw(22) << left << "Product Name" << " | "
-         << setw(5) << right << "Qtty" << " | "
-         << setw(12) << right << "Price" << " | "
-         << setw(12) << right << "Total"
-         << endl;
-    setColor(RESET);
-    limh(SALES_DASH);
-    if (cart.empty())
-    {
-        cout << "Cart is empty." << endl;
-        limh(SALES_DASH);
-        return;
-    }
-    for (const CartItem &cartItem : cart)
-    {
-        cout << cartItem.toDisplay() << endl;
-    }
-
-    limh(SALES_DASH);
 }
 
 // Adds items to Cart similar to addPurchaseToStock()
@@ -393,10 +369,10 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
         } while (paymentAmount < total);
 
         clearConsole();
-        
+
         gambling(cart);
         Receipt receipt(cart, paymentAmount);
-        
+
         cout << receipt.toDisplay();
         updateStockFromShelf(stockList, shelf);
 
@@ -412,7 +388,7 @@ void gambling(vector<CartItem> &sale, int chance)
     srand(time(0));
     int badLuck = (rand() % 101); // badluck goes from 0 to 100
 
-    if (badLuck < chance)         // if the "bad luck" is less than the chance, win
+    if (badLuck < chance) // if the "bad luck" is less than the chance, win
     {
         vector<CartItem> roster = sale;
 
@@ -423,10 +399,10 @@ void gambling(vector<CartItem> &sale, int chance)
         cout << "You won a free " << jackpot.getProductName() << "!" << endl;
         jackpot.setQuantity(1); // client only gets one, >:(
 
-        int resetPrice = 0 - jackpot.getSaleWithoutTax(); //price is negative to subtract total
+        int resetPrice = 0 - jackpot.getSaleWithoutTax(); // price is negative to subtract total
         jackpot.setSaleWithoutTax(resetPrice);
 
-        sale.push_back(jackpot); //item gets added at end of receipt for display
+        sale.push_back(jackpot); // item gets added at end of receipt for display
     }
 }
 
