@@ -230,6 +230,7 @@ public:
         {
             total += item.getTotalSaleWithoutTax();
         }
+        total = round(total) / 100;
         return total;
     }
 
@@ -241,6 +242,7 @@ public:
         {
             total += item.getTotalItemSellValue();
         }
+        total = round(total * 100) / 100;
         return total;
     }
 
@@ -252,13 +254,15 @@ public:
         {
             total += item.getTotalItemSellValue() - item.getTotalSaleWithoutTax();
         }
+        total = round(total * 100) / 100;
         return total;
     }
 
     // Calculates the change to be returned to the client based on the total cost of the items purchased.
     double getChange() const
     {
-        return paymentAmount - getTotalCost();
+        double change = round((paymentAmount - getTotalCost()) * 100) / 100;
+        return change;
     }
 
     // Returns a string representation of the receipt, including its ID, client ID, payment amount, date, items and total cost and change.

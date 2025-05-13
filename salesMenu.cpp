@@ -347,6 +347,7 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
     {
         total += cartItem.getTotalItemSellValue();
     }
+    total = round(total * 100) / 100;
     cout << "Total: " << total << " eur" << endl;
 
     if (promptYESOrNo("Do you wish to confirm?"))
