@@ -384,23 +384,23 @@ void gambling(vector<CartItem> &sale, int chance)
     srand(time(0));
     int badLuck = (rand() % 101); // badluck goes from 0 to 100
 
-    // if (badLuck < chance) // if the "bad luck" is less than the chance, win
-    //{
-    vector<CartItem> roster = sale;
+    if (badLuck < chance) // if the "bad luck" is less than the chance, win
+    {
+        vector<CartItem> roster = sale;
 
-    srand(time(0));                           // reinitializing seed
-    int sortedIndex = rand() % roster.size(); // randomizing index
+        srand(time(0));                           // reinitializing seed
+        int sortedIndex = rand() % roster.size(); // randomizing index
 
-    CartItem jackpot = roster.at(sortedIndex);
-    cout << "You won a free " << jackpot.getProductName() << "!" << endl;
-    jackpot.setQuantity(1); // client only gets one, >:(
+        CartItem jackpot = roster.at(sortedIndex);
+        cout << "You won a free " << jackpot.getProductName() << "!" << endl;
+        jackpot.setQuantity(1); // client only gets one, >:(
 
-    double fullPrice = round(jackpot.getSaleWithTax() * 100.0) / 100.0;
-    jackpot.setSaleWithoutTax(-fullPrice); // Negate full price (as base)
-    jackpot.setTaxRatePercent(0.0);        // Disable tax (don't apply again)
+        double fullPrice = round(jackpot.getSaleWithTax() * 100.0) / 100.0;
+        jackpot.setSaleWithoutTax(-fullPrice); // Negate full price (as base)
+        jackpot.setTaxRatePercent(0.0);        // Disable tax (don't apply again)
 
-    sale.push_back(jackpot); // item gets added at end of receipt for display
-    //}
+        sale.push_back(jackpot); // item gets added at end of receipt for display
+    }
 }
 
 // void gambling(Receipt &sale, int chance)
