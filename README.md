@@ -1,70 +1,90 @@
-# Final Project for 5092
+# 🎥 Camera Shop Terminal App
 
-**Grupo Dmytro e Rui**
+> A simple yet effective terminal-based store management system, written in C++.  
 
-## Objetivo
-Elaborar um programa em C++ com o intuito de gestão de um pequeno comércio local, concretizando os pontos abaixo.
-
-### Tema
-Loja de Maquinas Fotograficas
+Developed with ❤️ by:  
+[@Deekayee](https://github.com/Deekayee)  
+[@xd4rk1ng](https://github.com/xd4rk1ng)
 
 ---
 
-## Funcionalidades
+## 📦 About the Project
 
-### Ações
+Camera Shop is a lightweight, terminal-driven application designed for managing a small retail camera store. It operates entirely via command-line and manages product stock, sales, and checkout—all from a single executable.  
 
-- **Efetuar Venda:**
-  1. Apresentar os produtos no ecrã.
-  2. Selecionar produto e indicar a quantidade a comprar.
-  3. Checkout (apresentar resumo da compra e efetuar pagamento).
-  4. Imprimir talão no ecrã.
-
-- **Criação de Compra para Stock:**
-  1. Criação de artigo novo.
-  2. Eliminar produto.
+Upon first run, the program checks for a `stockList.csv` file in its folder. If the file is missing, a new blank stock file will be automatically created, ready for use.
 
 ---
 
-## Estruturas
+## 🧭 Main Menu
 
-- **Stock:**
-  - ID do produto
-  - Quantidade
-  - Nome do produto
-  - Preço de custo  
-    *(preço de venda = preço de custo + 30%)*
+You'll be greeted with three main options:
 
-- **Talão:**
-  1. Número da fatura
-  2. Número do cliente
-  3. Nome do produto
-  4. Quantidade
-  5. Preço sem IVA
-  6. IVA
-  7. Total com IVA
-  8. Valor entregue
-  9. Troco
+1. 🛒 **Shop Sales**
+2. 📦 **Shop Stock**
+3. 🚪 **Exit**
 
 ---
 
-## Outros Requisitos
+## 🛍️ Shop Sales
 
-- Data do talão inserida automaticamente pelo sistema.
-- O programa, ao iniciar, deve já conter valores para todas as estruturas.
-- **Extra:** De tempos em tempos, uma das vendas deve ser sorteada e o cliente não paga.
-- O programa deve conter todas as validações necessárias para evitar ações indevidas.
-- O stock deve ser atualizado automaticamente nas compras e vendas.
+This module allows you to browse stock or manage your shopping cart. It includes two views:
+
+- **Products View** – Displays all products available for purchase.
+- **Cart View** – Shows all items currently in your cart.
+
+### Available Options:
+
+1. ➕ Add to Cart  
+2. 🔁 Change Quantity in Cart  
+3. ❌ Remove from Cart  
+4. 🔄 Switch View (Products / Cart)  
+5. 🧹 Clear Cart  
+6. 💰 Checkout  
+0. 🔙 Go Back
 
 ---
 
-## Requisitos Técnicos
+## 🏪 Shop Stock Management
 
-O programa a ser elaborado em C++ deve utilizar:
+The second main menu option handles store-side stock operations. It displays all items with detailed information useful for inventory management.
 
-- Funções
-- Vetores
-- Matrizes
-- Ponteiros
-- Estruturas de decisão
-- Estruturas de repetição
+### Available Options:
+
+1. 🔍 Search Stock  
+2. ➕ Add New Product  
+3. ✏️ Edit Existing Product  
+4. ❌ Remove Product  
+0. 🔙 Go Back
+
+---
+
+## 🎉 Surprise Promotion (Gambling Feature™)
+
+At checkout, you may get lucky and win **one random cart item for free!**  
+Try your luck—no risk, all reward!
+
+---
+
+## 📁 File Structure
+
+- `stockList.csv` – Product stock database.
+- Receipts are stored internally and displayed at checkout.
+
+---
+
+## 🚀 Getting Started
+
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/Deekayee/your-repo.git
+   cd your-repo
+   ```
+2. Compile the program (example using `g++`)  
+   ```bash
+   g++ *.cpp -o shop.exe
+   ```
+3. Run it!  
+   ```bash
+   ./shop.exe
+   ```
