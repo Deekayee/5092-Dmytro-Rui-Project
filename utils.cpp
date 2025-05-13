@@ -31,29 +31,40 @@ void clearConsole() // clear the console
 // prints as -> "Do you wish to continue (y̲/n)?"
 bool promptYESOrNo(string prompt)
 {
-    cout << prompt
-         << "(" << UNDERLINE << "y" << RESET << "/n):"; // << endl;
-    getline(cin, prompt);
-    if (stringToLower(prompt) == "y" || prompt.empty())
+    string input;
+    while (true)
     {
-        return true;
+        cout << prompt << " (" << UNDERLINE << "y" << RESET << "/n): ";
+        getline(cin, input);
+        input = stringToLower(input);
+
+        if (input == "y" || input.empty())
+            return true;
+        else if (input == "n")
+            return false;
+        else
+            cout << "Invalid input. Please enter 'y' or 'n'." << endl;
     }
-    else
-        return false;
 }
+
 // default prompt -> "Do you wish to continue?"
 // prints as -> "Do you wish to continue (y/n̲)?"
 bool promptyesOrNO(string prompt)
 {
-    cout << prompt
-         << "(y/" << UNDERLINE << "n" << RESET << "):" << endl;
-    getline(cin, prompt);
-    if (stringToLower(prompt) == "n" || prompt.empty())
+    string input;
+    while (true)
     {
-        return false;
+        cout << prompt << " (y/" << UNDERLINE << "n" << RESET << "): ";
+        getline(cin, input);
+        input = stringToLower(input);
+
+        if (input == "n" || input.empty())
+            return false;
+        else if (input == "y")
+            return true;
+        else
+            cout << "Invalid input. Please enter 'y' or 'n' or press enter for default." << endl;
     }
-    else
-        return true;
 }
 
 // returns true if number is validated, false if not
@@ -305,8 +316,6 @@ void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &
     }
 }
 
-
-
 // OVERLOADED
 // finds product in vector by id
 // passes item by reference:
@@ -363,8 +372,6 @@ vector<Stock> searchForProduct(vector<Stock> &stockList, const string &name)
     }
     return items;
 }
-
-
 
 //  Will use to delete an item, (setQuantity to 0) in stockList vector
 //  returns true if successful, false if not (product not found)
