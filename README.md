@@ -77,8 +77,8 @@ Try your luck—no risk, all reward!
 
 1. Clone the repository  
    ```bash
-   git clone https://github.com/Deekayee/your-repo.git
-   cd your-repo
+   git clone https://github.com/Deekayee/5092-Dmytro-Rui-Project.git
+   cd 5092-Dmytro-Rui-Project
    ```
 2. Compile the program (example using `g++`)  
    ```bash
