@@ -14,7 +14,7 @@ void mainMenu(vector<Stock> &stockList)
     // adding copy of stockList to shelf
     // this will display items to user in specified order:
     do
-    {   
+    {
         shelfInit(stockList, cart, shelf);
         do
         {
@@ -336,6 +336,12 @@ void removeEditMenu(vector<Stock> &stockList)
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
+            pause();
+            continue;
+        }
+        if (item->getQuantity() == 0)
+        {
+            cout << "Item quantity already empty" << endl;
             pause();
             continue;
         }

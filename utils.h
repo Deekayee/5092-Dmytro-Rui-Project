@@ -49,7 +49,7 @@ void setColor(const string &colorCode);
 
 // VALIDATION FUNCTIONS
 bool validateMenuInput(const string &input, int &opt);
-int getValidatedInt(const string &prompt);
+int getValidatedInt(const string &prompt, bool zero = false);
 double getValidatedDouble(const string &prompt);
 string stringToLower(string name);
 bool promptYESOrNo(string prompt = "Do you wish to continue?");

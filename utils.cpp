@@ -101,7 +101,7 @@ bool validateMenuInput(const string &input, int &opt)
     return true;
 }
 
-int getValidatedInt(const string &prompt)
+int getValidatedInt(const string &prompt, bool zero)
 {
     string input;
     int value;
@@ -120,7 +120,7 @@ int getValidatedInt(const string &prompt)
         try
         {
             value = stoi(input);
-            if (value == 0)
+            if (value == 0 && zero == false)
             {
                 cout << "Value must be greater than zero." << endl;
                 continue;
@@ -503,4 +503,9 @@ void printCart(vector<CartItem> &cart) // TODO
     }
 
     limh(CART_DASH);
+}
+
+bool registerUser()
+{
+
 }
