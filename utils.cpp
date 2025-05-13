@@ -505,7 +505,3 @@ void printCart(vector<CartItem> &cart) // TODO
     limh(CART_DASH);
 }
 
-bool registerUser()
-{
-
-}
