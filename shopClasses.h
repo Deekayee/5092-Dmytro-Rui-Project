@@ -111,7 +111,7 @@ public:
 
     int getStockId() const { return stockId; }
     int getQuantity() const { return quantity; }
-    int getSaleWithoutTax() const { return saleWithoutTax; }
+    double getSaleWithoutTax() const { return saleWithoutTax; }
     double getTaxRatePercent() const { return taxRatePercent; }
     string getProductName() const { return productName; }
 
@@ -230,7 +230,7 @@ public:
         {
             total += item.getTotalSaleWithoutTax();
         }
-        total = round(total) / 100;
+        total = round(total * 100) / 100;
         return total;
     }
 
