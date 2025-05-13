@@ -66,13 +66,13 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
         case 3:
             removeProductCart(shelf, cart, menuState);
             break;
-        case 6:
+        case 4:
             menuState = !menuState; // flips menuState
             break;
         case 5:
             clearCart(cart, &shelf);
             break;
-        case 4:
+        case 6:
             checkoutMenu(stockList, shelf, cart);
             break;
         case 0:
