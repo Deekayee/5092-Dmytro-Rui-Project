@@ -101,7 +101,7 @@ bool validateMenuInput(const string &input, int &opt)
     return true;
 }
 
-int getValidatedInt(const string &prompt)
+int getValidatedInt(const string &prompt, bool zero)
 {
     string input;
     int value;
@@ -120,7 +120,7 @@ int getValidatedInt(const string &prompt)
         try
         {
             value = stoi(input);
-            if (value == 0)
+            if (value == 0 && zero == false)
             {
                 cout << "Value must be greater than zero." << endl;
                 continue;
@@ -460,7 +460,7 @@ void printProducts(const vector<Stock> &shelf)
             setColor(RED); // red for zero quantity
 
         stringstream ss;
-        cout << setw(2) << item.getStockId() << " | "
+        cout << setw(2) << right << item.getStockId() << " | "
              << setw(22) << left << item.getProductName() << " | "
              << setw(8) << right << item.getQuantity() << " | "
              << fixed << setprecision(2) << item.getSaleValue() * 1.23 << " eur"
@@ -503,4 +503,9 @@ void printCart(vector<CartItem> &cart) // TODO
     }
 
     limh(CART_DASH);
+}
+
+bool registerUser()
+{
+
 }

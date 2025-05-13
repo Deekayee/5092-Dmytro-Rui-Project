@@ -39,11 +39,11 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             cout << "Sales Options:" << endl;
             setColor(RESET);
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "1. Add product to cart" << setw(20) << left << switchName << endl;
+            cout << setw(limiterType - 20) << left << "1. Add to cart" << setw(20) << left << switchName << endl;
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "2. Change product in cart" << setw(20) << left << "5. Clear cart" << endl;
+            cout << setw(limiterType - 20) << left << "2. Change cart" << setw(20) << left << "5. Clear cart" << endl;
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "3. Remove product from cart" << setw(20) << left << "6. Checkout" << endl;
+            cout << setw(limiterType - 20) << left << "3. Remove from cart" << setw(20) << left << "6. Checkout" << endl;
             // limh(limiterType);
             // limh(limiterType);
             // limh(limiterType);
@@ -121,7 +121,9 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
         else
             printCart(cart);
 
-        int id = getValidatedInt("Insert product ID to add to cart: ");
+        int id = getValidatedInt("Insert product ID to add to cart (Enter 0 to return): ", true);
+        if (id == 0)
+            return;
 
         // checks initial quantity in stock and its existence
         Stock *item = findStock(shelf, id);
@@ -143,7 +145,7 @@ void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState
 
         /*verify item quantity is valid*/
         // needs cycle to ensure cartitem is created, or function is exited
-        int quantity = getValidatedInt("How many do you want good sir?: ");
+        int quantity = getValidatedInt("How many do you want good sir? (Enter 0 to return): ");
         string input;
 
         CartItem *bagged_item = findItemCart(cart, item->getStockId());
@@ -214,7 +216,9 @@ void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
             printProducts(shelf);
         else
             printCart(cart);
-        int id = getValidatedInt("Insert product ID to remove: ");
+        int id = getValidatedInt("Insert product ID to remove (Enter 0 to return): ", true);
+        if (id == 0)
+            return;
 
         int index;
         CartItem *bagged_item = findItemCart(cart, id, &index);
@@ -245,6 +249,13 @@ void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 
 void clearCart(vector<CartItem> &cart, vector<Stock> *shelf)
 {
+    if (cart.empty())
+    {
+        cout << "Cart is already empty";
+        pause();
+        return;
+    }
+
     // *this case represents a canceled sale through the menu
     // here we need to bring back the quantities in the cart back to the shelf
     // before deleting them
@@ -255,6 +266,7 @@ void clearCart(vector<CartItem> &cart, vector<Stock> *shelf)
             Stock *item = findStock(*shelf, bagged_item.getStockId());
             item->setQuantity(bagged_item.getQuantity() + item->getQuantity());
         }
+
     // *otherwise, if shelf isnt specified, it means checkout is happening, so
     // the shelf already owns the correct quantities and is ready to update our
     // stockList
@@ -273,7 +285,9 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
         else
             printCart(cart);
 
-        int id = getValidatedInt("Insert product ID in cart to change: ");
+        int id = getValidatedInt("Insert product ID in cart to change (Enter 0 to return): ", true);
+        if (id == 0)
+            return;
 
         CartItem *bagged_item = findItemCart(cart, id);
         if (bagged_item) // if item exists in cart
@@ -291,7 +305,7 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 
             int item_quantity = item->getQuantity();
             int bagged_quantity = bagged_item->getQuantity();
-            int quantity = getValidatedInt("Insert new quantity: ");
+            int quantity = getValidatedInt("Insert new quantity: ", true);
             quantity = quantity - bagged_item->getQuantity(); // will be the added/removed quantity from either cart or shelf
 
             if (quantity > item->getQuantity())
@@ -367,7 +381,7 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
 
         clearConsole();
 
-        gambling(cart,100);
+        gambling(cart, 100);
         Receipt receipt(cart, paymentAmount);
 
         cout << receipt.toDisplay();
@@ -387,9 +401,9 @@ void gambling(vector<CartItem> &sale, int chance)
 
     if (badLuck < chance) // if the "bad luck" is less than the chance, win
     {
-        //vector<CartItem> roster = sale;
+        // vector<CartItem> roster = sale;
 
-        srand(time(0));                           // reinitializing seed
+        srand(time(0));                         // reinitializing seed
         int sortedIndex = rand() % sale.size(); // randomizing index
 
         CartItem jackpot = sale.at(sortedIndex);
@@ -397,51 +411,9 @@ void gambling(vector<CartItem> &sale, int chance)
         jackpot.setQuantity(1); // client only gets one, >:(
 
         double fullPrice = jackpot.getSaleWithoutTax();
-        //jackpot.setTaxRatePercent(0);        // Disable tax (don't apply again)
+        // jackpot.setTaxRatePercent(0);        // Disable tax (don't apply again)
         jackpot.setSaleWithoutTax(-fullPrice); // Negate full price (as base)
 
         sale.push_back(jackpot); // item gets added at end of receipt for display
     }
 }
-
-// void gambling(Receipt &sale, int chance)
-// {
-//     srand(time(0));
-//     int badLuck = (rand() % 101); // badluck goes from 0 to 100
-
-//     if (badLuck < chance)         // if the "bad luck" is less than the chance, win
-//     {
-//         vector<CartItem> roster = sale.getItems();
-
-//         srand(time(0));                           // reinitializing seed
-//         int sortedIndex = rand() % roster.size(); // randomizing index
-
-//         CartItem jackpot = roster.at(sortedIndex);
-//         cout << "You won a free " << jackpot.getProductName() << "!" << endl;
-//         jackpot.setQuantity(1); // client only gets one, >:(
-
-//         int resetPrice = 0 - jackpot.getSaleWithoutTax(); //price is negative to subtract total
-//         jackpot.setSaleWithoutTax(resetPrice);
-
-//         sale.getItems().push_back(jackpot); //item gets added at end of receipt for display
-//     }
-// }
-
-// bool registerLogin()
-// {
-//     clearConsole();
-//     setColor(YELLOW);
-//     cout << "Registering Client";
-//     setColor(RESET);
-//     limh();
-
-//     fstream credentials("loginInfo.csv", ios::app);
-
-//     cout << "Please insert name: ";
-//     string name;
-//     getline(cin, name);
-// }
-// bool login()
-// {
-
-// }
