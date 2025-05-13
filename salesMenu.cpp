@@ -39,11 +39,11 @@ void salesMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> 
             cout << "Sales Options:" << endl;
             setColor(RESET);
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "1. Add product to cart" << setw(20) << left << switchName << endl;
+            cout << setw(limiterType - 20) << left << "1. Add to cart" << setw(20) << left << switchName << endl;
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "2. Change product in cart" << setw(20) << left << "5. Clear cart" << endl;
+            cout << setw(limiterType - 20) << left << "2. Change cart" << setw(20) << left << "5. Clear cart" << endl;
             limh(limiterType);
-            cout << setw(limiterType - 20) << left << "3. Remove product from cart" << setw(20) << left << "6. Checkout" << endl;
+            cout << setw(limiterType - 20) << left << "3. Remove from cart" << setw(20) << left << "6. Checkout" << endl;
             // limh(limiterType);
             // limh(limiterType);
             // limh(limiterType);

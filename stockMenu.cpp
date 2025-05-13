@@ -82,11 +82,11 @@ void editStockMenu(vector<Stock> &stockList)
         limh(STOCK_DASH);
         cout << "1. Search Stock" << endl;
         limh(STOCK_DASH);
-        cout << "2. Add purchase to Stock" << endl;
+        cout << "2. Add Stock" << endl;
         limh(STOCK_DASH);
-        cout << "3. Change purchase from Stock" << endl;
+        cout << "3. Change Stock" << endl;
         limh(STOCK_DASH);
-        cout << "4. Remove purchase from Stock" << endl;
+        cout << "4. Remove Stock" << endl;
         limh(STOCK_DASH);
         cout << "0. Go Back" << endl;
         limh(STOCK_DASH);
