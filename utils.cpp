@@ -43,7 +43,7 @@ bool promptYESOrNo(string prompt)
         else if (input == "n")
             return false;
         else
-            cout << "Invalid input. Please enter 'y' or 'n'." << endl;
+            cout << "Invalid input. Please enter 'y' or 'n' or press enter for default." << endl;
     }
 }
 
