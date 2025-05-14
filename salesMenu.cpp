@@ -305,7 +305,7 @@ void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuSt
 
             int item_quantity = item->getQuantity();
             int bagged_quantity = bagged_item->getQuantity();
-            int quantity = getValidatedInt("Insert new quantity: ", true);
+            int quantity = getValidatedInt("Insert new quantity: ", false);
             quantity = quantity - bagged_item->getQuantity(); // will be the added/removed quantity from either cart or shelf
 
             if (quantity > item->getQuantity())
