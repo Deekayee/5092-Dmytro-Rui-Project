@@ -32,5 +32,4 @@
 *.app
 
 # VS code files
-.vscode
-*.json
+.vscode/
