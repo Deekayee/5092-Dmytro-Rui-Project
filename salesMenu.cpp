@@ -381,7 +381,7 @@ void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartIte
 
         clearConsole();
 
-        gambling(cart, 100);
+        gambling(cart, 25);
         Receipt receipt(cart, paymentAmount);
 
         cout << receipt.toDisplay();
