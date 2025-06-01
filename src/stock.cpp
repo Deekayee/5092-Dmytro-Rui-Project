@@ -1,3 +1,10 @@
+#include <iostream>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <cmath>
+
 #include "stock.h"
 
 // Static member initialization

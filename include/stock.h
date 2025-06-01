@@ -1,12 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include <string>
-#include <ctime>
-#include <sstream>
-#include <iomanip>
-#include <vector>
-#include <cmath>
+
 using namespace std;
 
 class Stock
