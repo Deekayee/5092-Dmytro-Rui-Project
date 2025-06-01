@@ -22,13 +22,13 @@ private:
 public:
     // Constructors
     Stock();
-    Stock(string name, int qty, double price);
+    Stock(const string &name, int qty, double price);
 
     // Getters
     int getStockId() const;
     int getQuantity() const;
     double getCostValue() const;
-    string getProductName() const;
+    const string &getProductName() const;
     double getSaleValue() const;
 
     // Static getters
@@ -38,12 +38,12 @@ public:
     void setStockId(int id);
     void setQuantity(int qty);
     void setCostValue(double price);
-    void setProductName(string name);
+    void setProductName(string &name);
     static void setNextStockId(int id);
     static void incrementStockId();
 
     // Methods
     string toString() const;
     string toDisplay() const;
-    void fromString(const string line);
+    void fromString(const string &line);
 };
