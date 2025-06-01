@@ -11,10 +11,10 @@
 int Stock::nextStockId = 1;
 
 // Default constructor for Stock.
-Stock::Stock() : quantity(0), costValue(0.0), productName(""), stockId(0) {} // temporary invalid id
+Stock::Stock() : quantity(0), costValue(0.0), productName(""), stockId(0) {}
 
 // Construct a Stock object with a given name, quantity and price.
-Stock::Stock(string name, int qty, double price)
+Stock::Stock(const string &name, int qty, double price)
 {
     stockId = nextStockId++;
     productName = name;
@@ -26,7 +26,7 @@ Stock::Stock(string name, int qty, double price)
 int Stock::getStockId() const { return stockId; }
 int Stock::getQuantity() const { return quantity; }
 double Stock::getCostValue() const { return costValue; }
-string Stock::getProductName() const { return productName; }
+const string& Stock::getProductName() const { return productName; }
 double Stock::getSaleValue() const
 {
     const double saleRate = 0.3;
@@ -37,7 +37,7 @@ double Stock::getSaleValue() const
 void Stock::setStockId(int id) { stockId = id; }
 void Stock::setQuantity(int qty) { quantity = qty; }
 void Stock::setCostValue(double price) { costValue = price; }
-void Stock::setProductName(string name) { productName = name; }
+void Stock::setProductName(string& name) { productName = name; }
 
 // Static methods
 int Stock::getNextStockId() { return nextStockId; }
@@ -66,7 +66,7 @@ string Stock::toDisplay() const
 }
 
 // Parses a comma-separated string to initialize Stock attributes: stockId, productName, quantity, and costValue.
-void Stock::fromString(string line)
+void Stock::fromString(const string& line)
 {
     stringstream ss(line);
     string field;
