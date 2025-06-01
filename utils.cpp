@@ -3,7 +3,7 @@
 using namespace std;
 
 // init static variables
-int Stock::nextStockId = 1;
+int Stock::nextStockId = 1; // TODO: remove, this will be moved to Stock class implementation
 int Receipt::nextReceiptId = 1;
 int Receipt::nextClientId = 1;
 
