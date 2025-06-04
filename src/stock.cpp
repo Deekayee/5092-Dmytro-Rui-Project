@@ -1,11 +1,5 @@
-#include <iostream>
-#include <ctime>
-#include <sstream>
-#include <iomanip>
-#include <vector>
-#include <cmath>
+#include "../include/Stock.h"
 
-#include "stock.h"
 
 // Static member initialization
 int Stock::nextStockId = 1;
@@ -50,14 +44,17 @@ void Stock::setNextStockId(int id) { nextStockId = id; }
 string Stock::toString() const
 {
     stringstream ss;
+    
     ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << costValue;
     return ss.str();
 }
 
-// Returns a string representation of the Stock object in a display-friendly format, with left-aligned product name and right-aligned quantity and price.
+// Returns a string representation of the Stock object in a display-friendly
+// format, with left-aligned product name and right-aligned quantity and price.
 string Stock::toDisplay() const
 {
     stringstream ss;
+
     ss << setw(2) << stockId << " | "
        << setw(22) << left << productName << " | "
        << setw(8) << right << quantity << " | "
@@ -65,11 +62,13 @@ string Stock::toDisplay() const
     return ss.str();
 }
 
-// Parses a comma-separated string to initialize Stock attributes: stockId, productName, quantity, and costValue.
+// Parses a comma-separated string to initialize Stock attributes: stockId,
+// productName, quantity, and costValue.
 void Stock::fromString(const string& line)
 {
     stringstream ss(line);
     string field;
+
     getline(ss, field, ',');
     stockId = stoi(field);
     getline(ss, productName, ',');

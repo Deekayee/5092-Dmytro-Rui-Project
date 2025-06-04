@@ -33,7 +33,7 @@ public:
     void setContact(int contact);
     void setAddress(string address);
 
-    // String methods
+    // Methods
     string toString();
     void fromString();
 };

@@ -1,6 +1,12 @@
 #pragma once
 
+#include <cmath>
+#include <ctime>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
