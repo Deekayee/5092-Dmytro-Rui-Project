@@ -16,24 +16,24 @@ private:
 public:
     // Constructors
     Client();
-    Client(string name, int contact, string address);
+    Client(const string& name, int contact,const string& address);
 
     // Getters
-    int getClientId();
-    string getName();
-    int getContact();
-    int getAddress();
+    int getClientId() const;
+    const string& getName() const;
+    int getContact() const;
+    int getAddress() const;
 
     // Static getter
     static int getNextId();
 
     // Setters
     void setId(int id);
-    void setName(string name);
+    void setName(string &name);
     void setContact(int contact);
-    void setAddress(string address);
+    void setAddress(string &address);
 
-    // Methods
-    string toString();
+    // String methods
+    string toString() const;
     void fromString();
 };
