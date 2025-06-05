@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-#include "stock.h"
+#include "../include/Stock.h"
 
+using namespace std;
 class CartItem
 {
 private:
@@ -18,14 +18,14 @@ public:
     CartItem(const Stock &stock, int qty, double taxRate = 23.0);
 
     // Getters
-    const int getStockId();
-    const int getQuantity();
-    const double getSaleWithoutTax();
-    const double getTaxRatePercent();
-    const string &getProductName();
-    const double getSaleWithTax();
-    const double getTotalSaleWithoutTax();
-    const double getTotalItemSellValue();
+    int getQuantity() const;
+    int getStockId() const;
+    double getSaleWithoutTax() const;
+    double getTaxRatePercent() const;
+    const string &getProductName() const;
+    double getSaleWithTax() const;
+    double getTotalSaleWithoutTax() const;
+    double getTotalItemSellValue() const;
 
     // Setters
     void setStockId(int id);
