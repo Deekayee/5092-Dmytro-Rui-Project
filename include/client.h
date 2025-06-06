@@ -22,18 +22,18 @@ public:
     int getClientId() const;
     const string& getName() const;
     int getContact() const;
-    int getAddress() const;
+    const string& getAddress() const;
 
     // Static getter
     static int getNextId();
 
     // Setters
     void setId(int id);
-    void setName(string &name);
+    void setName(const string &name);
     void setContact(int contact);
-    void setAddress(string &address);
+    void setAddress(const string &address);
 
     // String methods
     string toString() const;
-    void fromString();
+    void fromString(const string &line);
 };
