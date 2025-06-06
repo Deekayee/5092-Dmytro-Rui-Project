@@ -1,4 +1,4 @@
-#include "../include/Stock.h"
+#include "../include/stock.h"
 
 
 // Static member initialization

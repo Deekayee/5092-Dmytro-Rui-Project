@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/Stock.h"
+#include "../include/stock.h"
 
 using namespace std;
 class CartItem

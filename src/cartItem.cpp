@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/CartItem.h"
+#include "../include/cartItem.h"
 #include <string>
 
 // Constructors
