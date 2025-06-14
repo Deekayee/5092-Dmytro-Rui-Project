@@ -7,7 +7,7 @@ using namespace std;
 class Client
 {
 private:
-    static int nextClientId;
+    static int nextId;
 
     int clientId;
     string name;
@@ -24,8 +24,10 @@ public:
     int getContact() const;
     const string& getAddress() const;
 
-    // Static getter
+    // Static methods
     static int getNextId();
+    static void incrementId();
+    static void setNextId(int id);
 
     // Setters
     void setId(int id);

@@ -38,7 +38,7 @@ int Stock::getNextStockId() { return nextStockId; }
 void Stock::incrementStockId() { ++nextStockId; }
 void Stock::setNextStockId(int id) { nextStockId = id; }
 
-// Utility methods
+// String methods
 
 // Returns a string representation of the Stock object in CSV format.
 string Stock::toString() const
