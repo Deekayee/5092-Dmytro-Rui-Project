@@ -8,6 +8,7 @@
 #include "../include/cartItem.h"
 #include "../include/client.h"
 #include "../include/receipt.h"
+#include "../include/fileManager.h"
 
 using namespace std;
 // ideas:
@@ -18,25 +19,23 @@ using namespace std;
 class Store
 {
 private:
-    vector <Stock> stockList;
-    vector <CartItem> cart;
-    vector <Client> clientList;
-    array <Receipt, 100> saleList;
+    vector<Stock> stockList;
+    vector<CartItem> cart;
+    vector<Client> clientList;
+    array<Receipt, 100> saleList;
 
 public:
-    // tbd
     // Constructors
-    Store(string stockFile, string clientFile, string saleFile);
+    Store(const string &stockFile, const string &clientFile, const string &saleFile);
 
     // Getters
-    vector <Stock>& stockList();
-    vector <CartItem>& cart();
-    vector <Client>& clientList();
-    array <Receipt, 100> saleList();
-
+    vector<Stock> &getStockList();
+    vector<CartItem> &getCart();
+    vector<Client> &getClientList();
+    array<Receipt, 100> getSaleList();
 
     // Setters
-    // Do we even need them?
+    // Do we even need them? I guess not
 
     // Methods
 };
