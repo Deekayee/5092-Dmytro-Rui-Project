@@ -34,8 +34,28 @@ public:
     vector<Client> &getClientList();
     array<Receipt, 100> getSaleList();
 
-    // Setters
-    // Do we even need them? I guess not
-
     // Methods
+    // Data Management
+    bool initializeData();
+
+    // Stock Management
+    Stock* findStockById(vector<Stock>& stockList, int stockId);
+    Stock* findStockByName(vector<Stock>& stockList, const string& name);
+    vector<Stock> searchProducts(const string& name);
+    void updateStockQuantity(int stockId, int newQuantity);
+    void removeFromStock(int stockId, int quantity);
+
+    // Cart Management
+    void addToCart(int stockId, int quantity);
+    void removeFromCart(int stockId);
+    void clearCart();
+    CartItem* findInCart(int stockId);
+
+    // Client Management
+    Client* findClientById(vector<Client>& clientList, int clientId);
+    Client* findClientByName(vector<Client>& clientList, const string& name);
+
+    // Sales Management
+    void processCheckout();
+    void generateReceipt();
 };
