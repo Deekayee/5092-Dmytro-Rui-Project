@@ -36,7 +36,7 @@ public:
 
     // Methods
     // Data Management
-    bool initializeData();
+    bool initializeData(const string &stockFile, const string &clientFile, const string &saleFile);
 
     // Stock Management
     Stock* findStockById(vector<Stock>& stockList, int stockId);

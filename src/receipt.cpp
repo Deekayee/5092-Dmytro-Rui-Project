@@ -146,6 +146,12 @@ string Receipt::toDisplay() const
     return ss.str();
 }
 
+string Receipt::toString() const
+{
+    string str;
+    str = to_string(receiptId) + "," + to_string(clientId) + "," + to_string(paymentAmount);
+}
+
 // Parser
 void Receipt::fromString(const string &line)
 {

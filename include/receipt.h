@@ -49,6 +49,7 @@ public:
 
     // Utility methods
     string toDisplay() const;
+    string toString() const;
     void fromString(const string &line);
 
     // Static utilities
