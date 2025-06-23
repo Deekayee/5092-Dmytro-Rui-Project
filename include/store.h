@@ -8,6 +8,7 @@
 #include "../include/cartItem.h"
 #include "../include/client.h"
 #include "../include/receipt.h"
+#include "../include/fileManager.h"
 
 using namespace std;
 // ideas:
@@ -18,26 +19,43 @@ using namespace std;
 class Store
 {
 private:
-    vector <Stock> stockList;
-    vector <CartItem> cart;
-    vector <Client> clientList;
-    array <Receipt, 100> saleList;
+    vector<Stock> stockList;
+    vector<CartItem> cart;
+    vector<Client> clientList;
+    array<Receipt, 100> saleList;
 
 public:
-    // tbd
     // Constructors
-    Store(string stockFile, string clientFile, string saleFile);
+    Store(const string &stockFile, const string &clientFile, const string &saleFile);
 
     // Getters
-    vector <Stock>& stockList();
-    vector <CartItem>& cart();
-    vector <Client>& clientList();
-    array <Receipt, 100> saleList();
-
-
-    // Setters
-    // Do we even need them?
+    vector<Stock> &getStockList();
+    vector<CartItem> &getCart();
+    vector<Client> &getClientList();
+    array<Receipt, 100> getSaleList();
 
     // Methods
-    // Need print methods for all vectors
+    // Data Management
+    bool initializeData();
+
+    // Stock Management
+    Stock* findStockById(vector<Stock>& stockList, int stockId);
+    Stock* findStockByName(vector<Stock>& stockList, const string& name);
+    vector<Stock> searchProducts(const string& name);
+    void updateStockQuantity(int stockId, int newQuantity);
+    void removeFromStock(int stockId, int quantity);
+
+    // Cart Management
+    void addToCart(int stockId, int quantity);
+    void removeFromCart(int stockId);
+    void clearCart();
+    CartItem* findInCart(int stockId);
+
+    // Client Management
+    Client* findClientById(vector<Client>& clientList, int clientId);
+    Client* findClientByName(vector<Client>& clientList, const string& name);
+
+    // Sales Management
+    void processCheckout();
+    void generateReceipt();
 };
