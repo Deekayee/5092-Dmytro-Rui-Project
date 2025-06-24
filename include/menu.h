@@ -43,7 +43,7 @@ public:
     static void clearConsole();
     static void setColor(const string &colorCode);
     // VALIDATION FUNCTIONS
-    static string Menu::stringToLower(string name);
+    static string stringToLower(string name);
     static bool validateMenuInput(const string &input, int &opt);
     static int getValidatedInt(const string &prompt, bool zero = false);
     static double getValidatedDouble(const string &prompt);
