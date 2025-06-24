@@ -26,7 +26,7 @@ private:
 
 public:
     // Constructors
-    Store(const string &stockFile, const string &clientFile, const string &saleFile);
+    Store();
 
     // Getters
     vector<Stock> &getStockList();
@@ -36,26 +36,30 @@ public:
 
     // Methods
     // Data Management
-    bool initializeData(const string &stockFile, const string &clientFile, const string &saleFile);
+    bool initializeData();
 
     // Stock Management
-    Stock* findStockById(vector<Stock>& stockList, int stockId);
-    Stock* findStockByName(vector<Stock>& stockList, const string& name);
-    vector<Stock> searchProducts(const string& name);
-    void updateStockQuantity(int stockId, int newQuantity);
-    void removeFromStock(int stockId, int quantity);
+    Stock *findStockById(vector<Stock> &stockList, int stockId);
+    Stock *findStockByName(vector<Stock> &stockList, const string &name);
+    vector<Stock> searchForProduct(const string &name);
+    void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity);
+    void removePurchaseFromStock(vector<Stock> &stockList, Stock *item);
+    void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
+    void printProducts(const vector<Stock> &shelf);
 
     // Cart Management
-    void addToCart(int stockId, int quantity);
-    void removeFromCart(int stockId);
-    void clearCart();
-    CartItem* findInCart(int stockId);
+    CartItem *findItemCart(vector<CartItem> &cart, int id, int *index = nullptr);
+    void addProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
+    void removeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
+    void changeProductCart(vector<Stock> &shelf, vector<CartItem> &cart, bool menuState);
+    void clearCart(vector<CartItem> &cart, vector<Stock> *shelf = nullptr);
+    void printCart(vector<CartItem> &cart);
 
     // Client Management
-    Client* findClientById(vector<Client>& clientList, int clientId);
-    Client* findClientByName(vector<Client>& clientList, const string& name);
+    Client *findClientById(vector<Client> &clientList, int clientId);
+    Client *findClientByName(vector<Client> &clientList, const string &name);
 
     // Sales Management
-    void processCheckout();
-    void generateReceipt();
+    void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart);
+    void gambling(vector<CartItem> &sale, int chance = 50);
 };
