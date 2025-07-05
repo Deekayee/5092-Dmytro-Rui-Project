@@ -1,9 +1,9 @@
 #include "menu.h"
-#include "utils.h"
+#include "store.h"
 
 // private:
 //  Main() options:
-void management()
+void Menu::management()
 {
     string input;
     int opt;
@@ -56,16 +56,16 @@ void management()
     }
 }
 
-void shopping()
+void Menu::shopping()
 {
 }
 
-void logins()
+void Menu::logins()
 {
 }
 
 // SubMenus - management:
-void searchStock()
+void Menu::searchStock()
 {
     bool run;
     do
@@ -82,12 +82,12 @@ void searchStock()
         cout << "Name: ";
         getline(cin, name);
 
-        vector<Stock> items = searchForProduct(stockList, name);
-        run = showSearchResults(items);
+        vector<Stock> items = store.searchForProduct(name);
+        run = store.showSearchResults(items);
     } while (run);
 }
 
-void addStock()
+void Menu::addStock()
 {
     vector<int> idColor; // saves ids for marking when changed
 
@@ -120,14 +120,14 @@ void addStock()
         item.setProductName(field);
 
         string name = item.getProductName();
-        Stock *findItem = findStock(name);
+        Stock *findItem = store.findStock(name);
         if (findItem != nullptr) // if product found
         {
             // default yes
             if (promptYESOrNo("Product Name was found in stockpile, do you want to add to product quantity?"))
             {
                 int addedQuantity = getValidatedInt("Quantity to add: ");
-                changeQuantityFromStock(store, findItem, addedQuantity + findItem->getQuantity());
+                store.changeQuantityFromStock(store, findItem, addedQuantity + findItem->getQuantity());
                 cout << endl
                      << "Item ID: " << findItem->getStockId() << " changed in stockpile!" << endl;
             }
@@ -140,7 +140,7 @@ void addStock()
             item.setCostValue(getValidatedDouble("Cost Value: "));
 
             stockList.push_back(item);
-            if (updateFile(stockList))
+            if (FileManager::saveStockToFile(stockList))
                 cout << "Stock Updated!" << endl;
             cout << endl
                  << "Item ID: " << item.getStockId() << " added in stockpile!" << endl;
@@ -151,13 +151,13 @@ void addStock()
     } while (promptyesOrNO("Do you want to register another item?"));
 }
 
-void editStock()
+void Menu::editStock()
 {
     vector<int> idColor; // saves ids for marking when changed
     while (true)
     {
         clearConsole();
-        printStock(stockList, "Change Item Menu", &idColor, Green);
+        store.printStock(stockList, "Change Item Menu", &idColor, Green);
 
         string prompt;
         int id;
@@ -171,7 +171,7 @@ void editStock()
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item = findStock(stockList, id);
+        Stock *item = store.findStock(stockList, id);
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
@@ -179,7 +179,7 @@ void editStock()
             continue;
         }
         clearConsole();
-        printStock(stockList, "Stock View");
+        store.printStock(stockList, "Stock View");
 
         setColor(Cyan);
         cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
@@ -203,7 +203,7 @@ void editStock()
 
         Stock newItem;
         newItem.fromString(itemString.str());
-        changePurchaseFromStock(stockList, item, newItem);
+        store.changePurchaseFromStock(stockList, item, newItem);
         cout << "Stock Updated!" << endl;
 
         idColor.push_back(item->getStockId());
@@ -213,7 +213,7 @@ void editStock()
     }
 }
 
-void removeStock()
+void Menu::removeStock()
 {
     vector<int> idColor; // saves ids for marking when changed
     while (true)
@@ -222,7 +222,7 @@ void removeStock()
         int id;
         do
         {
-            printStock(stockList, "Remove Item Menu", &idColor, Yellow);
+            store.printStock(stockList, "Remove Item Menu", &idColor, Yellow);
 
             limh(STOCK_DASH);
 
@@ -234,7 +234,7 @@ void removeStock()
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item = findStock(stockList, id);
+        Stock *item = store.findStock(stockList, id);
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
@@ -257,7 +257,7 @@ void removeStock()
         }
         limh(STOCK_DASH);
 
-        removePurchaseFromStock(stockList, item);
+        store.removePurchaseFromStock(stockList, item);
         cout << "Stock Updated!" << endl;
 
         if (!promptyesOrNO("Do you wish to keep removing items?"))
@@ -266,11 +266,12 @@ void removeStock()
 }
 
 // public:
-Menu(Store &storeReference) : store(storeReference) {}
+Menu::Menu(Store &storeReference) : store(storeReference) {}
 
-void main()
+void Menu::main()
 {
     string input;
+    int opt;
     while (true)
     {
         do

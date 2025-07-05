@@ -1,7 +1,6 @@
 #pragma once
 
-#include "store.h"
-
+class Store;
 class Menu
 {
 private:
