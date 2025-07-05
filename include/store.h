@@ -21,6 +21,7 @@ class Store
 private:
     vector<Stock> stockList;
     vector<CartItem> cart;
+    vector<Stock> shelf; // WARNING: implies a lot of fixing, but I think it's better to have this here instead of passing it as argument everywhere, TODO: fix functions that accept it as argument
     vector<Client> clientList;
     array<Receipt, 100> saleList;
 
@@ -37,12 +38,15 @@ public:
     // Methods
     // Data Management
     bool initializeData();
+    void shelfInit(vector<Stock> &stockList, vector<CartItem> &cart, vector<Stock> &shelf);
+    void updateStockFromShelf(vector<Stock> &stockList, vector<Stock> &shelf);
 
     // Stock Management
     Stock *findStockById(vector<Stock> &stockList, int stockId);
     Stock *findStockByName(vector<Stock> &stockList, const string &name);
     vector<Stock> searchForProduct(const string &name);
     void changeQuantityFromStock(vector<Stock> &stockList, Stock *item, int quantity);
+    void changePurchaseFromStock(vector<Stock> &stockList, Stock *olditem, Stock newitem);
     void removePurchaseFromStock(vector<Stock> &stockList, Stock *item);
     void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
     void printProducts(const vector<Stock> &shelf);
@@ -58,8 +62,16 @@ public:
     // Client Management
     Client *findClientById(vector<Client> &clientList, int clientId);
     Client *findClientByName(vector<Client> &clientList, const string &name);
+    void addClient(vector<Client> &clientList);
+    void removeClient(vector<Client> &clientList);
+    void printClients(const vector<Client> &clientList);
 
     // Sales Management
-    void checkoutMenu(vector<Stock> &stockList, vector<Stock> &shelf, vector<CartItem> &cart);
+    void checkoutMenu();
+    double calculateCartTotal();
+    Client *handleClientSelection();
+    Client *createNewClient();
+    double processPayment(double total);
+    void completeCheckout(Client *client, double payment, double total);
     void gambling(vector<CartItem> &sale, int chance = 50);
 };
