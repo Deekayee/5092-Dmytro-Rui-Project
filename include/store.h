@@ -26,7 +26,7 @@ private:
 
 public:
     // Constructors
-    Store(const string &stockFile, const string &clientFile, const string &saleFile);
+    Store();
 
     // Getters
     vector<Stock> &getStockList();
@@ -36,7 +36,7 @@ public:
 
     // Methods
     // Data Management
-    bool initializeData(const string &stockFile, const string &clientFile, const string &saleFile);
+    bool initializeData();
 
     // Stock Management
     Stock* findStockById(vector<Stock>& stockList, int stockId);

@@ -1,16 +1,16 @@
 #include "../include/store.h"
 
-Store::Store(const string &stockFile, const string &clientFile, const string &saleFile)
+Store::Store()
 {
     // Initialize DataBase
     // - open stock, client and sale files
     // - fill stock and client vectors
     // - fill out sale *special* vector (limit 100)
     // - loadup start menu
-    initializeData(stockFile, clientFile, saleFile);
+    initializeData();
 }
 
-bool Store::initializeData(const string &stockFile, const string &clientFile, const string &saleFile)
+bool Store::initializeData()
 {
     int errorCheck = 0;
     errorCheck += FileManager::loadStockFromFile("stockList.csv", stockList);

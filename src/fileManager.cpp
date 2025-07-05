@@ -102,7 +102,7 @@ bool FileManager::saveClientsToFile(const string &filename, const vector<Client>
     return true;
 }
 
-bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt,100> &saleList)
+bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt, 100> &saleList)
 {
     fstream file(filename, ios::in);
     if (!file.is_open())
@@ -119,7 +119,7 @@ bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt,100
     {
         Receipt sale;
         sale.fromString(line);
-        saleList.at(i)=sale;
+        saleList.at(i) = sale;
 
         // Track the highest ID
         if (sale.getReceiptId() > maxId)
@@ -127,13 +127,13 @@ bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt,100
     }
 
     // Set the nextStockId to one greater than the highest existing ID
-    Stock::setNextStockId(maxId + 1);
+    Receipt::setNextReceiptId(maxId + 1);
 
     file.close();
     return true;
 }
 
-bool FileManager::saveReceiptsToFile(const string &filename, const array<Receipt,100> &saleList)
+bool FileManager::saveReceiptsToFile(const string &filename, const array<Receipt, 100> &saleList)
 {
     ofstream file(filename);
     if (!file.is_open())
@@ -142,8 +142,8 @@ bool FileManager::saveReceiptsToFile(const string &filename, const array<Receipt
         return false;
     }
 
-    file << "StockId,ProductName,Quantity,CostValue" << endl;
-    for (int i=0; i<100; i++)
+    file << "ReceiptId,ClientId,PaymentAumount,Date,Items" << endl;
+    for (int i = 0; i < 100; i++)
     {
         file << saleList.at(i).toString() << endl;
     }
