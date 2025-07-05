@@ -39,7 +39,7 @@ public:
     void setStockId(int id);
     void setQuantity(int qty);
     void setCostValue(double price);
-    void setProductName(string &name);
+    void setProductName(const string &name);
     static void setNextStockId(int id);
     static void incrementStockId();
 

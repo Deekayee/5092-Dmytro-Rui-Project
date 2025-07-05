@@ -31,7 +31,7 @@ double Stock::getSaleValue() const
 void Stock::setStockId(int id) { stockId = id; }
 void Stock::setQuantity(int qty) { quantity = qty; }
 void Stock::setCostValue(double price) { costValue = price; }
-void Stock::setProductName(string& name) { productName = name; }
+void Stock::setProductName(const string& name) { productName = name; }
 
 // Static methods
 int Stock::getNextStockId() { return nextStockId; }
