@@ -8,6 +8,7 @@
 #include "cartItem.h"
 #include "receipt.h"
 #include "client.h"
+#include "salesReport.h"
 #include "fileManager.h"
 #include "utils.h"
 
@@ -20,7 +21,7 @@ private:
     vector<CartItem> cart;
     vector<Stock> shelf;
     vector<Client> clientList;
-    array<Receipt, 100> receiptList;
+    array<Receipt, 100> salesList; // Did all the receipt logic for the reports here, so thats what we save ig
 
     bool dataInit();
     bool dataUpdate();

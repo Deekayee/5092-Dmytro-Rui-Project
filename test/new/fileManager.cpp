@@ -1,7 +1,10 @@
 #include "fileManager.h"
 
+#include "receipt.h"
+
 #include <iostream>
 #include <fstream>
+#include <array>
 
 bool FileManager::loadStock(vector<Stock> &stockList)
 {
@@ -102,7 +105,7 @@ bool FileManager::saveClients(const vector<Client> &clientList)
     return true;
 }
 
-bool FileManager::loadReceipts(array<Receipt, 100> &receiptList)
+bool FileManager::loadSales(array<Receipt, 100> &saleList)
 {
     fstream file("receiptList.csv", ios::in);
     if (!file.is_open())
@@ -114,26 +117,32 @@ bool FileManager::loadReceipts(array<Receipt, 100> &receiptList)
     string line;
     getline(file, line); // ignore header
     int maxId = 0;
-    int i = 0;
-    while (getline(file, line) && i < 100)
+    int i = 0; // Initialize i to 0
+    
+    while (getline(file, line) && i < 100) // Add bounds check
     {
-        Receipt sale;
-        sale.fromString(line);
-        receiptList.at(i++) = sale;
+        if (!line.empty()) // Check if line is not empty
+        {
+            Receipt sale;
+            sale.fromString(line);
+            saleList.at(i) = sale;
 
-        // Track the highest ID
-        if (sale.getReceiptId() > maxId)
-            maxId = sale.getReceiptId();
+            // Track the highest ID
+            if (sale.getReceiptId() > maxId)
+                maxId = sale.getReceiptId();
+            
+            i++; // Increment i
+        }
     }
 
-    // Set the nextStockId to one greater than the highest existing ID
+    // Set the nextReceiptId to one greater than the highest existing ID
     Receipt::setNextReceiptId(maxId + 1);
 
     file.close();
     return true;
 }
 
-bool FileManager::saveReceipts( const array<Receipt, 100> &receiptList)
+bool FileManager::saveSales(const array<Receipt, 100> &saleList)
 {
     ofstream file("receiptList.csv");
     if (!file.is_open())
@@ -142,10 +151,14 @@ bool FileManager::saveReceipts( const array<Receipt, 100> &receiptList)
         return false;
     }
 
-    file << "ReceiptId,ClientId,PaymentAumount,Date,Items" << endl;
+    file << "ReceiptId,ClientId,PaymentAmount,Date,Items" << endl;
+    
     for (int i = 0; i < 100; i++)
     {
-        file << receiptList.at(i).toString() << endl;
+        if (saleList.at(i).getReceiptId() > 0) // Only save valid receipts
+        {
+            file << saleList.at(i).toString() << endl;
+        }
     }
 
     file.close();

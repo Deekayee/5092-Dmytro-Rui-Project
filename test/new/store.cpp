@@ -462,10 +462,10 @@ void Store::printCart()
 
 Client *Store::findClientById(int clientId)
 {
-    for (Client &compareClient : clientList)
+    for (Client &client : clientList)
     {
-        compareClient.getClientId() == clientId;
-        return &compareClient;
+        if (client.getClientId() == clientId)
+            return &client;
     }
     return nullptr;
 }
@@ -473,32 +473,14 @@ Client *Store::findClientById(int clientId)
 Client *Store::findClientByName(const string &name)
 {
     string lowerName = stringToLower(name);
-    for (Client &compareClient : clientList)
+    for (Client &client : clientList)
     {
-        string clientName = compareClient.getName();
-        if (stringToLower(clientName) == lowerName)
-            return &compareClient;
+        if (stringToLower(client.getName()) == lowerName)
+            return &client;
     }
     return nullptr;
 }
 
-void Store::addClient(Client &newClient)
-{
-    clientList.push_back(newClient);
-    return;
-}
-
-void Store::removeClient(int clientId)
-{
-    Client *killClient = findClientById(clientId);
-    killClient->switchActive();
-    return;
-}
-
-void Store::printClients()
-{
-    return;
-}
 
 // Sales Management
 

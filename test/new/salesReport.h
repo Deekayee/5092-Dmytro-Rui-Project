@@ -16,9 +16,8 @@ private:
 public:
     SalesReport() : receiptCount(0), maxStockId(0) {}
     
-    // Load receipts and stock data
-    void loadReceipts(const array<Receipt, 100>& saleList);
-    void loadStock(const vector<Stock>& stock);
+    // Initialize with data from Store
+    void initialize(const array<Receipt, 100>& saleList, const vector<Stock>& stock);
     
     // Find client who bought the most in value
     int getTopClientByValue() const;

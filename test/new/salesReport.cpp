@@ -3,16 +3,12 @@
 
 #include <climits>
 
-void SalesReport::loadReceipts(const array<Receipt, 100>& saleList)
+void SalesReport::initialize(const array<Receipt, 100>& saleList, const vector<Stock>& stock)
 {
     receipts = saleList;
-    receiptCount = countValidReceipts();
-}
-
-void SalesReport::loadStock(const vector<Stock>& stock)
-{
     stockList = stock;
-    maxStockId = stockList.size(); // Since IDs go from 1 to size
+    receiptCount = countValidReceipts();
+    maxStockId = stockList.size();
 }
 
 int SalesReport::countValidReceipts() const
