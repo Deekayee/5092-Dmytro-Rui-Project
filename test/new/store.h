@@ -8,7 +8,6 @@
 #include "cartItem.h"
 #include "receipt.h"
 #include "client.h"
-#include "saleReport.h"
 #include "fileManager.h"
 #include "utils.h"
 
@@ -21,7 +20,7 @@ private:
     vector<CartItem> cart;
     vector<Stock> shelf;
     vector<Client> clientList;
-    array<SaleReport, 100> salesList;
+    array<Receipt, 100> receiptList;
 
     bool dataInit();
     bool dataUpdate();
@@ -55,8 +54,8 @@ public:
     // Client Management
     Client *findClientById(int clientId);
     Client *findClientByName(const string &name);
-    void addClient();
-    void removeClient();
+    void addClient(Client &newClient);
+    void removeClient(Client &killClient);
     void printClients();
 
     // Sales Management

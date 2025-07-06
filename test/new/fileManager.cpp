@@ -102,9 +102,9 @@ bool FileManager::saveClients(const vector<Client> &clientList)
     return true;
 }
 
-bool FileManager::loadSales(array<SaleReport, 100> &saleList)
+bool FileManager::loadReceipts(array<Receipt, 100> &receiptList)
 {
-    fstream file("saleList.csv", ios::in);
+    fstream file("receiptList.csv", ios::in);
     if (!file.is_open())
     {
         cout << "Error opening file." << endl;
@@ -114,12 +114,12 @@ bool FileManager::loadSales(array<SaleReport, 100> &saleList)
     string line;
     getline(file, line); // ignore header
     int maxId = 0;
-    int i;
-    while (getline(file, line))
+    int i = 0;
+    while (getline(file, line) && i < 100)
     {
         Receipt sale;
         sale.fromString(line);
-        saleList.at(i) = sale;
+        receiptList.at(i++) = sale;
 
         // Track the highest ID
         if (sale.getReceiptId() > maxId)
@@ -133,19 +133,19 @@ bool FileManager::loadSales(array<SaleReport, 100> &saleList)
     return true;
 }
 
-bool FileManager::saveSales( const array<SaleReport, 100> &saleList)
+bool FileManager::saveReceipts( const array<Receipt, 100> &receiptList)
 {
-    ofstream file("saleList.csv");
+    ofstream file("receiptList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << "saleList.csv" << endl;
+        cout << "Error opening file: " << "receiptList.csv" << endl;
         return false;
     }
 
     file << "ReceiptId,ClientId,PaymentAumount,Date,Items" << endl;
     for (int i = 0; i < 100; i++)
     {
-        file << saleList.at(i).toString() << endl;
+        file << receiptList.at(i).toString() << endl;
     }
 
     file.close();

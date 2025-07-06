@@ -3,10 +3,13 @@
 #include <string>
 #include <vector>
 
+#include "cartItem.h"
+#include "utils.h"
+
 using namespace std;
 
 // Forward declaration to minimize dependencies
-class CartItem;
+//class CartItem;
 
 class Receipt
 {

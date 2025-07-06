@@ -6,7 +6,7 @@ bool Store::dataInit()
     int errorCheck = 0;
     errorCheck += FileManager::loadStock(this->stockList);
     errorCheck += FileManager::loadClients(this->clientList);
-    errorCheck += FileManager::loadSales(this->salesList);
+    errorCheck += FileManager::loadReceipts(this->receiptList);
 
     if (errorCheck != 5)
         return false;
@@ -18,7 +18,7 @@ bool Store::dataUpdate()
     int errorCheck = 0;
     errorCheck += FileManager::saveStock(this->stockList);
     errorCheck += FileManager::saveClients(this->clientList);
-    errorCheck += FileManager::saveSales(this->salesList);
+    errorCheck += FileManager::saveReceipts(this->receiptList);
 
     if (errorCheck != 5)
         return false;
@@ -467,6 +467,22 @@ Client *Store::findClientById(int clientId)
 Client *Store::findClientByName(const string &name)
 {
 }
+
+void Store::addClient(Client &newClient)
+{
+    
+}
+
+void Store::removeClient(Client &killClient);
+{
+
+}
+
+void Store::printClients();
+{
+
+}
+
 
 // Sales Management
 
