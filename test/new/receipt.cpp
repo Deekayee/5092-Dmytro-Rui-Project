@@ -1,5 +1,6 @@
 #include "receipt.h"
 #include "cartItem.h"
+#include "utils.h"
 
 #include <iostream>
 #include <sstream>
@@ -90,62 +91,118 @@ double Receipt::getChange() const
 string Receipt::toDisplay() const
 {
     stringstream ss;
+    // Totals with left alignment and consistent spacing
+    const int labelWidth = 20; // Width for the label column
+    
+    // Helper lambda to pad lines to full width
+    auto padLine = [](const string& line, int width) -> string {
+        if (line.length() >= width) return line;
+        return line + string(width - line.length(), ' ');
+    };
+    
+    // Header with store branding
+    ss << padLine("", DISPLAY_WIDTH) << '\n';
+    ss << padLine("╔" + string(DISPLAY_WIDTH - 2, '=') + "╗", DISPLAY_WIDTH) << '\n';
+    ss << padLine("║" + string((DISPLAY_WIDTH - 22) / 2, ' ') + "*** RECEIPT ***" + string((DISPLAY_WIDTH - 10) / 2, ' ') + "║", DISPLAY_WIDTH) << '\n';
+    ss << padLine("╚" + string(DISPLAY_WIDTH - 2, '=') + "╝", DISPLAY_WIDTH) << '\n';
+    ss << padLine("", DISPLAY_WIDTH) << '\n';
+    
+    // Start with white background and black text
+    ss << WHITE << BLACK; // White background + black text
 
-    // Header
-    ss << "Receipt:\n";
-    ss << string(DISPLAY_WIDTH, '-') << '\n';
-    ss << "Receipt ID: " << receiptId << '\n';
-    ss << "Client ID:  " << clientId << '\n';
-    ss << "Date:       " << date << '\n';
-    ss << "Items:\n";
-    ss << string(DISPLAY_WIDTH, '-') << '\n';
+    ss << padLine(string(DISPLAY_WIDTH, '='), DISPLAY_WIDTH) << '\n';
+    
+    // Header info with consistent alignment
+    stringstream receiptIdSS;
+    receiptIdSS << " " << setw(labelWidth) << left << "Receipt ID:" << receiptId;
+    ss << padLine(receiptIdSS.str(), DISPLAY_WIDTH) << '\n';
+    
+    stringstream clientIdSS;
+    clientIdSS << " " << setw(labelWidth) << left << "Client ID:" << clientId;
+    ss << padLine(clientIdSS.str(), DISPLAY_WIDTH) << '\n';
+    
+    stringstream dateSS;
+    dateSS << " " << setw(labelWidth) << left << "Date:" << date;
+    ss << padLine(dateSS.str(), DISPLAY_WIDTH) << '\n';
+    
+    stringstream itemsSS;
+    itemsSS << " " << setw(labelWidth) << left << "Items:";
+    ss << padLine(itemsSS.str(), DISPLAY_WIDTH) << '\n';
+    
+    ss << padLine(string(DISPLAY_WIDTH, '-'), DISPLAY_WIDTH) << '\n';
 
     // Table header
-    ss << setw(2) << "ID" << " | "
-       << setw(22) << left << "Product Name" << " | "
-       << setw(5) << right << "Qtty" << " | "
-       << setw(12) << right << "Price" << " | "
-       << setw(12) << right << "Total" << '\n';
+    stringstream headerSS;
+    headerSS << setw(2) << " ID" << " | "
+             << setw(22) << left << "Product Name" << " | "
+             << setw(5) << right << "Qtty" << " | "
+             << setw(12) << right << "Price" << " | "
+             << setw(12) << right << "Total";
+    ss << padLine(headerSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << string(DISPLAY_WIDTH, '-') << '\n';
+    ss << padLine(string(DISPLAY_WIDTH, '-'), DISPLAY_WIDTH) << '\n';
 
     // Items
     for (const auto &item : items)
     {
-        ss << item.toDisplay() << '\n';
+        ss << padLine(" " + item.toDisplay(), DISPLAY_WIDTH) << '\n';
     }
 
-    ss << string(DISPLAY_WIDTH, '-') << '\n';
+    ss << padLine(string(DISPLAY_WIDTH, '-'), DISPLAY_WIDTH) << '\n';
 
-    // Totals with consistent formatting
-    const int labelWidth = 25;
-    const int valueWidth = 9;
+    
+    stringstream totalSS;
+    totalSS << " " << setw(labelWidth) << left << "Total w/o Tax:"
+            << fixed << setprecision(2)
+            << getTotalCostWithoutTax() << " eur";
+    ss << padLine(totalSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << setw(labelWidth) << right << "Total w/o Tax: "
-       << setw(valueWidth) << fixed << setprecision(2)
-       << getTotalCostWithoutTax() << " eur\n";
+    stringstream taxSS;
+    taxSS << " " << setw(labelWidth) << left << "Total Tax (23%):"
+          << fixed << setprecision(2)
+          << getTotalTax() << " eur";
+    ss << padLine(taxSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << setw(labelWidth) << right << "Total Tax ("
-       << fixed << setprecision(0) << (TAX_RATE * 100) << "%): "
-       << setw(valueWidth) << fixed << setprecision(2)
-       << getTotalTax() << " eur\n";
+    stringstream costSS;
+    costSS << " " << setw(labelWidth) << left << "Total Cost:"
+           << fixed << setprecision(2)
+           << getTotalCost() << " eur";
+    ss << padLine(costSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << setw(labelWidth) << right << "Total Cost: "
-       << setw(valueWidth) << fixed << setprecision(2)
-       << getTotalCost() << " eur\n";
+    stringstream paymentSS;
+    paymentSS << " " << setw(labelWidth) << left << "Payment Amount:"
+              << fixed << setprecision(2)
+              << paymentAmount << " eur";
+    ss << padLine(paymentSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << setw(labelWidth) << right << "Payment Amount: "
-       << setw(valueWidth) << fixed << setprecision(2)
-       << paymentAmount << " eur\n";
+    stringstream changeSS;
+    changeSS << " " << setw(labelWidth) << left << "Change:"
+             << fixed << setprecision(2)
+             << getChange() << " eur";
+    ss << padLine(changeSS.str(), DISPLAY_WIDTH) << '\n';
 
-    ss << setw(labelWidth) << right << "Change: "
-       << setw(valueWidth) << fixed << setprecision(2)
-       << getChange() << " eur\n";
+    ss << padLine(string(DISPLAY_WIDTH, '-'), DISPLAY_WIDTH) << '\n';
+    
+    // Footer with thank you message
+    ss << padLine("", DISPLAY_WIDTH) << '\n';
+    ss << padLine(string((DISPLAY_WIDTH - 20) / 2, ' ') + "Thank you for buying", DISPLAY_WIDTH) << '\n';
+    ss << padLine(string((DISPLAY_WIDTH - 20) / 2, ' ') + "in our amazing shop!", DISPLAY_WIDTH) << '\n';
+    ss << padLine("", DISPLAY_WIDTH) << '\n';
+    ss << padLine(string((DISPLAY_WIDTH - 23) / 2, ' ') + "Till next time friendo!", DISPLAY_WIDTH) << '\n';
+    ss << padLine("", DISPLAY_WIDTH) << '\n';
+    
+    // Perforated edge effect
+    ss << padLine(string(DISPLAY_WIDTH, '='), DISPLAY_WIDTH) << '\n';
+    
+    // Reset colors at the end
+    ss << RESET;
 
-    ss << string(DISPLAY_WIDTH, '-') << "\n\n";
+    // Empty line at the end
+    ss << '\n';
 
     return ss.str();
 }
+
 
 string Receipt::toString() const
 {

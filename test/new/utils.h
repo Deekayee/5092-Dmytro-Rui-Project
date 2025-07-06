@@ -20,6 +20,10 @@ using namespace std;
 #define MAGENTA "\033[1;35m"
 #define CYAN "\033[1;36m"
 
+// COLOR DEFINES - BW
+#define WHITE "\033[47m"
+#define BLACK "\033[30m"
+
 // COLOR RESET
 #define RESET "\033[0m"
 
