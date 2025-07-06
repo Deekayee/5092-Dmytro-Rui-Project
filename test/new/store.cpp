@@ -6,7 +6,7 @@ bool Store::dataInit()
     int errorCheck = 0;
     errorCheck += FileManager::loadStock(this->stockList);
     errorCheck += FileManager::loadClients(this->clientList);
-    errorCheck += FileManager::loadReceipts(this->receiptList);
+    errorCheck += FileManager::loadReceipts(this->salesList);
 
     if (errorCheck != 5)
         return false;
@@ -18,7 +18,7 @@ bool Store::dataUpdate()
     int errorCheck = 0;
     errorCheck += FileManager::saveStock(this->stockList);
     errorCheck += FileManager::saveClients(this->clientList);
-    errorCheck += FileManager::saveReceipts(this->receiptList);
+    errorCheck += FileManager::saveReceipts(this->salesList);
 
     if (errorCheck != 5)
         return false;
