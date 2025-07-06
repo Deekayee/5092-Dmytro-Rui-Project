@@ -15,6 +15,6 @@ public:
     static bool saveStock(const vector<Stock> &stockList);
     static bool loadClients(vector<Client> &clientList);
     static bool saveClients(const vector<Client> &clientList);
-    static bool loadSales(array<SalesReport,100> &saleList);
-    static bool saveSales(const array<SalesReport,100> &saleList);
+    static bool loadSales(array<Receipt, 100> &saleList);
+    static bool saveSales(const array<Receipt, 100> &saleList);
 };

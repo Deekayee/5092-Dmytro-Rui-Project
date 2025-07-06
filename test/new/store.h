@@ -21,7 +21,7 @@ private:
     vector<CartItem> cart;
     vector<Stock> shelf;
     vector<Client> clientList;
-    array<SaleReport, 100> salesList;
+    array<Receipt, 100> salesList; // Did all the receipt logic for the reports here, so thats what we save ig
 
     bool dataInit();
     bool dataUpdate();
