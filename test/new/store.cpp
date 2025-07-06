@@ -464,11 +464,10 @@ Client *Store::findClientById(int clientId)
 {
     for (Client &compareClient : clientList)
     {
-        compareClient.getClientId()==clientId;
+        compareClient.getClientId() == clientId;
         return &compareClient;
     }
     return nullptr;
-    
 }
 
 Client *Store::findClientByName(const string &name)
@@ -477,11 +476,10 @@ Client *Store::findClientByName(const string &name)
     for (Client &compareClient : clientList)
     {
         string clientName = compareClient.getName();
-        if(stringToLower(clientName) == lowerName)
+        if (stringToLower(clientName) == lowerName)
             return &compareClient;
     }
     return nullptr;
-    
 }
 
 void Store::addClient(Client &newClient)
@@ -490,16 +488,17 @@ void Store::addClient(Client &newClient)
     return;
 }
 
-void Store::removeClient(Client &killClient);
+void Store::removeClient(int clientId)
 {
-    return
+    Client *killClient = findClientById(clientId);
+    killClient->switchActive();
+    return;
 }
 
-void Store::printClients();
+void Store::printClients()
 {
-
+    return;
 }
-
 
 // Sales Management
 
@@ -577,13 +576,7 @@ Client *Store::handleClientSelection()
     return nullptr; // We'll handle this in completeCheckout
 }
 
-Client *Store::createNewClient()
-{
-    // Add client creation logic here
-    Store::addClient();
-    // Return pointer to the newly created client
-    return &clientList.back(); // Assuming addClient adds to the end
-}
+
 
 double Store::processPayment(double total)
 {

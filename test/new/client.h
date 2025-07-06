@@ -9,6 +9,7 @@ class Client
 private:
     static int nextId;
 
+    bool isActive;
     int clientId;
     string name;
     int contact;
@@ -16,7 +17,7 @@ private:
 public:
     // Constructors
     Client();
-    Client(const string& name, int contact,const string& address);
+    Client(const string& name, int contact,const string& address, bool active);
 
     // Getters
     int getClientId() const;
@@ -34,6 +35,9 @@ public:
     void setName(const string &name);
     void setContact(int contact);
     void setAddress(const string &address);
+
+    // Kill Switch
+    void switchActive();
 
     // String methods
     string toString() const;

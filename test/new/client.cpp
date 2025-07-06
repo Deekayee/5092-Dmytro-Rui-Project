@@ -9,12 +9,13 @@ int Client::nextId = 1;
 Client::Client() : clientId(0), name(""), contact(0), address("") {}
 
 // Construct a Client object with a given name, contact and address
-Client::Client(const string &name, int contact, const string &address)
+Client::Client(const string &name, int contact, const string &address, bool isActive)
 {
     this->clientId = nextId;
     this->name = name;
     this->contact = contact;
     this->address = address;
+    this->isActive = true;
 }
 
 // Getters
@@ -28,6 +29,12 @@ void Client::setId(int id) { this->clientId = id; }
 void Client::setName(const string &name) { this->name = name; }
 void Client::setContact(int contact) { this->contact = contact; }
 void Client::setAddress(const string &address) { this->address = address; }
+
+// Kill Switch
+void Client::switchActive()
+{
+    isActive = !isActive;
+}
 
 // Static methods
 int Client::getNextId() { return nextId; }

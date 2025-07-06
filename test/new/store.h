@@ -45,9 +45,9 @@ public:
 
     // Cart Management
     CartItem *findItemCart(int id, int *index = nullptr);
-    void addProductCart(bool menuState);
-    void removeProductCart(bool menuState);
-    void changeProductCart(bool menuState);
+    void addProductCart(bool menuState); // menu
+    void removeProductCart(bool menuState); // menu
+    void changeProductCart(bool menuState); // menu
     void clearCart(vector<Stock> *shelf = nullptr); // check implementation
     void printCart();
 
@@ -55,16 +55,16 @@ public:
     Client *findClientById(int clientId);
     Client *findClientByName(const string &name);
     void addClient(Client &newClient);
-    void removeClient(Client &killClient);
-    void printClients();
+    void removeClient(int clientId);
+    void printClients(); // menu
 
     // Sales Management
-    void checkoutMenu();
+    void checkoutMenu(); // menu
     double calculateCartTotal();
-    Client *handleClientSelection();
-    Client *createNewClient();
+    Client *handleClientSelection(); // menu
+    Client *createNewClient(); // menu
     double processPayment(double total);
-    void completeCheckout(Client *client, double payment, double total);
+    void completeCheckout(Client *client, double payment, double total); //maybe // menu
     void gambling(vector<CartItem> &sale, int chance = 50);
 
 
