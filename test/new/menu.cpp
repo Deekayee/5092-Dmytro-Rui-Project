@@ -82,9 +82,55 @@ void Menu::searchStock()
         cout << "Name: ";
         getline(cin, name);
 
-        vector<Stock> items = store.searchForProduct(name);
-        run = store.showSearchResults(items);
+        vector<Stock> items = store.searchPurchaseStock(name);
+        run = Menu::showSearchResults(items);
     } while (run);
+}
+
+bool Menu::showSearchResults(vector <Stock>& matchedItems)
+{
+    clearConsole();
+    setColor(YELLOW);
+    cout << "Search Results:" << endl;
+    setColor(RESET);
+    if (matchedItems.empty())
+    {
+        limh();
+        setColor(CYAN);
+        cout << "No matching results found" << endl;
+        setColor(RESET);
+        limh();
+    }
+    else
+    {
+        setColor(Magenta);
+        cout << "Found " << matchedItems.size() << " matching results:" << endl;
+        setColor(RESET);
+        limh();
+
+        setColor(CYAN);
+        cout << "ID | Product Name           | Quantity | Cost eur" << endl;
+        setColor(RESET);
+        limh();
+
+        for (const Stock &item : matchedItems)
+        {
+            if (item.getQuantity() == 0)
+                setColor(RED); // red for zero quantity
+
+            cout << item.toDisplay() << endl;
+
+            if (item.getQuantity() == 0)
+                setColor(RESET); // resets color
+        }
+        limh();
+    }
+
+    // default NO
+    if (promptyesOrNO("Do you wish to keep searching?"))
+        return true;
+    else
+        return false;
 }
 
 void Menu::addStock()
@@ -120,14 +166,14 @@ void Menu::addStock()
         item.setProductName(field);
 
         string name = item.getProductName();
-        Stock *findItem = store.findStock(name);
+        Stock *findItem = store.findStockByName(name);
         if (findItem != nullptr) // if product found
         {
             // default yes
             if (promptYESOrNo("Product Name was found in stockpile, do you want to add to product quantity?"))
             {
                 int addedQuantity = getValidatedInt("Quantity to add: ");
-                store.changeQuantityFromStock(store, findItem, addedQuantity + findItem->getQuantity());
+                store.changeQuantityStock(findItem, addedQuantity + findItem->getQuantity());
                 cout << endl
                      << "Item ID: " << findItem->getStockId() << " changed in stockpile!" << endl;
             }
@@ -139,11 +185,7 @@ void Menu::addStock()
             item.setQuantity(getValidatedInt("Quantity: "));
             item.setCostValue(getValidatedDouble("Cost Value: "));
 
-            stockList.push_back(item);
-            if (FileManager::saveStockToFile(stockList))
-                cout << "Stock Updated!" << endl;
-            cout << endl
-                 << "Item ID: " << item.getStockId() << " added in stockpile!" << endl;
+            store.addPurchaseStock(&item);
         }
         idColor.push_back((item.getStockId()));
 
@@ -157,7 +199,7 @@ void Menu::editStock()
     while (true)
     {
         clearConsole();
-        store.printStock(stockList, "Change Item Menu", &idColor, Green);
+        store.printStock("Change Item Menu", &idColor, Green);
 
         string prompt;
         int id;
@@ -171,7 +213,7 @@ void Menu::editStock()
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item = store.findStock(stockList, id);
+        Stock *item = store.findStockById( id);
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
@@ -179,7 +221,7 @@ void Menu::editStock()
             continue;
         }
         clearConsole();
-        store.printStock(stockList, "Stock View");
+        store.printStock( "Stock View");
 
         setColor(Cyan);
         cout << "Changing product: " << item->getStockId() << "-" << item->getProductName() << endl;
@@ -203,7 +245,7 @@ void Menu::editStock()
 
         Stock newItem;
         newItem.fromString(itemString.str());
-        store.changePurchaseFromStock(stockList, item, newItem);
+        store.changePurchaseStock( item, newItem);
         cout << "Stock Updated!" << endl;
 
         idColor.push_back(item->getStockId());
@@ -222,7 +264,7 @@ void Menu::removeStock()
         int id;
         do
         {
-            store.printStock(stockList, "Remove Item Menu", &idColor, Yellow);
+            store.printStock( "Remove Item Menu", &idColor, Yellow);
 
             limh(STOCK_DASH);
 
@@ -234,7 +276,7 @@ void Menu::removeStock()
         if (id <= 0) // go back in menu
             return;
 
-        Stock *item = store.findStock(stockList, id);
+        Stock *item = store.findStockById( id);
         if (item == nullptr)
         {
             cout << "Item not found in stock" << endl;
@@ -257,7 +299,7 @@ void Menu::removeStock()
         }
         limh(STOCK_DASH);
 
-        store.removePurchaseFromStock(stockList, item);
+        store.removePurchaseStock( item);
         cout << "Stock Updated!" << endl;
 
         if (!promptyesOrNO("Do you wish to keep removing items?"))

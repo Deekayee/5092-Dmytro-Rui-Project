@@ -1,4 +1,4 @@
-#include "../include/productReport.h"
+#include "productReport.h"
 
 int ProductReport::getId() { return id; }
 int ProductReport::getQuantity() { return quantity; }

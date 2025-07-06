@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "stock.h"
 #include "cartItem.h"
+#include "receipt.h"
 #include "client.h"
 #include "saleReport.h"
 #include "fileManager.h"
@@ -18,30 +19,28 @@ class Store
 private:
     vector<Stock> stockList;
     vector<CartItem> cart;
-    vector<CartItem> shelf;
+    vector<Stock> shelf;
     vector<Client> clientList;
     array<SaleReport, 100> salesList;
 
     bool dataInit();
     bool dataUpdate();
+    void updateStockFromShelf();
 
 public:
     Menu menu;
     Store(); // constructs with a stock menu and a sales menu
 
-    // vector<Stock> &getStock() const;
-    // vector<CartItem> &getCart() const;
-    // vector<CartItem> &getShelf() const;
-    // vector<Client> &getClients() const;
-    // array<SaleReport, 100> &getSales() const;
+    vector<Stock>& getStock();
 
     // Stock Management
     Stock *findStockById( int stockId);
     Stock *findStockByName( const string &name);
-    vector<Stock> searchForProduct(const string &name);
-    void changeQuantityFromStock( Stock *item, int quantity);
-    void changePurchaseFromStock( Stock *olditem, Stock newitem);
-    void removePurchaseFromStock( Stock *item);
+    vector<Stock> searchPurchaseStock(const string &name);
+    void addPurchaseStock (Stock *item);
+    void changeQuantityStock( Stock *item, int quantity);
+    void changePurchaseStock( Stock *olditem, Stock newitem);
+    void removePurchaseStock( Stock *item);
     void printStock(const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
     void printProducts();
 
@@ -68,4 +67,6 @@ public:
     double processPayment(double total);
     void completeCheckout(Client *client, double payment, double total);
     void gambling(vector<CartItem> &sale, int chance = 50);
+
+
 };

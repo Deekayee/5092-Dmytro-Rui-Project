@@ -14,7 +14,7 @@ private:
     static int nextReceiptId;
 
     // Constants for better maintainability
-    static const double TAX_RATE = 0.23;
+    static const double TAX_RATE;
     static const int DISPLAY_WIDTH = 81;
 
     int receiptId;

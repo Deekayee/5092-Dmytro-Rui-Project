@@ -25,6 +25,17 @@ bool Store::dataUpdate()
     return true;
 }
 
+void Store::updateStockFromShelf()
+{
+    for (Stock &shelf_item : shelf)
+    {
+        int id = shelf_item.getStockId();
+        Stock *stock_item = Store::findStockById(id);
+        Store::changePurchaseStock(stock_item, shelf_item);
+    }
+    cout << "Stock Updated!" << endl;
+}
+
 // public
 Store::Store() : menu(*this)
 {
@@ -37,13 +48,11 @@ Store::Store() : menu(*this)
     }
 }
 
-// vector<Stock>& getStock() const { return &stockList; }
-// vector<CartItem>& getCart() const { return &cart; }
-// vector<CartItem>& getShelf() const { return &shelf; }
-// vector<Client>& getClients() const { return &clientList; }
-// array<sale>& getSales() const { return &salesList; }
-
 // Stock Management
+vector<Stock> &Store::getStock()
+{
+    return stockList;
+}
 
 Stock *Store::findStockById(int stockId)
 {
@@ -66,7 +75,7 @@ Stock *Store::findStockByName(const string &name)
     return nullptr;
 }
 
-vector<Stock> Store::searchForProduct(const string &name)
+vector<Stock> Store::searchPurchaseStock(const string &name)
 {
     vector<Stock> items;
     string lowerName = stringToLower(name);
@@ -81,19 +90,28 @@ vector<Stock> Store::searchForProduct(const string &name)
     return items;
 }
 
-void Store::removePurchaseFromStock(Stock *item)
+void Store::removePurchaseStock(Stock *item)
 {
     item->setQuantity(0);
     FileManager::saveStock(stockList);
 }
 
-void Store::changeQuantityFromStock(Stock *item, int quantity)
+void Store::addPurchaseStock(Stock *item)
+{
+    stockList.push_back(*item);
+    if (FileManager::saveStock(stockList))
+        cout << "Stock Updated!" << endl;
+    cout << endl
+         << "Item ID: " << item->getStockId() << " added in stockpile!" << endl;
+}
+
+void Store::changeQuantityStock(Stock *item, int quantity)
 {
     item->setQuantity(quantity);
     FileManager::saveStock(stockList);
 }
 
-void Store::changePurchaseFromStock(Stock *olditem, Stock newitem)
+void Store::changePurchaseStock(Stock *olditem, Stock newitem)
 {
     olditem->setProductName(newitem.getProductName());
     olditem->setQuantity(newitem.getQuantity());
@@ -102,7 +120,7 @@ void Store::changePurchaseFromStock(Stock *olditem, Stock newitem)
     FileManager::saveStock(stockList);
 }
 
-void Store::printStock(const const string &title, vector<int> *idColor = nullptr, const string colorCode = "")
+void Store::printStock(const string &title, vector<int> *idColor, const string colorCode)
 {
     clearConsole();
     int titleDASH = STOCK_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
@@ -172,7 +190,7 @@ void Store::printProducts()
 
 // Cart Management
 
-CartItem *Store::findItemCart(int id, int *index = nullptr)
+CartItem *Store::findItemCart(int id, int *index)
 {
     for (int i = 0; i < cart.size(); i++)
     {
@@ -381,7 +399,7 @@ void Store::changeProductCart(bool menuState)
         }
     }
 }
-void Store::clearCart(vector<Stock> *shelf = nullptr)
+void Store::clearCart(vector<Stock> *shelf)
 {
     if (cart.empty())
     {
@@ -567,8 +585,8 @@ void Store::completeCheckout(Client *client, double payment, double total)
     cout << receipt.toDisplay();
 
     // Update stock and clear cart
-    updateStockFromShelf(stockList, shelf);
-    clearCart(cart);
+    updateStockFromShelf();
+    clearCart();
 
     pause();
 }

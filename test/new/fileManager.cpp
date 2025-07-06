@@ -102,7 +102,7 @@ bool FileManager::saveClients(const vector<Client> &clientList)
     return true;
 }
 
-bool FileManager::loadSales(array<Receipt, 100> &saleList)
+bool FileManager::loadSales(array<SaleReport, 100> &saleList)
 {
     fstream file("saleList.csv", ios::in);
     if (!file.is_open())
@@ -133,7 +133,7 @@ bool FileManager::loadSales(array<Receipt, 100> &saleList)
     return true;
 }
 
-bool FileManager::saveSales( const array<Receipt, 100> &saleList)
+bool FileManager::saveSales( const array<SaleReport, 100> &saleList)
 {
     ofstream file("saleList.csv");
     if (!file.is_open())

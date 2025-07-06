@@ -1,11 +1,9 @@
-#pragma once
-
 #include "cartItem.h"
 #include <string>
 
 // Constructors
 CartItem::CartItem() : stockId(0), quantity(0), saleWithoutTax(0.0), taxRatePercent(0.0), productName("") {}
-CartItem::CartItem(const Stock &stock, int qty, double taxRate = 23.0)
+CartItem::CartItem(const Stock &stock, int qty, double taxRate)
 {
     stockId = stock.getStockId();
     productName = stock.getProductName();

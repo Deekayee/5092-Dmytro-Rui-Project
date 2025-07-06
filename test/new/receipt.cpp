@@ -7,6 +7,7 @@
 #include <ctime>
 #include <cmath>
 
+const double Receipt::TAX_RATE = 0.23;
 // Static member initialization
 int Receipt::nextReceiptId = 1;
 

@@ -1,5 +1,11 @@
 #pragma once
 
+#include "stock.h"
+#include <vector>
+
+
+using namespace std;
+
 class Store;
 class Menu
 {
@@ -13,6 +19,7 @@ private:
     void logins();
     // SubMenus - management:
     void searchStock();
+    bool showSearchResults(vector <Stock>& matchedItems);
     void addStock();
     void editStock();
     void removeStock();
