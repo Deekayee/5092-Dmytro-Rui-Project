@@ -4,7 +4,7 @@
 #include <vector>
 #include "stock.h"
 #include "client.h"
-#include "saleReport.h"
+#include "salesReport.h"
 
 using namespace std;
 
@@ -15,6 +15,6 @@ public:
     static bool saveStock(const vector<Stock> &stockList);
     static bool loadClients(vector<Client> &clientList);
     static bool saveClients(const vector<Client> &clientList);
-    static bool loadSales(array<SaleReport,100> &saleList);
-    static bool saveSales(const array<SaleReport,100> &saleList);
+    static bool loadSales(array<SalesReport,100> &saleList);
+    static bool saveSales(const array<SalesReport,100> &saleList);
 };
