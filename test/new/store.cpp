@@ -4,11 +4,9 @@
 bool Store::dataInit()
 {
     int errorCheck = 0;
-    errorCheck += fileManager::loadStock();
-    errorCheck += fileManager::loadCart();
-    errorCheck += fileManager::loadShelf();
-    errorCheck += fileManager::loadClient();
-    errorCheck += fileManager::loadSale();
+    errorCheck += FileManager::loadStock(this->stockList);
+    errorCheck += FileManager::loadClients(this->clientList);
+    errorCheck += FileManager::loadSales(this->salesList);
 
     if (errorCheck != 5)
         return false;
@@ -18,11 +16,9 @@ bool Store::dataInit()
 bool Store::dataUpdate()
 {
     int errorCheck = 0;
-    errorCheck += fileManager::saveStock();
-    errorCheck += fileManager::saveCart();
-    errorCheck += fileManager::saveShelf();
-    errorCheck += fileManager::saveClient();
-    errorCheck += fileManager::saveSale();
+    errorCheck += FileManager::saveStock(this->stockList);
+    errorCheck += FileManager::saveClients(this->clientList);
+    errorCheck += FileManager::saveSales(this->salesList);
 
     if (errorCheck != 5)
         return false;
@@ -37,7 +33,7 @@ Store::Store() : menu(*this)
         string buffer;
         cout << "Error: Failed to load data base. Please check with the developers!" << endl;
         cout << "Please enter Ctrl + C to kill task.";
-        getline(cin,buffer);
+        getline(cin, buffer);
     }
 }
 
@@ -88,13 +84,13 @@ vector<Stock> Store::searchForProduct(const string &name)
 void Store::removePurchaseFromStock(Stock *item)
 {
     item->setQuantity(0);
-    FileManager::saveStockToFile("stockList.csv", stockList);
+    FileManager::saveStock(stockList);
 }
 
 void Store::changeQuantityFromStock(Stock *item, int quantity)
 {
     item->setQuantity(quantity);
-    FileManager::saveStockToFile("stockList.csv", stockList);
+    FileManager::saveStock(stockList);
 }
 
 void Store::changePurchaseFromStock(Stock *olditem, Stock newitem)
@@ -103,7 +99,7 @@ void Store::changePurchaseFromStock(Stock *olditem, Stock newitem)
     olditem->setQuantity(newitem.getQuantity());
     olditem->setCostValue(newitem.getCostValue());
 
-    FileManager::saveStockToFile("stockList.csv", stockList);
+    FileManager::saveStock(stockList);
 }
 
 void Store::printStock(const const string &title, vector<int> *idColor = nullptr, const string colorCode = "")
@@ -198,16 +194,16 @@ void Store::addProductCart(bool menuState)
 
         clearConsole();
         if (menuState == false)
-            printProducts(shelf);
+            Store::printProducts();
         else
-            printCart(cart);
+            Store::printCart();
 
         int id = getValidatedInt("Insert product ID to add to cart (Enter 0 to return): ", true);
         if (id == 0)
             return;
 
         // checks initial quantity in stock and its existence
-        Stock *item = Store::findStockById(shelf, id);
+        Stock *item = Store::findStockById(id);
         if (item == nullptr)
         {
 
@@ -229,7 +225,7 @@ void Store::addProductCart(bool menuState)
         int quantity = getValidatedInt("How many do you want good sir? (Enter 0 to return): ");
         string input;
 
-        CartItem *bagged_item = findItemCart(cart, item->getStockId());
+        CartItem *bagged_item = findItemCart(item->getStockId());
         if (bagged_item != nullptr) // item exists in cart
         {
 
@@ -293,16 +289,16 @@ void Store::removeProductCart(bool menuState)
         clearConsole();
 
         if (menuState == false)
-            printProducts(shelf);
+            Store::printProducts();
         else
-            printCart(cart);
+            Store::printCart();
         int id = getValidatedInt("Insert product ID to remove (Enter 0 to return): ", true);
         if (id == 0)
             return;
 
         int index;
-        CartItem *bagged_item = findItemCart(cart, id, &index);
-        Stock *item = Store::findStockById(shelf, id);
+        CartItem *bagged_item = findItemCart(id, &index);
+        Stock *item = Store::findStockById(id);
 
         string input;
         if (bagged_item != nullptr)
@@ -333,19 +329,19 @@ void Store::changeProductCart(bool menuState)
 
         clearConsole();
         if (menuState == false)
-            printProducts(shelf);
+            Store::printProducts();
         else
-            printCart(cart);
+            Store::printCart();
 
         int id = getValidatedInt("Insert product ID in cart to change (Enter 0 to return): ", true);
         if (id == 0)
             return;
 
-        CartItem *bagged_item = findItemCart(cart, id);
+        CartItem *bagged_item = Store::findItemCart(id);
         if (bagged_item) // if item exists in cart
         {
 
-            Stock *item = Store::findStockById(shelf, id);
+            Stock *item = Store::findStockById(id);
 
             int item_quantity = item->getQuantity();
             int bagged_quantity = bagged_item->getQuantity();
@@ -385,7 +381,7 @@ void Store::changeProductCart(bool menuState)
         }
     }
 }
-void Store::clearCart(vector<CartItem> &cart, vector<Stock> *shelf = nullptr)
+void Store::clearCart(vector<Stock> *shelf = nullptr)
 {
     if (cart.empty())
     {
@@ -401,7 +397,7 @@ void Store::clearCart(vector<CartItem> &cart, vector<Stock> *shelf = nullptr)
         for (CartItem &bagged_item : cart)
         {
             // update
-            Stock *item = Store::findStockById(*shelf, bagged_item.getStockId());
+            Stock *item = Store::findStockById(bagged_item.getStockId());
             item->setQuantity(bagged_item.getQuantity() + item->getQuantity());
         }
 
@@ -412,7 +408,7 @@ void Store::clearCart(vector<CartItem> &cart, vector<Stock> *shelf = nullptr)
     cout << "Cart cleared." << endl;
 }
 
-void Store::printCart(vector<CartItem> &cart)
+void Store::printCart()
 {
     int titleDASH = CART_DASH - 9; // to make sure it fits the rest of the horizontal lims
     clearConsole();
@@ -446,11 +442,11 @@ void Store::printCart(vector<CartItem> &cart)
 
 // Client Management
 
-Client *Store::findClientById(vector<Client> &clientList, int clientId)
+Client *Store::findClientById(int clientId)
 {
 }
 
-Client *Store::findClientByName(vector<Client> &clientList, const string &name)
+Client *Store::findClientByName(const string &name)
 {
 }
 
@@ -468,24 +464,24 @@ void Store::checkoutMenu()
     // Display cart and calculate total
     clearConsole();
     cout << "Your cart:" << endl;
-    printCart(cart);
+    Store::printCart();
 
-    double total = calculateCartTotal();
+    double total = Store::calculateCartTotal();
     cout << "Total: " << total << " eur" << endl;
 
     if (!promptYESOrNo("Do you wish to confirm?"))
         return;
 
     // Handle client selection/creation
-    Client *selectedClient = handleClientSelection();
+    Client *selectedClient = Store::handleClientSelection();
 
     // Process payment
-    double payment = processPayment(total);
+    double payment = Store::processPayment(total);
     if (payment < 0) // User cancelled payment
         return;
 
     // Complete checkout
-    completeCheckout(selectedClient, payment, total);
+    Store::completeCheckout(selectedClient, payment, total);
 }
 
 double Store::calculateCartTotal()
@@ -506,7 +502,7 @@ Client *Store::handleClientSelection()
         string name;
         getline(cin, name);
 
-        Client *client = findClientByName(clientList, name);
+        Client *client = Store::findClientByName(name);
         if (client)
         {
             cout << "Welcome back, " << client->getName() << ", you son of your mother!" << endl;
@@ -533,7 +529,7 @@ Client *Store::handleClientSelection()
 Client *Store::createNewClient()
 {
     // Add client creation logic here
-    addClient(clientList);
+    Store::addClient();
     // Return pointer to the newly created client
     return &clientList.back(); // Assuming addClient adds to the end
 }
@@ -561,7 +557,7 @@ void Store::completeCheckout(Client *client, double payment, double total)
     // Apply gambling only for registered clients
     if (client && client->getClientId() != 0)
     {
-        gambling(cart, 25);
+        Store::gambling(cart, 25);
     }
 
     // Create receipt with appropriate client ID
