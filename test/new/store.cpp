@@ -462,11 +462,25 @@ void Store::printCart()
 
 Client *Store::findClientById(int clientId)
 {
+    for (Client &client : clientList)
+    {
+        if (client.getClientId() == clientId)
+            return &client;
+    }
+    return nullptr;
 }
 
 Client *Store::findClientByName(const string &name)
 {
+    string lowerName = stringToLower(name);
+    for (Client &client : clientList)
+    {
+        if (stringToLower(client.getName()) == lowerName)
+            return &client;
+    }
+    return nullptr;
 }
+
 
 // Sales Management
 
