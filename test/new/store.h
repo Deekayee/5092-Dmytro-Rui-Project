@@ -8,7 +8,7 @@
 #include "cartItem.h"
 #include "receipt.h"
 #include "client.h"
-#include "saleReport.h"
+#include "salesReport.h"
 #include "fileManager.h"
 #include "utils.h"
 

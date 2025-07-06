@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cartItem.h" // if we forward declare, this is needed
+
 #include <string>
 #include <vector>
 

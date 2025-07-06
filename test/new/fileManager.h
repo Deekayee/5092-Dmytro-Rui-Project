@@ -4,7 +4,7 @@
 #include <vector>
 #include "stock.h"
 #include "client.h"
-#include "salesReport.h"
+#include "receipt.h"
 
 using namespace std;
 

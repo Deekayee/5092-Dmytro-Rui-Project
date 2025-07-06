@@ -1,7 +1,10 @@
 #include "fileManager.h"
 
+#include "receipt.h"
+
 #include <iostream>
 #include <fstream>
+#include <array>
 
 bool FileManager::loadStock(vector<Stock> &stockList)
 {
