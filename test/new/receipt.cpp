@@ -206,8 +206,15 @@ string Receipt::toDisplay() const
 
 string Receipt::toString() const
 {
-    string str;
-    str = to_string(receiptId) + "," + to_string(clientId) + "," + to_string(paymentAmount);
+    stringstream ss;
+    ss << receiptId << "," << clientId << "," << fixed << setprecision(2) << paymentAmount << "," << date;
+    
+    // Add items separated by semicolons
+    for (const auto& item : items) {
+        ss << ";" << item.toString();
+    }
+    
+    return ss.str();
 }
 
 // Parser
@@ -215,15 +222,16 @@ void Receipt::fromString(const string &line)
 {
     stringstream ss(line);
     string field;
+
     getline(ss, field, ',');
     receiptId = stoi(field);
     getline(ss, field, ',');
     clientId = stoi(field);
     getline(ss, field, ',');
     paymentAmount = stod(field);
-    getline(ss, date, ',');
-    while (getline(ss, field, ','))
-    {
+    getline(ss, date, ';');
+    
+    while (getline(ss, field, ';')) {
         CartItem item;
         item.fromString(field);
         items.push_back(item);
