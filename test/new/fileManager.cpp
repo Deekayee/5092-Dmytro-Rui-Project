@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 
-bool FileManager::loadStockFromFile(const string &filename, vector<Stock> &stockList)
+bool FileManager::loadStock(vector<Stock> &stockList)
 {
-    fstream file(filename, ios::in);
+    fstream file("stockList.csv", ios::in);
     if (!file.is_open())
     {
         cout << "Error opening file." << endl;
@@ -33,12 +33,12 @@ bool FileManager::loadStockFromFile(const string &filename, vector<Stock> &stock
     return true;
 }
 
-bool FileManager::saveStockToFile(const string &filename, const vector<Stock> &stockList)
+bool FileManager::saveStock(const vector<Stock> &stockList)
 {
-    ofstream file(filename);
+    ofstream file("stockList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << filename << endl;
+        cout << "Error opening file: " << "stockList.csv" << endl;
         return false;
     }
 
@@ -52,9 +52,9 @@ bool FileManager::saveStockToFile(const string &filename, const vector<Stock> &s
     return true;
 }
 
-bool FileManager::loadClientsFromFile(const string &filename, vector<Client> &clientList)
+bool FileManager::loadClients(vector<Client> &clientList)
 {
-    fstream file(filename, ios::in);
+    fstream file("clientList.csv", ios::in);
     if (!file.is_open())
     {
         cout << "Error opening file." << endl;
@@ -83,12 +83,12 @@ bool FileManager::loadClientsFromFile(const string &filename, vector<Client> &cl
     return true;
 }
 
-bool FileManager::saveClientsToFile(const string &filename, const vector<Client> &clientList)
+bool FileManager::saveClients(const vector<Client> &clientList)
 {
-    ofstream file(filename);
+    ofstream file("clientList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << filename << endl;
+        cout << "Error opening file: " << "clientList.csv" << endl;
         return false;
     }
 
@@ -102,9 +102,9 @@ bool FileManager::saveClientsToFile(const string &filename, const vector<Client>
     return true;
 }
 
-bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt, 100> &saleList)
+bool FileManager::loadSales(array<Receipt, 100> &saleList)
 {
-    fstream file(filename, ios::in);
+    fstream file("saleList.csv", ios::in);
     if (!file.is_open())
     {
         cout << "Error opening file." << endl;
@@ -133,12 +133,12 @@ bool FileManager::loadReceiptsFromFile(const string &filename, array<Receipt, 10
     return true;
 }
 
-bool FileManager::saveReceiptsToFile(const string &filename, const array<Receipt, 100> &saleList)
+bool FileManager::saveSales( const array<Receipt, 100> &saleList)
 {
-    ofstream file(filename);
+    ofstream file("saleList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << filename << endl;
+        cout << "Error opening file: " << "saleList.csv" << endl;
         return false;
     }
 
