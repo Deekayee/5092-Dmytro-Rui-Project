@@ -462,20 +462,37 @@ void Store::printCart()
 
 Client *Store::findClientById(int clientId)
 {
+    for (Client &compareClient : clientList)
+    {
+        compareClient.getClientId()==clientId;
+        return &compareClient;
+    }
+    return nullptr;
+    
 }
 
 Client *Store::findClientByName(const string &name)
 {
+    string lowerName = stringToLower(name);
+    for (Client &compareClient : clientList)
+    {
+        string clientName = compareClient.getName();
+        if(stringToLower(clientName) == lowerName)
+            return &compareClient;
+    }
+    return nullptr;
+    
 }
 
 void Store::addClient(Client &newClient)
 {
-    
+    clientList.push_back(newClient);
+    return;
 }
 
 void Store::removeClient(Client &killClient);
 {
-
+    return
 }
 
 void Store::printClients();
