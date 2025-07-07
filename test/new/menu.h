@@ -21,6 +21,7 @@ private:
     // Main() options:
     void management();
     void shopping();
+    void reports();
     void logins();
     // SubMenus - management:
     void printStock(const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
@@ -29,6 +30,13 @@ private:
     void addStock();
     void editStock();
     void removeStock();
+    //  SubMenus - reports:
+    void generateStockReport(SalesReport& report);
+    void generateSalesReportByProduct(SalesReport& report);
+    void generateCompleteSalesReport(SalesReport& report);
+    void showMostSoldProduct(SalesReport& report);
+    void showLeastSoldProduct(SalesReport& report);
+    void showTopClient(SalesReport& report);
     // SubMenus - shopping:
     void printProducts();
     void printCart();
