@@ -13,8 +13,8 @@ CartItem::CartItem(const Stock &stock, int qty, double taxRate)
 }
 
 // Getters
-int CartItem::getQuantity() const { return stockId; }
-int CartItem::getStockId() const { return quantity; }
+int CartItem::getQuantity() const { return quantity; }
+int CartItem::getStockId() const { return stockId; }
 double CartItem::getSaleWithoutTax() const { return saleWithoutTax; }
 double CartItem::getTaxRatePercent() const { return taxRatePercent; }
 const string &CartItem::getProductName() const { return productName; }
@@ -42,9 +42,14 @@ void CartItem::setProductName(string &name) { productName = name; }
 string CartItem::toString() const
 {
     stringstream ss;
-    ss << stockId << ',' << productName << ',' << quantity << ',' << fixed << setprecision(2) << saleWithoutTax << ',' << fixed << setprecision(2) << taxRatePercent << ',' << fixed << setprecision(2) << getSaleWithTax() << ',' << fixed << setprecision(2) << getTotalItemSellValue();
+    ss << stockId << ','
+       << productName << ','
+       << quantity << ','
+       << fixed << setprecision(2) << saleWithoutTax << ','
+       << fixed << setprecision(2) << taxRatePercent;
     return ss.str();
 }
+
 string CartItem::toDisplay() const
 {
     stringstream ss;
@@ -67,10 +72,6 @@ void CartItem::fromString(const string &line)
     quantity = stoi(field);
     getline(ss, field, ',');
     saleWithoutTax = stod(field);
-    getline(ss, field, ',');
-    taxRatePercent = stod(field);
-    getline(ss, field, ',');
-    double saleWithTax = stod(field);
     getline(ss, field);
-    double totalItemSellValue = stod(field);
+    taxRatePercent = stod(field);
 }

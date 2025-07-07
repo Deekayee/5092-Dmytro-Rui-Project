@@ -65,17 +65,21 @@ int SalesReport::getLeastSoldProductByQuantity() const
 {
     int leastSoldProduct = -1;
     int minQuantity = INT_MAX;
-    
-    // Check each product ID from 1 to maxStockId
+
     for (int productId = 1; productId <= maxStockId; productId++) {
         int totalQuantity = getProductTotalQuantitySold(productId);
         
+        // Skip products that were never sold
+        if (totalQuantity == 0) {
+            continue;
+        }
+
         if (totalQuantity < minQuantity) {
             minQuantity = totalQuantity;
             leastSoldProduct = productId;
         }
     }
-    
+
     return leastSoldProduct;
 }
 
@@ -137,7 +141,7 @@ void SalesReport::generateSalesReportByProduct(const string& productName) const
     // Show individual sales
     cout << "\nIndividual Sales:" << endl;
     cout << "Receipt ID | Quantity | Sale Value" << endl;
-    cout << "--------------------------------" << endl;
+    cout << "----------------------------------" << endl;
     
     for (int i = 0; i < receiptCount; i++) {
         if (receipts[i].getReceiptId() > 0) {
@@ -158,7 +162,7 @@ double SalesReport::getClientTotalPurchases(int clientId) const
     double total = 0;
     for (int i = 0; i < receiptCount; i++) {
         if (receipts[i].getReceiptId() > 0 && receipts[i].getClientId() == clientId) {
-            total += receipts[i].getPaymentAmount();
+            total += receipts[i].getTotalCost();
         }
     }
     return total;

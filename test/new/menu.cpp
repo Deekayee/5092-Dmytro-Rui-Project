@@ -191,7 +191,7 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
     Stock *leastSoldStock = store.findStockById(leastSold);
 
     // Display results with null checks
-    cout << "Most sold product is: ";
+    cout << "Most sold product by quantity is: ";
     if (mostSoldStock != nullptr)
     {
         cout << mostSoldStock->getProductName() << " (ID: " << mostSold << ")" << endl;
@@ -201,7 +201,7 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
         cout << "Unknown (ID: " << mostSold << ")" << endl;
     }
 
-    cout << "Least sold product is: ";
+    cout << "Least sold product by quantity is: ";
     if (leastSoldStock != nullptr)
     {
         cout << leastSoldStock->getProductName() << " (ID: " << leastSold << ")" << endl;
