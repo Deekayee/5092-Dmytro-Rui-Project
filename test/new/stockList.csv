@@ -1,2 +1,11 @@
 StockId,ProductName,Quantity,CostValue
-1,test,1,1.00
+1,Sony a6400,10,836.00
+2,Canon R50,4,631.94
+3,Nikon Z30,5,678.97
+4,GoPro Hero11,0,371.99
+5,Tripod,15,45.00
+6,Camera Bag,25,29.99
+7,SD Card 64GB,50,12.50
+8,SD Card 128GB,40,18.99
+9,Battery Pack,30,22.00
+10,USB Cable,60,5.49
