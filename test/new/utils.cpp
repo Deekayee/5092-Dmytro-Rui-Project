@@ -182,6 +182,61 @@ double getValidatedDouble(const string &prompt)
         }
     }
 }
+string &getValidatedName()
+{
+    regex nameRegex(R"(^[A-Z][a-zA-Z]+\s+[A-Z][a-zA-Z]+$)");                // Matches only first and last name
+    string input;
+    while (true)
+    {
+        cout << "Please insert client's first and last name (First Last): ";
+        getline(cin, input);
+        if (!regex_match(input, nameRegex))
+        {
+            cout << endl
+                 << "Invalid client name. Please make sure to enter a first and a last name." << endl;
+            continue;
+        }
+        else
+            return input;
+    }
+}
+string &getValidatedAddress()
+{
+    regex addressRegex(R"(^([A-Za-zÀ-ÿ\s]+)\s+(\d+)\s+([A-Za-zÀ-ÿ\s]+)$)"); // Matches only adresses (street, door, city)
+    string input;
+    while (true)
+    {
+        cout << "Please insert client's address (Street Door_number City): ";
+        getline(cin, input);
+        if (!regex_match(input, addressRegex))
+        {
+            cout << endl
+                 << "Invalid client name. Please make sure to enter a first and a last name." << endl;
+            continue;
+        }
+        else
+            input;
+    }
+
+}
+int getValidatedContact()
+{
+    regex phoneRegex(R"(^9\d{8}$)");                                        // Matches only valid phone numbers (9xxxxxxxx)
+    string input;
+    while (true)
+    {
+        cout << "Please insert client's phone number (9xxxxxxxx): ";
+        getline(cin, input);
+        if (!regex_match(input, phoneRegex))
+        {
+            cout << endl
+                 << "Invalid client name. Please make sure to enter a first and a last name." << endl;
+            continue;
+        }
+        else
+            return stoi(input);
+    }
+}
 
 void setColor(const string &colorCode)
 {
