@@ -18,8 +18,8 @@ class Store
 {
 private:
     vector<Stock> stockList;
-    vector<CartItem> cart;
     vector<Stock> shelf;
+    vector<CartItem> cart;
     vector<Client> clientList;
     array<Receipt, 100> salesList; // Did all the receipt logic for the reports here, so thats what we save ig
 
@@ -32,6 +32,10 @@ public:
     Store(); // constructs with a stock menu and a sales menu
 
     vector<Stock>& getStock();
+    vector<Stock>& getShelf();
+    vector<CartItem>& getCart();
+    vector<Client> getClientList();
+    array<Receipt,100> getSalesList();
 
     // Stock Management
     Stock *findStockById( int stockId);
@@ -41,32 +45,19 @@ public:
     void changeQuantityStock( Stock *item, int quantity);
     void changePurchaseStock( Stock *olditem, Stock newitem);
     void removePurchaseStock( Stock *item);
-    void printStock(const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
-    void printProducts();
+    
+
 
     // Cart Management
     CartItem *findItemCart(int id, int *index = nullptr);
-    void addProductCart(bool menuState); // menu
-    void removeProductCart(bool menuState); // menu
-    void changeProductCart(bool menuState); // menu
     void clearCart(vector<Stock> *shelf = nullptr); // check implementation
-    void printCart();
 
     // Client Management
     Client *findClientById(int clientId);
     Client *findClientByName(const string &name);
     void addClient(Client &newClient);
-    void removeClient(int clientId);
-    void printClients(); // menu
+    bool removeClient(int clientId);
 
     // Sales Management
-    void checkoutMenu(); // menu
     double calculateCartTotal();
-    Client *handleClientSelection(); // menu
-    Client *createNewClient(); // menu
-    double processPayment(double total);
-    void completeCheckout(Client *client, double payment, double total); //maybe // menu
-    void gambling(vector<CartItem> &sale, int chance = 50);
-
-
 };
