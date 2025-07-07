@@ -7,6 +7,7 @@ bool Store::dataInit()
      FileManager::loadStock(this->stockList);
      FileManager::loadClients(this->clientList);
      FileManager::loadReceipts(this->salesList);
+     Store::shelfInit();
 
     
     
@@ -23,6 +24,29 @@ bool Store::dataUpdate()
     if (errorCheck != 5)
         return false;
     return true;
+}
+
+bool Store::shelfInit()
+{
+    // only allow client to view and select available stock through shelf
+    shelf.clear();
+    for (Stock &stock_item : stockList)
+    {
+        if (stock_item.getQuantity() == 0)
+            continue;
+
+        shelf.push_back(stock_item); // all items in shelf will be of quantity > 0
+    }
+    //once shelf is filled up, compare with cart, if its not empty
+    if (!cart.empty())
+    {
+        for (CartItem &cart_item : cart)
+        {
+            Stock *shelf_item = findShelf(cart_item.getStockId());
+            int quantity = shelf_item->getQuantity() - cart_item.getQuantity();
+            shelf_item->setQuantity(quantity);
+        }
+    }
 }
 
 void Store::updateStockFromShelf()
@@ -171,7 +195,7 @@ CartItem *Store::findItemCart(int id, int *index)
 
 Stock *Store::findShelf(int stockId)
 {
-    for (Stock &stock : stockList)
+    for (Stock &stock : shelf)
     {
         if (stock.getStockId() == stockId)
             return &stock;
@@ -183,7 +207,7 @@ void Store::clearCart(vector<Stock> *shelf)
 {
     if (cart.empty())
     {
-        cout << "Cart is already empty";
+        cout << "Cart is already empty" << endl;
         pause();
         return;
     }

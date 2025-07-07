@@ -40,9 +40,9 @@ private:
     // SubMenus - shopping:
     void printProducts();
     void printCart();
-    void addProductCart(bool menuState);
-    void removeProductCart(bool menuState);
-    void changeProductCart(bool menuState);
+    void addProductCart();
+    void removeProductCart();
+    void changeProductCart();
     void checkoutMenu();
     double processPayment(double total);                                 // (asks for payment, prints messages)
     void completeCheckout(Client *client, double payment, double total); //(prints receipt, messages, pauses)

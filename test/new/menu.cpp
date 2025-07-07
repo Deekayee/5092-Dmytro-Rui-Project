@@ -239,7 +239,7 @@ void Menu::showMostSoldProduct(SalesReport &report)
     int quantity = report.getProductTotalQuantitySold(mostSold);
     double sales = report.getProductTotalSales(mostSold);
 
-        // Check if we have valid data
+    // Check if we have valid data
     if (mostSold == -1)
     {
         cout << "No sales data available to generate report." << endl;
@@ -267,7 +267,7 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     int quantity = report.getProductTotalQuantitySold(leastSold);
     double sales = report.getProductTotalSales(leastSold);
 
-        if (leastSold == -1)
+    if (leastSold == -1)
     {
         cout << "No sales data available to generate report." << endl;
         pause();
@@ -293,7 +293,7 @@ void Menu::showTopClient(SalesReport &report)
     int topClient = report.getTopClientByValue();
     double totalPurchases = report.getClientTotalPurchases(topClient);
 
-        if (topClient == -1)
+    if (topClient == -1)
     {
         cout << "No sales data available to generate report." << endl;
         pause();
@@ -308,6 +308,82 @@ void Menu::showTopClient(SalesReport &report)
 
 void Menu::shopping()
 {
+    string input;
+    int opt;
+    while (true)
+    {
+
+        do
+        {
+            clearConsole();
+
+            // Depending on the state of the menu
+            // will print either the products in stock or in cart
+            //   menuState:
+            //   false -> Shows Products (default)
+            //   true -> Shows Cart
+            int limiterType;
+            string switchName;
+            if (menuState == false)
+            {
+                // needs to print price for client, meaning, profit margin + maybe with tax
+                printProducts();
+                limiterType = PRODUCTS_DASH;
+                switchName = "4. View Cart";
+            }
+            else
+            {
+                printCart();
+                limiterType = CART_DASH;
+                switchName = "4. View Products";
+            }
+
+            setColor(Cyan);
+            cout << "Sales Options:" << endl;
+            setColor(RESET);
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "1. Add to cart" << setw(20) << left << switchName << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "2. Change cart" << setw(20) << left << "5. Clear cart" << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "3. Remove from cart" << setw(20) << left << "6. Checkout" << endl;
+            limh(limiterType);
+            cout << "0. Go back" << endl;
+            limh(limiterType);
+            cout << "Option: ";
+
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            addProductCart();
+            break;
+        case 2:
+            changeProductCart();
+            break;
+        case 3:
+            removeProductCart();
+            break;
+        case 4:
+            menuState = !menuState; // flips menuState
+            break;
+        case 5:
+            store.clearCart();
+            break;
+        case 6:
+            checkoutMenu();
+            break;
+        case 0:
+            return;
+
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    };
 }
 
 void Menu::logins()
@@ -624,7 +700,7 @@ void Menu::printCart()
     limh(CART_DASH);
 }
 
-void Menu::addProductCart(bool menuState)
+void Menu::addProductCart()
 {
     while (true)
     {
@@ -640,8 +716,8 @@ void Menu::addProductCart(bool menuState)
         if (id == 0)
             return;
 
-        // checks initial quantity in stock and its existence
-        Stock *item = store.findStockById(id);
+        // checks initial quantity in shelf and its existence
+        Stock *item = store.findShelf(id);
         if (item == nullptr)
         {
 
@@ -721,7 +797,7 @@ void Menu::addProductCart(bool menuState)
     }
 }
 
-void Menu::removeProductCart(bool menuState)
+void Menu::removeProductCart()
 {
     while (true)
     {
@@ -762,7 +838,7 @@ void Menu::removeProductCart(bool menuState)
     }
 }
 
-void Menu::changeProductCart(bool menuState)
+void Menu::changeProductCart()
 {
     while (true)
     {
