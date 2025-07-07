@@ -23,12 +23,14 @@ int Client::getClientId() const { return clientId; }
 const string &Client::getName() const { return name; }
 int Client::getContact() const { return contact; }
 const string &Client::getAddress() const { return address; }
+bool Client::getActivity() const { return isActive;}
 
 // Setters
 void Client::setId(int id) { this->clientId = id; }
 void Client::setName(const string &name) { this->name = name; }
 void Client::setContact(int contact) { this->contact = contact; }
 void Client::setAddress(const string &address) { this->address = address; }
+void Client::setActivity(bool activity) { this->isActive = activity;}
 
 // Kill Switch
 void Client::switchActive()
@@ -46,7 +48,7 @@ void Client::setNextId(int Id) { nextId = Id; }
 // Returns a string representation of the Client object in CSV format.
 string Client::toString() const
 {
-    return to_string(clientId) + ',' + name + ',' + to_string(contact) + ',' + address;
+    return to_string(clientId) + ',' + name + ',' + to_string(contact) + ',' + address + ',' + to_string(isActive);
 }
 
 // Parses a comma-separated string to initialize Client attributes: clientId,
@@ -62,6 +64,8 @@ void Client::fromString(const string &line)
     setName(field);
     getline(ss, field, ',');
     setContact(stoi(field));
-    getline(ss, field);
+    getline(ss, field, ',');
     setAddress(field);
+    getline(ss, field);
+    setActivity(stoi(field));
 }

@@ -24,6 +24,7 @@ public:
     const string& getName() const;
     int getContact() const;
     const string& getAddress() const;
+    bool getActivity() const;
 
     // Static methods
     static int getNextId();
@@ -35,6 +36,8 @@ public:
     void setName(const string &name);
     void setContact(int contact);
     void setAddress(const string &address);
+    void setActivity(bool activity);
+
 
     // Kill Switch
     void switchActive();

@@ -3,7 +3,6 @@
 #include "utils.h"
 // private:
 
-
 // Individual report methods
 void Menu::generateStockReport(SalesReport &report)
 {
@@ -56,8 +55,8 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
     int mostSold = report.getMostSoldProductByQuantity();
     int leastSold = report.getLeastSoldProductByQuantity();
     double mostSoldProfit = report.getMostSoldProductTotalSales() * (0.3 / 1.3); // calculating profit based on total sales already without tax and 30% margin
-    //Sale Price = Cost × 1.3  →  Cost = Sale / 1.3
-    //Profit = Sale - Cost = Sale - (Sale / 1.3) = Sale × (0.3 / 1.3)
+    // Sale Price = Cost × 1.3  →  Cost = Sale / 1.3
+    // Profit = Sale - Cost = Sale - (Sale / 1.3) = Sale × (0.3 / 1.3)
     int topClient = report.getTopClientByValue();
 
     // Check if we have valid data
@@ -194,8 +193,6 @@ void Menu::showTopClient(SalesReport &report)
 
     pause();
 }
-
-
 
 // SubMenus - management:
 void Menu::printProducts()
@@ -803,7 +800,29 @@ void Menu::gambling(vector<CartItem> &sale, int chance)
 //  SubMenus - logins:
 void Menu::printClients()
 {
-    // Implement as needed, similar to printCart/printStock
+    clearConsole();
+    int titleDASH = STOCK_DASH - 12; // to make sure it fits the rest of the horizontal lims
+
+    setColor(YELLOW);
+    cout << "Clients View";
+    setColor(RESET);
+    limh(titleDASH);
+
+    setColor(CYAN);
+    cout << "ID | Clients Name           | Address | Phone " << endl;
+    setColor(RESET);
+    limh();
+
+    for (const Client &client : store.getClientList())
+    {
+        
+
+        cout << client.toString() << endl;
+
+        setColor(RESET); // resets color
+    }
+
+    limh();
 }
 
 Client *Menu::handleClientSelection()
@@ -840,8 +859,16 @@ Client *Menu::handleClientSelection()
 
 Client *Menu::registerClient()
 {
-    // Implement as needed
-    return nullptr;
+    clearConsole();
+
+    string clientName = getValidatedName();
+    string clientAddress = getValidatedAddress();
+    int clientContact = getValidatedContact();
+
+    Client newClient(clientName, clientContact, clientAddress, true);
+    store.addClient(newClient);
+    FileManager::saveClients(store.getClientList());
+    return &store.getClientList().back();
 }
 
 void Menu::printStock(const string &title, vector<int> *idColor, const string colorCode)
@@ -906,7 +933,9 @@ void Menu::main()
             limh(STOCK_DASH);
             cout << "3. Reports" << endl;
             limh(STOCK_DASH);
-            cout << "4. Exit" << endl;
+            cout << "4. Clients" << endl;
+            limh(STOCK_DASH);
+            cout << "5. Exit" << endl;
             limh(STOCK_DASH);
             cout << "Option: ";
             getline(cin, input);
@@ -934,6 +963,9 @@ void Menu::main()
             reports();
             break;
         case 4:
+            logins();
+            break;
+        case 5:
             // exit
             clearConsole();
             run = false;
@@ -1154,32 +1186,48 @@ void Menu::logins()
     {
         string input;
         int opt;
-        //display here
-        
-        
+        // display here
+
         do
         {
-            switch (opt)
-            {
-            case 1:
-            printClients();
-                break;
-            case 2:
-            registerClient();
-                break;
-            case 3:
-            killClient();
-                break;
-            case 4:
-            editClient()
-                break;
-            case 5:
-                return;
-            
-            default:
-                break;
-            }
-
+            clearConsole();
+            setColor(Cyan);
+            cout << "Clients menu" << endl;
+            setColor(RESET);
+            limh(STOCK_DASH);
+            cout << "1. " << endl;
+            limh(STOCK_DASH);
+            cout << "2. Register new client" << endl;
+            limh(STOCK_DASH);
+            cout << "3. " << endl;
+            limh(STOCK_DASH);
+            cout << "4. " << endl;
+            limh(STOCK_DASH);
+            cout << "5. Exit" << endl;
+            limh(STOCK_DASH);
+            cout << "Option: ";
+            getline(cin, input);
         } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            printClients();
+            pause();
+            break;
+        case 2:
+            registerClient();
+            break;
+        case 3:
+            // killClient();
+            break;
+        case 4:
+            // editClient() break;
+        case 5:
+            return;
+
+        default:
+            break;
+        }
     }
 }

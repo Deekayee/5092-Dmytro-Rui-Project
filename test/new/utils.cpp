@@ -182,9 +182,9 @@ double getValidatedDouble(const string &prompt)
         }
     }
 }
-string &getValidatedName()
+string getValidatedName()
 {
-    regex nameRegex(R"(^[A-Z][a-zA-Z]+\s+[A-Z][a-zA-Z]+$)");                // Matches only first and last name
+    regex nameRegex(R"(^[A-Z][a-zA-Z]+\s+[A-Z][a-zA-Z]+$)"); // Matches only first and last name
     string input;
     while (true)
     {
@@ -200,13 +200,13 @@ string &getValidatedName()
             return input;
     }
 }
-string &getValidatedAddress()
+string getValidatedAddress()
 {
-    regex addressRegex(R"(^([A-Za-zÀ-ÿ\s]+)\s+(\d+)\s+([A-Za-zÀ-ÿ\s]+)$)"); // Matches only adresses (street, door, city)
+    regex addressRegex(R"(^([A-Za-zÀ-ÿ\s]+),\s*(\d+),\s*([A-Za-zÀ-ÿ\s]+)$)"); // Matches only adresses (street, door, city)
     string input;
     while (true)
     {
-        cout << "Please insert client's address (Street Door_number City): ";
+        cout << "Please insert client's address (Street, Door_number, City): ";
         getline(cin, input);
         if (!regex_match(input, addressRegex))
         {
@@ -215,13 +215,15 @@ string &getValidatedAddress()
             continue;
         }
         else
-            input;
+        {
+            input = regex_replace(input, regex(","), "");
+        }
+        return input;
     }
-
 }
 int getValidatedContact()
 {
-    regex phoneRegex(R"(^9\d{8}$)");                                        // Matches only valid phone numbers (9xxxxxxxx)
+    regex phoneRegex(R"(^9\d{8}$)"); // Matches only valid phone numbers (9xxxxxxxx)
     string input;
     while (true)
     {
@@ -250,105 +252,106 @@ string stringToLower(string name)
     return lowerName;
 }
 
-void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor, const string colorCode)
-{
-    clearConsole();
-    int titleDASH = STOCK_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
+// void printStock(const vector<Stock> &stockList, const string &title, vector<int> *idColor, const string colorCode)
+// {
+//     clearConsole();
+//     int titleDASH = STOCK_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
 
-    setColor(YELLOW);
-    cout << title;
-    setColor(RESET);
-    limh(titleDASH);
+//     setColor(YELLOW);
+//     cout << title;
+//     setColor(RESET);
+//     limh(titleDASH);
 
-    setColor(CYAN);
-    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
-    setColor(RESET);
-    limh();
+//     setColor(CYAN);
+//     cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
+//     setColor(RESET);
+//     limh();
 
-    for (const Stock &item : stockList)
-    {
-        if (item.getQuantity() == 0)
-            setColor(RED); // red for zero quantity
-        if (idColor != nullptr)
-            for (int id : *idColor)
-            {
-                if (item.getStockId() == id)
-                    setColor(colorCode); // <color> for when item matches vector idColor
-            }
+//     for (const Stock &item : stockList)
+//     {
+//         if (item.getQuantity() == 0)
+//             setColor(RED); // red for zero quantity
+//         if (idColor != nullptr)
+//             for (int id : *idColor)
+//             {
+//                 if (item.getStockId() == id)
+//                     setColor(colorCode); // <color> for when item matches vector idColor
+//             }
 
-        cout << item.toDisplay() << endl;
+//         cout << item.toDisplay() << endl;
 
-        setColor(RESET); // resets color
-    }
+//         setColor(RESET); // resets color
+//     }
 
-    limh();
-}
+//     limh();
+// }
 
 // this function will only show relevant information to client
 // ie.: client doesn't need to know the purchase value, only the sale value
-void printProducts(const vector<Stock> &shelf)
-{
-    // just for pretty formatting
-    int titleLength = 13;
 
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Products View";
-    setColor(RESET);
-    limh(PRODUCTS_DASH - titleLength);
+// void printProducts(const vector<Stock> &shelf)
+// {
+//     // just for pretty formatting
+//     int titleLength = 13;
 
-    setColor(CYAN);
-    cout << "ID | Product Name           | Quantity | Price w/Tax (eur)" << endl;
-    setColor(RESET);
-    limh(PRODUCTS_DASH);
+//     clearConsole();
+//     setColor(YELLOW);
+//     cout << "Products View";
+//     setColor(RESET);
+//     limh(PRODUCTS_DASH - titleLength);
 
-    for (const Stock &item : shelf)
-    {
-        if (item.getQuantity() == 0)
-            setColor(RED); // red for zero quantity
+//     setColor(CYAN);
+//     cout << "ID | Product Name           | Quantity | Price w/Tax (eur)" << endl;
+//     setColor(RESET);
+//     limh(PRODUCTS_DASH);
 
-        stringstream ss;
-        cout << setw(2) << right << item.getStockId() << " | "
-             << setw(22) << left << item.getProductName() << " | "
-             << setw(8) << right << item.getQuantity() << " | "
-             << fixed << setprecision(2) << item.getSaleValue() * 1.23 << " eur"
-             << endl;
+//     for (const Stock &item : shelf)
+//     {
+//         if (item.getQuantity() == 0)
+//             setColor(RED); // red for zero quantity
 
-        setColor(RESET); // resets color
-    }
+//         stringstream ss;
+//         cout << setw(2) << right << item.getStockId() << " | "
+//              << setw(22) << left << item.getProductName() << " | "
+//              << setw(8) << right << item.getQuantity() << " | "
+//              << fixed << setprecision(2) << item.getSaleValue() * 1.23 << " eur"
+//              << endl;
 
-    limh(PRODUCTS_DASH);
-}
+//         setColor(RESET); // resets color
+//     }
 
-// Prints items in cart similar to printStock()
-void printCart(vector<CartItem> &cart) // TODO
-{
-    int titleDASH = CART_DASH - 9; // to make sure it fits the rest of the horizontal lims
-    clearConsole();
-    setColor(YELLOW);
-    cout << "Your cart";
-    setColor(RESET);
+//     limh(PRODUCTS_DASH);
+// }
 
-    limh(titleDASH);
-    setColor(CYAN);
-    cout << setw(2) << "ID" << " | "
-         << setw(22) << left << "Product Name" << " | "
-         << setw(5) << right << "Qtty" << " | "
-         << setw(12) << right << "Price" << " | "
-         << setw(12) << right << "Total"
-         << endl;
-    setColor(RESET);
-    limh(CART_DASH);
-    if (cart.empty())
-    {
-        cout << "Cart is empty." << endl;
-        limh(CART_DASH);
-        return;
-    }
-    for (const CartItem &cartItem : cart)
-    {
-        cout << cartItem.toDisplay() << endl;
-    }
+// // Prints items in cart similar to printStock()
+// void printCart(vector<CartItem> &cart) // TODO
+// {
+//     int titleDASH = CART_DASH - 9; // to make sure it fits the rest of the horizontal lims
+//     clearConsole();
+//     setColor(YELLOW);
+//     cout << "Your cart";
+//     setColor(RESET);
 
-    limh(CART_DASH);
-}
+//     limh(titleDASH);
+//     setColor(CYAN);
+//     cout << setw(2) << "ID" << " | "
+//          << setw(22) << left << "Product Name" << " | "
+//          << setw(5) << right << "Qtty" << " | "
+//          << setw(12) << right << "Price" << " | "
+//          << setw(12) << right << "Total"
+//          << endl;
+//     setColor(RESET);
+//     limh(CART_DASH);
+//     if (cart.empty())
+//     {
+//         cout << "Cart is empty." << endl;
+//         limh(CART_DASH);
+//         return;
+//     }
+//     for (const CartItem &cartItem : cart)
+//     {
+//         cout << cartItem.toDisplay() << endl;
+//     }
+
+//     limh(CART_DASH);
+// }
