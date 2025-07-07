@@ -26,7 +26,7 @@ bool Store::dataUpdate()
     return true;
 }
 
-bool Store::shelfInit()
+void Store::shelfInit()
 {
     // only allow client to view and select available stock through shelf
     shelf.clear();
