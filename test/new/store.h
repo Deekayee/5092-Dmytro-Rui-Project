@@ -60,4 +60,6 @@ public:
 
     // Sales Management
     double calculateCartTotal();
+    void addReceipt(const Receipt &receipt);
+
 };

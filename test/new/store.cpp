@@ -1,4 +1,5 @@
 #include "store.h"
+#include <climits>
 
 // private
 bool Store::dataInit()
@@ -261,4 +262,23 @@ double Store::calculateCartTotal()
         total += item.getTotalItemSellValue();
     }
     return round(total * 100) / 100;
+}
+
+void Store::addReceipt(const Receipt &receipt)
+{    
+    // Find the first empty slot in the array
+    int oldestId = INT_MAX;
+    int oldestIndex;
+    for (int i = 0; i < 100; i++)
+    {
+        int currentId = salesList.at(i).getReceiptId();
+        // Check which slot has the lowest id (lower id means older receipt, as)
+        if (currentId < oldestId)
+        {
+            oldestId = currentId;
+            oldestIndex = i;
+        }
+    }
+    salesList.at(oldestIndex) = receipt;
+    return;
 }

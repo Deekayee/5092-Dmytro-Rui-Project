@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "store.h"
 #include "utils.h"
+
 // private:
 
 // Individual report methods
@@ -766,7 +767,9 @@ void Menu::completeCheckout(Client *client, double payment, double total)
 
     cout << receipt.toDisplay();
 
-    // Update stock and clear cart
+    // Update stock and clear cart and save receipt
+    store.addReceipt(receipt);
+    FileManager::saveReceipts(store.getSalesList());
     store.updateStockFromShelf();
     store.clearCart();
 
