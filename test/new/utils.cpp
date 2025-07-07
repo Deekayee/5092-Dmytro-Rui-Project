@@ -206,12 +206,12 @@ string getValidatedAddress()
     string input;
     while (true)
     {
-        cout << "Please insert client's address (Street, Door_number, City): ";
+        cout << "Please insert client's address (Street, Door number, City): ";
         getline(cin, input);
         if (!regex_match(input, addressRegex))
         {
             cout << endl
-                 << "Invalid client name. Please make sure to enter a first and a last name." << endl;
+                 << "Invalid client address. Please make sure to enter address in the following format: Street, Door number, City." << endl;
             continue;
         }
         else
@@ -232,7 +232,7 @@ int getValidatedContact()
         if (!regex_match(input, phoneRegex))
         {
             cout << endl
-                 << "Invalid client name. Please make sure to enter a first and a last name." << endl;
+                 << "Invalid client contact. Please make sure to enter a valid phone number, 9 digits, starting with 9." << endl;
             continue;
         }
         else
