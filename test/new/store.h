@@ -25,7 +25,7 @@ private:
 
     bool dataInit();
     bool dataUpdate();
-    bool shelfInit();
+    void shelfInit();
 
 public:
     Menu menu;
