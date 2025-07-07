@@ -2,126 +2,7 @@
 #include "store.h"
 #include "utils.h"
 // private:
-//  Main() options:
-void Menu::management()
-{
-    string input;
-    int opt;
-    while (true)
-    {
-        do
-        {
-            clearConsole();
-            printStock("Stock View");
 
-            setColor(Cyan);
-            cout << "Stock Editing Menu" << endl;
-            setColor(RESET);
-            limh(STOCK_DASH);
-            cout << "1. Search Stock" << endl;
-            limh(STOCK_DASH);
-            cout << "2. Add Stock" << endl;
-            limh(STOCK_DASH);
-            cout << "3. Change Stock" << endl;
-            limh(STOCK_DASH);
-            cout << "4. Remove Stock" << endl;
-            limh(STOCK_DASH);
-            cout << "0. Go Back" << endl;
-            limh(STOCK_DASH);
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, opt));
-
-        switch (opt)
-        {
-        case 1:
-            searchStock();
-            break;
-        case 2:
-            addStock();
-            break;
-        case 3:
-            editStock();
-            break;
-        case 4:
-            removeStock();
-            break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-    }
-}
-
-void Menu::reports()
-{
-    string input;
-    int opt;
-
-    // Initialize report
-    SalesReport report;
-    report.initialize(store.getSalesList(), store.getStock());
-
-    while (true)
-    {
-        do
-        {
-            clearConsole();
-
-            setColor(Cyan);
-            cout << "Sales Reports Menu" << endl;
-            setColor(RESET);
-            limh(STOCK_DASH);
-            cout << "1. Total stock value" << endl;
-            limh(STOCK_DASH);
-            cout << "2. Sales Report by Product" << endl;
-            limh(STOCK_DASH);
-            cout << "3. Complete Sales Report" << endl;
-            limh(STOCK_DASH);
-            cout << "4. Most Sold Product" << endl;
-            limh(STOCK_DASH);
-            cout << "5. Least Sold Product" << endl;
-            limh(STOCK_DASH);
-            cout << "6. Top Client by Value" << endl;
-            limh(STOCK_DASH);
-            cout << "0. Go Back" << endl;
-            limh(STOCK_DASH);
-            cout << "Option: ";
-            getline(cin, input);
-        } while (!validateMenuInput(input, opt));
-
-        switch (opt)
-        {
-        case 1:
-            generateStockReport(report);
-            break;
-        case 2:
-            generateSalesReportByProduct(report);
-            break;
-        case 3:
-            generateCompleteSalesReport(report);
-            break;
-        case 4:
-            showMostSoldProduct(report);
-            break;
-        case 5:
-            showLeastSoldProduct(report);
-            break;
-        case 6:
-            showTopClient(report);
-            break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-    }
-}
 
 // Individual report methods
 void Menu::generateStockReport(SalesReport &report)
@@ -306,89 +187,7 @@ void Menu::showTopClient(SalesReport &report)
     pause();
 }
 
-void Menu::shopping()
-{
-    string input;
-    int opt;
-    while (true)
-    {
 
-        do
-        {
-            clearConsole();
-
-            // Depending on the state of the menu
-            // will print either the products in stock or in cart
-            //   menuState:
-            //   false -> Shows Products (default)
-            //   true -> Shows Cart
-            int limiterType;
-            string switchName;
-            if (menuState == false)
-            {
-                // needs to print price for client, meaning, profit margin + maybe with tax
-                printProducts();
-                limiterType = PRODUCTS_DASH;
-                switchName = "4. View Cart";
-            }
-            else
-            {
-                printCart();
-                limiterType = CART_DASH;
-                switchName = "4. View Products";
-            }
-
-            setColor(Cyan);
-            cout << "Sales Options:" << endl;
-            setColor(RESET);
-            limh(limiterType);
-            cout << setw(limiterType - 20) << left << "1. Add to cart" << setw(20) << left << switchName << endl;
-            limh(limiterType);
-            cout << setw(limiterType - 20) << left << "2. Change cart" << setw(20) << left << "5. Clear cart" << endl;
-            limh(limiterType);
-            cout << setw(limiterType - 20) << left << "3. Remove from cart" << setw(20) << left << "6. Checkout" << endl;
-            limh(limiterType);
-            cout << "0. Go back" << endl;
-            limh(limiterType);
-            cout << "Option: ";
-
-            getline(cin, input);
-        } while (!validateMenuInput(input, opt));
-
-        switch (opt)
-        {
-        case 1:
-            addProductCart();
-            break;
-        case 2:
-            changeProductCart();
-            break;
-        case 3:
-            removeProductCart();
-            break;
-        case 4:
-            menuState = !menuState; // flips menuState
-            break;
-        case 5:
-            store.clearCart();
-            break;
-        case 6:
-            checkoutMenu();
-            break;
-        case 0:
-            return;
-
-        default:
-            cout << "Invalid input, try again." << endl;
-            pause();
-            break;
-        }
-    };
-}
-
-void Menu::logins()
-{
-}
 
 // SubMenus - management:
 void Menu::printProducts()
@@ -1018,20 +817,20 @@ Client *Menu::handleClientSelection()
             cout << "Client not found." << endl;
             if (promptyesOrNO("Would you like to register as a new client?"))
             {
-                return createNewClient();
+                return registerClient();
             }
         }
     }
     else if (promptyesOrNO("But do you want to be part of the cool kids club?"))
     {
-        return createNewClient();
+        return registerClient();
     }
 
     // Return default client (guest checkout)
     return nullptr; // We'll handle this in completeCheckout
 }
 
-Client *Menu::createNewClient()
+Client *Menu::registerClient()
 {
     // Implement as needed
     return nullptr;
@@ -1139,4 +938,240 @@ void Menu::main()
         }
     }
     return;
+}
+
+void Menu::shopping()
+{
+    string input;
+    int opt;
+    while (true)
+    {
+
+        do
+        {
+            clearConsole();
+
+            // Depending on the state of the menu
+            // will print either the products in stock or in cart
+            //   menuState:
+            //   false -> Shows Products (default)
+            //   true -> Shows Cart
+            int limiterType;
+            string switchName;
+            if (menuState == false)
+            {
+                // needs to print price for client, meaning, profit margin + maybe with tax
+                printProducts();
+                limiterType = PRODUCTS_DASH;
+                switchName = "4. View Cart";
+            }
+            else
+            {
+                printCart();
+                limiterType = CART_DASH;
+                switchName = "4. View Products";
+            }
+
+            setColor(Cyan);
+            cout << "Sales Options:" << endl;
+            setColor(RESET);
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "1. Add to cart" << setw(20) << left << switchName << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "2. Change cart" << setw(20) << left << "5. Clear cart" << endl;
+            limh(limiterType);
+            cout << setw(limiterType - 20) << left << "3. Remove from cart" << setw(20) << left << "6. Checkout" << endl;
+            limh(limiterType);
+            cout << "0. Go back" << endl;
+            limh(limiterType);
+            cout << "Option: ";
+
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            addProductCart();
+            break;
+        case 2:
+            changeProductCart();
+            break;
+        case 3:
+            removeProductCart();
+            break;
+        case 4:
+            menuState = !menuState; // flips menuState
+            break;
+        case 5:
+            store.clearCart();
+            break;
+        case 6:
+            checkoutMenu();
+            break;
+        case 0:
+            return;
+
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    };
+}
+//  Main() options:
+void Menu::management()
+{
+    string input;
+    int opt;
+    while (true)
+    {
+        do
+        {
+            clearConsole();
+            printStock("Stock View");
+
+            setColor(Cyan);
+            cout << "Stock Editing Menu" << endl;
+            setColor(RESET);
+            limh(STOCK_DASH);
+            cout << "1. Search Stock" << endl;
+            limh(STOCK_DASH);
+            cout << "2. Add Stock" << endl;
+            limh(STOCK_DASH);
+            cout << "3. Change Stock" << endl;
+            limh(STOCK_DASH);
+            cout << "4. Remove Stock" << endl;
+            limh(STOCK_DASH);
+            cout << "0. Go Back" << endl;
+            limh(STOCK_DASH);
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            searchStock();
+            break;
+        case 2:
+            addStock();
+            break;
+        case 3:
+            editStock();
+            break;
+        case 4:
+            removeStock();
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    }
+}
+
+void Menu::reports()
+{
+    string input;
+    int opt;
+
+    // Initialize report
+    SalesReport report;
+    report.initialize(store.getSalesList(), store.getStock());
+
+    while (true)
+    {
+        do
+        {
+            clearConsole();
+
+            setColor(Cyan);
+            cout << "Sales Reports Menu" << endl;
+            setColor(RESET);
+            limh(STOCK_DASH);
+            cout << "1. Total stock value" << endl;
+            limh(STOCK_DASH);
+            cout << "2. Sales Report by Product" << endl;
+            limh(STOCK_DASH);
+            cout << "3. Complete Sales Report" << endl;
+            limh(STOCK_DASH);
+            cout << "4. Most Sold Product" << endl;
+            limh(STOCK_DASH);
+            cout << "5. Least Sold Product" << endl;
+            limh(STOCK_DASH);
+            cout << "6. Top Client by Value" << endl;
+            limh(STOCK_DASH);
+            cout << "0. Go Back" << endl;
+            limh(STOCK_DASH);
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            generateStockReport(report);
+            break;
+        case 2:
+            generateSalesReportByProduct(report);
+            break;
+        case 3:
+            generateCompleteSalesReport(report);
+            break;
+        case 4:
+            showMostSoldProduct(report);
+            break;
+        case 5:
+            showLeastSoldProduct(report);
+            break;
+        case 6:
+            showTopClient(report);
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    }
+}
+
+void Menu::logins()
+{
+    while (true)
+    {
+        string input;
+        int opt;
+        //display here
+        
+        
+        do
+        {
+            switch (opt)
+            {
+            case 1:
+            printClients();
+                break;
+            case 2:
+            registerClient();
+                break;
+            case 3:
+            killClient();
+                break;
+            case 4:
+            editClient()
+                break;
+            case 5:
+                return;
+            
+            default:
+                break;
+            }
+
+        } while (!validateMenuInput(input, opt));
+    }
 }
