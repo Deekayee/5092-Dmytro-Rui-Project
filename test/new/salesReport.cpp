@@ -190,7 +190,7 @@ double SalesReport::getProductTotalSales(int stockId) const
         if (receipts[i].getReceiptId() > 0) {
             for (const auto& item : receipts[i].getItems()) {
                 if (item.getStockId() == stockId) {
-                    total += item.getTotalItemSellValue();
+                    total += item.getTotalSaleWithoutTax();
                 }
             }
         }
