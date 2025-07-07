@@ -746,3 +746,66 @@ void Menu::printStock(const string &title, vector<int> *idColor, const string co
 }
 //public:
 Menu::Menu(Store &storeReference) : store(storeReference) {}
+
+void Menu::main()
+{
+    // main loop
+    // vars
+    bool run = true;
+    int opt;
+    string input;
+    vector<CartItem> cart;
+    vector<Stock> shelf;
+    // adding copy of stockList to shelf
+    // this will display items to user in specified order:
+    while (true)
+    {
+        do
+        {
+            clearConsole();
+            setColor(Cyan);
+            cout << "Shop menu" << endl;
+            setColor(RESET);
+            limh(STOCK_DASH);
+            cout << "1. Shop Sales" << endl;
+            limh(STOCK_DASH);
+            cout << "2. Shop Stock" << endl;
+            limh(STOCK_DASH);
+            cout << "3. Exit" << endl;
+            limh(STOCK_DASH);
+            cout << "Option: ";
+            getline(cin, input);
+        } while (!validateMenuInput(input, opt));
+
+        switch (opt)
+        {
+        case 1:
+            // show products, give an option to buy and checkout or cancel
+            shopping();
+            break;
+        case 2:
+            // show stock, give an option to add or remove and cancel, among some other bonus features
+            // bar access to stock if a sale is in process, in order to prevent mismanagement of stock and shelf items
+            if (!cart.empty())
+            {
+                cout << "You have products in cart! Clear the cart or finish checking out to proceed" << endl
+                     << "Unable to access stock menu" << endl;
+                pause();
+                break;
+            }
+            management();
+            break;
+        case 3:
+            // exit
+            clearConsole();
+            run = false;
+            break;
+        default:
+            // user is a bit slow, what can we do
+            cout << "Invalid input, try again." << endl;
+            pause();
+            break;
+        }
+    }
+    return;
+}

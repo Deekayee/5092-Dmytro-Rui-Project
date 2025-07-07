@@ -3,13 +3,13 @@
 // private
 bool Store::dataInit()
 {
-    int errorCheck = 0;
-    errorCheck += FileManager::loadStock(this->stockList);
-    errorCheck += FileManager::loadClients(this->clientList);
-    errorCheck += FileManager::loadReceipts(this->salesList);
+    
+     FileManager::loadStock(this->stockList);
+     FileManager::loadClients(this->clientList);
+     FileManager::loadReceipts(this->salesList);
 
-    if (errorCheck != 5)
-        return false;
+    
+    
     return true;
 }
 

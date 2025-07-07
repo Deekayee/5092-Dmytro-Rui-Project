@@ -6,13 +6,18 @@
 #include <fstream>
 #include <array>
 
-bool FileManager::loadStock(vector<Stock> &stockList)
+
+
+void FileManager::loadStock(vector<Stock> &stockList)
 {
     fstream file("stockList.csv", ios::in);
     if (!file.is_open())
     {
-        cout << "Error opening file." << endl;
-        return false;
+        fstream file("stockList.csv", ios::app);
+
+        // gives the file a header
+        cout << "Creating file - stockList.csv..." << endl;
+        file << "StockId,ProductName,Quantity,CostValue" << endl;
     }
 
     string line;
@@ -33,7 +38,7 @@ bool FileManager::loadStock(vector<Stock> &stockList)
     Stock::setNextStockId(maxId + 1);
 
     file.close();
-    return true;
+    return;
 }
 
 bool FileManager::saveStock(const vector<Stock> &stockList)
@@ -55,13 +60,16 @@ bool FileManager::saveStock(const vector<Stock> &stockList)
     return true;
 }
 
-bool FileManager::loadClients(vector<Client> &clientList)
+void FileManager::loadClients(vector<Client> &clientList)
 {
     fstream file("clientList.csv", ios::in);
     if (!file.is_open())
     {
-        cout << "Error opening file." << endl;
-        return false;
+        fstream file("clientList.csv", ios::app);
+
+        // gives the file a header
+        cout << "Creating file - receiptList.csv..." << endl;
+        file << "ClientId,Name,Contact,Address" << endl;
     }
 
     string line;
@@ -83,7 +91,7 @@ bool FileManager::loadClients(vector<Client> &clientList)
     Client::setNextId(maxId + 1);
 
     file.close();
-    return true;
+    return;
 }
 
 bool FileManager::saveClients(const vector<Client> &clientList)
@@ -105,13 +113,16 @@ bool FileManager::saveClients(const vector<Client> &clientList)
     return true;
 }
 
-bool FileManager::loadReceipts(array<Receipt, 100> &saleList)
+void FileManager::loadReceipts(array<Receipt, 100> &saleList)
 {
     fstream file("receiptList.csv", ios::in);
     if (!file.is_open())
     {
-        cout << "Error opening file." << endl;
-        return false;
+        fstream file("receiptList.csv", ios::app);
+
+        // gives the file a header
+        cout << "Creating file - receiptList.csv..." << endl;
+        file << "ReceiptId,ClientId,PaymentAmount,Date,Items" << endl;
     }
 
     string line;
@@ -139,7 +150,7 @@ bool FileManager::loadReceipts(array<Receipt, 100> &saleList)
     Receipt::setNextReceiptId(maxId + 1);
 
     file.close();
-    return true;
+    return;
 }
 
 bool FileManager::saveReceipts(const array<Receipt, 100> &saleList)
