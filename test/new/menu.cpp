@@ -174,7 +174,9 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
 
     int mostSold = report.getMostSoldProductByQuantity();
     int leastSold = report.getLeastSoldProductByQuantity();
-    double mostSoldProfit = report.getMostSoldProductTotalSales();
+    double mostSoldProfit = report.getMostSoldProductTotalSales() * (0.3 / 1.3); // calculating profit based on total sales already without tax and 30% margin
+    //Sale Price = Cost × 1.3  →  Cost = Sale / 1.3
+    //Profit = Sale - Cost = Sale - (Sale / 1.3) = Sale × (0.3 / 1.3)
     int topClient = report.getTopClientByValue();
 
     // Check if we have valid data
@@ -231,13 +233,14 @@ void Menu::showMostSoldProduct(SalesReport &report)
     int titleLength = 17;
     clearConsole();
     setColor(YELLOW);
-    cout << "MOST SOLD PRODUCT";
+    cout << "Most sold product";
     setColor(RESET);
     limh(STOCK_DASH - titleLength);
 
     int mostSold = report.getMostSoldProductByQuantity();
     int quantity = report.getProductTotalQuantitySold(mostSold);
     double sales = report.getProductTotalSales(mostSold);
+    Stock *mostSoldStock = store.findStockById(mostSold);
 
     // Check if we have valid data
     if (mostSold == -1)
@@ -248,6 +251,7 @@ void Menu::showMostSoldProduct(SalesReport &report)
     }
 
     cout << "Product ID: " << mostSold << endl;
+    cout << "Product Name: " << mostSoldStock->getProductName() << endl;
     cout << "Total quantity sold: " << quantity << endl;
     cout << "Total sales value: " << fixed << setprecision(2) << sales << " eur." << endl;
 
@@ -259,13 +263,14 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     int titleLength = 18;
     clearConsole();
     setColor(YELLOW);
-    cout << "LEAST SOLD PRODUCT";
+    cout << "Least sold product";
     setColor(RESET);
     limh(STOCK_DASH - titleLength);
 
     int leastSold = report.getLeastSoldProductByQuantity();
     int quantity = report.getProductTotalQuantitySold(leastSold);
     double sales = report.getProductTotalSales(leastSold);
+    Stock *leastSoldStock = store.findStockById(leastSold);
 
     if (leastSold == -1)
     {
@@ -275,6 +280,7 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     }
 
     cout << "Product ID: " << leastSold << endl;
+    cout << "Product Name: " << leastSoldStock->getProductName() << endl;
     cout << "Total quantity sold: " << quantity << endl;
     cout << "Total sales value: " << fixed << setprecision(2) << sales << " eur." << endl;
 
@@ -286,12 +292,13 @@ void Menu::showTopClient(SalesReport &report)
     int titleLength = 19;
     clearConsole();
     setColor(YELLOW);
-    cout << "TOP CLIENT BY VALUE";
+    cout << "Top client by value sold";
     setColor(RESET);
     limh(STOCK_DASH - titleLength);
 
     int topClient = report.getTopClientByValue();
     double totalPurchases = report.getClientTotalPurchases(topClient);
+    Client *topClientObj = store.findClientById(topClient);
 
     if (topClient == -1)
     {
@@ -301,6 +308,7 @@ void Menu::showTopClient(SalesReport &report)
     }
 
     cout << "Client ID: " << topClient << endl;
+    cout << "Client Name: " << topClientObj->getName() << endl;
     cout << "Total purchases: " << fixed << setprecision(2) << totalPurchases << " eur." << endl;
 
     pause();
