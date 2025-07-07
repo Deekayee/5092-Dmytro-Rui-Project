@@ -57,6 +57,18 @@ vector<Stock> &Store::getShelf()
 {
     return shelf;
 }
+vector<CartItem> &Store::getCart()
+{
+    return cart;
+}
+vector<Client> &Store::getClientList()
+{
+    return clientList;
+}
+array<Receipt, 100> &Store::getSalesList()
+{
+    return salesList;
+}
 
 Stock *Store::findStockById(int stockId)
 {
@@ -141,6 +153,57 @@ bool Store::removeClient(int id)
     }
     else
         return false;
+}
+
+CartItem *Store::findItemCart(int id, int *index)
+{
+    for (int i = 0; i < cart.size(); i++)
+    {
+        if (cart.at(i).getStockId() == id)
+        {
+            if (index != nullptr)
+                *index = i;
+            return &cart.at(i); // finds and returns reference to item
+        }
+    }
+    return nullptr;
+}
+
+Stock *Store::findShelf(int stockId)
+{
+    for (Stock &stock : stockList)
+    {
+        if (stock.getStockId() == stockId)
+            return &stock;
+    }
+    return nullptr;
+}
+
+void Store::clearCart(vector<Stock> *shelf)
+{
+    if (cart.empty())
+    {
+        cout << "Cart is already empty";
+        pause();
+        return;
+    }
+
+    // *this case represents a canceled sale through the menu
+    // here we need to bring back the quantities in the cart back to the shelf
+    // before deleting them
+    if (shelf != nullptr)
+        for (CartItem &bagged_item : cart)
+        {
+            // update
+            Stock *item = findShelf(bagged_item.getStockId());
+            item->setQuantity(bagged_item.getQuantity() + item->getQuantity());
+        }
+
+    // *otherwise, if shelf isnt specified, it means checkout is happening, so
+    // the shelf already owns the correct quantities and is ready to update our
+    // stockList
+    cart.clear();
+    cout << "Cart cleared." << endl;
 }
 
 Client *Store::findClientById(int clientId)

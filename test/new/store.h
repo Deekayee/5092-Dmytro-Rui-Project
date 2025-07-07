@@ -25,31 +25,30 @@ private:
 
     bool dataInit();
     bool dataUpdate();
-    void updateStockFromShelf();
 
 public:
     Menu menu;
     Store(); // constructs with a stock menu and a sales menu
 
-    vector<Stock>& getStock();
-    vector<Stock>& getShelf();
-    vector<CartItem>& getCart();
-    vector<Client> getClientList();
-    array<Receipt,100> getSalesList();
+    vector<Stock> &getStock();
+    vector<Stock> &getShelf();
+    vector<CartItem> &getCart();
+    vector<Client> &getClientList();
+    array<Receipt, 100> &getSalesList();
 
     // Stock Management
-    Stock *findStockById( int stockId);
-    Stock *findStockByName( const string &name);
+    Stock *findStockById(int stockId);
+    Stock *findStockByName(const string &name);
     vector<Stock> searchPurchaseStock(const string &name);
-    void addPurchaseStock (Stock *item);
-    void changeQuantityStock( Stock *item, int quantity);
-    void changePurchaseStock( Stock *olditem, Stock newitem);
-    void removePurchaseStock( Stock *item);
-    
-
+    void addPurchaseStock(Stock *item);
+    void changeQuantityStock(Stock *item, int quantity);
+    void changePurchaseStock(Stock *olditem, Stock newitem);
+    void removePurchaseStock(Stock *item);
+    void updateStockFromShelf();
 
     // Cart Management
     CartItem *findItemCart(int id, int *index = nullptr);
+    Stock *findShelf(int stockId);
     void clearCart(vector<Stock> *shelf = nullptr); // check implementation
 
     // Client Management

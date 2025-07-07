@@ -1,6 +1,12 @@
 #pragma once
 
 #include "stock.h"
+#include "cartItem.h"
+#include "client.h"
+#include "receipt.h"
+#include "salesReport.h"
+#include "utils.h"
+
 #include <vector>
 
 using namespace std;

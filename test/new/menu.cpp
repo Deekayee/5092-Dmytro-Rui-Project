@@ -1,6 +1,6 @@
 #include "menu.h"
 #include "store.h"
-
+#include "utils.h"
 // private:
 //  Main() options:
 void Menu::management()
@@ -443,7 +443,7 @@ void Menu::removeStock()
                 if (item->getQuantity() >= quantity)
                 {
                     CartItem newItemCart(*item, quantity); // create the new bagged item
-                    store.cart.push_back(newItemCart);           // add the new bagged item the vector cart
+                    store.getCart().push_back(newItemCart);           // add the new bagged item the vector cart
                     item->setQuantity(item->getQuantity() - quantity);
                 }
                 else // if exceeds
@@ -456,7 +456,7 @@ void Menu::removeStock()
                     if (promptYESOrNo(ss.str()))
                     {
                         CartItem newItemCart(*item, item->getQuantity()); // create the new bagged item
-                        store.cart.push_back(newItemCart);                      // add the new bagged item the vector cart
+                        store.getCart().push_back(newItemCart);                      // add the new bagged item the vector cart
                         item->setQuantity(0);
                     }
                 }
@@ -492,7 +492,7 @@ void Menu::removeStock()
             string input;
             if (bagged_item != nullptr)
             {
-                store.cart.erase(store.cart.begin() + index);
+                store.getCart().erase(store.getCart().begin() + index);
                 item->setQuantity(item->getQuantity() + bagged_item->getQuantity());
 
                 cout << "Product removed from cart." << endl;
@@ -574,7 +574,7 @@ void Menu::removeStock()
 
     void Menu::checkoutMenu()
     {
-        if (store.cart.empty())
+        if (store.getCart().empty())
         {
             cout << "Cart is empty." << endl;
             pause();
@@ -627,12 +627,12 @@ void Menu::removeStock()
         // Apply gambling only for registered clients
         if (client && client->getClientId() != 0)
         {
-            gambling(store.cart, 25);
+            gambling(store.getCart(), 25);
         }
 
         // Create receipt with appropriate client ID
         int clientId = client ? client->getClientId() : 0;
-        Receipt receipt(store.cart, payment, clientId);
+        Receipt receipt(store.getCart(), payment, clientId);
 
         cout << receipt.toDisplay();
 
@@ -710,3 +710,39 @@ Client *Menu::createNewClient()
     // Implement as needed
     return nullptr;
 }
+
+void Menu::printStock(const string &title, vector<int> *idColor, const string colorCode)
+{
+    clearConsole();
+    int titleDASH = STOCK_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
+
+    setColor(YELLOW);
+    cout << title;
+    setColor(RESET);
+    limh(titleDASH);
+
+    setColor(CYAN);
+    cout << "ID | Product Name           | Quantity | Cost (eur)" << endl;
+    setColor(RESET);
+    limh();
+
+    for (const Stock &item : store.getStock())
+    {
+        if (item.getQuantity() == 0)
+            setColor(RED); // red for zero quantity
+        if (idColor != nullptr)
+            for (int id : *idColor)
+            {
+                if (item.getStockId() == id)
+                    setColor(colorCode); // <color> for when item matches vector idColor
+            }
+
+        cout << item.toDisplay() << endl;
+
+        setColor(RESET); // resets color
+    }
+
+    limh();
+}
+//public:
+Menu::Menu(Store &storeReference) : store(storeReference) {}
