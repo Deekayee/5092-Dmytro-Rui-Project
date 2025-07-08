@@ -12,7 +12,7 @@ const double Receipt::TAX_RATE = 0.23;
 int Receipt::nextReceiptId = 1;
 
 // Default constructor
-Receipt::Receipt() : receiptId(nextReceiptId++), clientId(0), paymentAmount(0.0), date(getCurrentDateTime()) {}
+Receipt::Receipt() : receiptId(0), clientId(0), paymentAmount(0.0), date("0000-00-00 00:00") {}
 
 // Constructor with cart and payment
 Receipt::Receipt(const vector<CartItem> &cart, double payment, int clntId)
