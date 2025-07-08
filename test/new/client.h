@@ -14,16 +14,17 @@ private:
     string name;
     int contact;
     string address;
+
 public:
     // Constructors
     Client();
-    Client(const string& name, int contact,const string& address, bool active);
+    Client(const string &name, int contact, const string &address, bool active);
 
     // Getters
     int getClientId() const;
-    const string& getName() const;
+    const string &getName() const;
     int getContact() const;
-    const string& getAddress() const;
+    const string &getAddress() const;
     bool getActivity() const;
 
     // Static methods
@@ -37,7 +38,6 @@ public:
     void setContact(int contact);
     void setAddress(const string &address);
     void setActivity(bool activity);
-
 
     // Kill Switch
     void switchActive();

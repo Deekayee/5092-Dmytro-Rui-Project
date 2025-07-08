@@ -56,10 +56,8 @@ public:
     Client *findClientById(int clientId);
     Client *findClientByName(const string &name);
     void addClient(Client &newClient);
-    bool removeClient(int clientId);
 
     // Sales Management
     double calculateCartTotal();
     void addReceipt(const Receipt &receipt);
-
 };

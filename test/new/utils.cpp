@@ -17,17 +17,21 @@
 
 using namespace std;
 
+// Utility functions
+// pause the console
 void pause() // pause the console
 {
     cout << "Press enter to continue...";
     cin.ignore();
 }
 
+// horizontal line with color
 void limh(int n) // horizontal line with color
 {
     cout << Magenta << string(n, '-') << RESET << endl;
 }
 
+// clear the console
 void clearConsole() // clear the console
 {
 #ifdef _WIN32
@@ -111,6 +115,7 @@ bool validateMenuInput(const string &input, int &opt)
     return true;
 }
 
+// returns validated int
 int getValidatedInt(const string &prompt, bool zero)
 {
     string input;
@@ -144,6 +149,7 @@ int getValidatedInt(const string &prompt, bool zero)
     }
 }
 
+// returns validated double
 double getValidatedDouble(const string &prompt)
 {
     const double maxValue = 1000000.00; // Arbitrary maximum
@@ -182,9 +188,11 @@ double getValidatedDouble(const string &prompt)
         }
     }
 }
+
+// returns validated name
 string getValidatedName()
 {
-    regex nameRegex(R"(^[A-Z][a-zA-Z]+\s+[A-Z][a-zA-Z]+$)"); // Matches only first and last name
+    regex nameRegex(R"(^[A-Z][a-zA-Z]+\s+[A-Z][a-zA-Z]+$)"); // Matches only first and last name split by space
     string input;
     while (true)
     {
@@ -200,6 +208,8 @@ string getValidatedName()
             return input;
     }
 }
+
+// returns validated address
 string getValidatedAddress()
 {
     regex addressRegex(R"(^([A-Za-zÀ-ÿ\s]+),\s*(\d+),\s*([A-Za-zÀ-ÿ\s]+)$)"); // Matches only adresses (street, door, city)
@@ -221,6 +231,8 @@ string getValidatedAddress()
         return input;
     }
 }
+
+// returns validated contact
 int getValidatedContact()
 {
     regex phoneRegex(R"(^9\d{8}$)"); // Matches only valid phone numbers (9xxxxxxxx)
@@ -240,11 +252,13 @@ int getValidatedContact()
     }
 }
 
+// sets color
 void setColor(const string &colorCode)
 {
     cout << colorCode;
 }
 
+// converts string to lowercase
 string stringToLower(string name)
 {
     string lowerName = name;

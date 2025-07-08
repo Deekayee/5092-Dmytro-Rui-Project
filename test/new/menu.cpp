@@ -5,6 +5,7 @@
 // private:
 
 // Individual report methods
+// stock report
 void Menu::generateStockReport(SalesReport &report)
 {
     int titleLength = 12;
@@ -19,6 +20,7 @@ void Menu::generateStockReport(SalesReport &report)
     pause();
 }
 
+// sales by product report
 void Menu::generateSalesReportByProduct(SalesReport &report)
 {
     int titleLength = 26;
@@ -44,6 +46,7 @@ void Menu::generateSalesReportByProduct(SalesReport &report)
     pause();
 }
 
+// complete sales report
 void Menu::generateCompleteSalesReport(SalesReport &report)
 {
     int titleLength = 21;
@@ -109,6 +112,7 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
     pause();
 }
 
+// most sold product by quantity
 void Menu::showMostSoldProduct(SalesReport &report)
 {
     int titleLength = 17;
@@ -140,6 +144,7 @@ void Menu::showMostSoldProduct(SalesReport &report)
     pause();
 }
 
+// least sold product by quantity
 void Menu::showLeastSoldProduct(SalesReport &report)
 {
     int titleLength = 18;
@@ -170,6 +175,7 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     pause();
 }
 
+// top client by value sold
 void Menu::showTopClient(SalesReport &report)
 {
     int titleLength = 24;
@@ -234,6 +240,7 @@ void Menu::printProducts()
     limh(PRODUCTS_DASH);
 }
 
+// Search stock
 void Menu::searchStock()
 {
     bool run;
@@ -256,6 +263,7 @@ void Menu::searchStock()
     } while (run);
 }
 
+// Search stock results
 bool Menu::showSearch(vector<Stock> &matchedItems)
 {
     clearConsole();
@@ -302,6 +310,7 @@ bool Menu::showSearch(vector<Stock> &matchedItems)
         return false;
 }
 
+// Add stock
 void Menu::addStock()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -362,6 +371,7 @@ void Menu::addStock()
     } while (promptyesOrNO("Do you want to register another item?"));
 }
 
+// Edit stock
 void Menu::editStock()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -424,6 +434,7 @@ void Menu::editStock()
     }
 }
 
+// Remove stock
 void Menu::removeStock()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -509,6 +520,7 @@ void Menu::printCart()
     limh(CART_DASH);
 }
 
+// Add product to cart
 void Menu::addProductCart()
 {
     while (true)
@@ -606,6 +618,7 @@ void Menu::addProductCart()
     }
 }
 
+// Remove product from cart
 void Menu::removeProductCart()
 {
     while (true)
@@ -647,6 +660,7 @@ void Menu::removeProductCart()
     }
 }
 
+// Change quantity of product in cart
 void Menu::changeProductCart()
 {
     while (true)
@@ -707,6 +721,7 @@ void Menu::changeProductCart()
     }
 }
 
+// Checkout menu
 void Menu::checkoutMenu()
 {
     if (store.getCart().empty())
@@ -739,6 +754,7 @@ void Menu::checkoutMenu()
     completeCheckout(selectedClient, payment, total);
 }
 
+// Process payment
 double Menu::processPayment(double total)
 {
     double payment = getValidatedDouble("Insert payment amount: ");
@@ -755,6 +771,7 @@ double Menu::processPayment(double total)
     return payment;
 }
 
+// Complete checkout
 void Menu::completeCheckout(Client *client, double payment, double total)
 {
     clearConsole();
@@ -780,6 +797,7 @@ void Menu::completeCheckout(Client *client, double payment, double total)
     pause();
 }
 
+// Gambling for free products
 void Menu::gambling(vector<CartItem> &sale, int chance)
 {
     srand(time(0));
@@ -803,6 +821,7 @@ void Menu::gambling(vector<CartItem> &sale, int chance)
 }
 
 //  SubMenus - logins:
+// print clients
 void Menu::printClients(const string &title, vector<int> *idColor, const string colorCode)
 {
     clearConsole();
@@ -839,6 +858,7 @@ void Menu::printClients(const string &title, vector<int> *idColor, const string 
     limh(CLIENT_DASH);
 }
 
+// kill client
 void Menu::killClient()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -893,6 +913,7 @@ void Menu::killClient()
     }
 }
 
+// revive client
 void Menu::reviveClient()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -947,6 +968,7 @@ void Menu::reviveClient()
     }
 }
 
+// change client name
 void Menu::changeClientName()
 {
     vector<int> idColor; // saves ids for marking when changed
@@ -1001,6 +1023,7 @@ void Menu::changeClientName()
     }
 }
 
+// handle client selection
 Client *Menu::handleClientSelection()
 {
     if (promptyesOrNO("Are you part of our extremely cool clientele?"))
@@ -1033,6 +1056,7 @@ Client *Menu::handleClientSelection()
     return nullptr; // We'll handle this in completeCheckout
 }
 
+// register new client
 Client *Menu::registerClient()
 {
     string clientName = getValidatedName();
@@ -1078,9 +1102,11 @@ void Menu::printStock(const string &title, vector<int> *idColor, const string co
 
     limh();
 }
-// public:
+
+// intresting constructor, stores a reference to the store and uses it
 Menu::Menu(Store &storeReference) : store(storeReference) {}
 
+// main menu
 void Menu::main()
 {
     // main loop
@@ -1152,13 +1178,13 @@ void Menu::main()
     return;
 }
 
+// menu for sales
 void Menu::shopping()
 {
     string input;
     int opt;
     while (true)
     {
-
         do
         {
             clearConsole();
@@ -1231,7 +1257,8 @@ void Menu::shopping()
         }
     };
 }
-//  Main() options:
+
+// menu for stock
 void Menu::management()
 {
     string input;
@@ -1285,6 +1312,7 @@ void Menu::management()
     }
 }
 
+// menu for reports
 void Menu::reports()
 {
     string input;
@@ -1352,6 +1380,7 @@ void Menu::reports()
     }
 }
 
+// menu for clients
 void Menu::logins()
 {
     while (true)

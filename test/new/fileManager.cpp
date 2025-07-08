@@ -6,8 +6,7 @@
 #include <fstream>
 #include <array>
 
-
-
+// Function to load stock from a file
 void FileManager::loadStock(vector<Stock> &stockList)
 {
     fstream file("stockList.csv", ios::in);
@@ -41,6 +40,7 @@ void FileManager::loadStock(vector<Stock> &stockList)
     return;
 }
 
+// Function to save stock to a file
 bool FileManager::saveStock(const vector<Stock> &stockList)
 {
     ofstream file("stockList.csv");
@@ -60,6 +60,7 @@ bool FileManager::saveStock(const vector<Stock> &stockList)
     return true;
 }
 
+// Function to load clients from a file
 void FileManager::loadClients(vector<Client> &clientList)
 {
     fstream file("clientList.csv", ios::in);
@@ -94,6 +95,7 @@ void FileManager::loadClients(vector<Client> &clientList)
     return;
 }
 
+// Function to save clients to a file
 bool FileManager::saveClients(const vector<Client> &clientList)
 {
     ofstream file("clientList.csv");
@@ -113,6 +115,7 @@ bool FileManager::saveClients(const vector<Client> &clientList)
     return true;
 }
 
+// Function to load receipts from a file
 void FileManager::loadReceipts(array<Receipt, 100> &saleList)
 {
     fstream file("receiptList.csv", ios::in);
@@ -129,7 +132,7 @@ void FileManager::loadReceipts(array<Receipt, 100> &saleList)
     getline(file, line); // ignore header
     int maxId = 0;
     int i = 0; // Initialize i to 0
-    
+
     while (getline(file, line) && i < 100) // Add bounds check
     {
         if (!line.empty()) // Check if line is not empty
@@ -141,7 +144,7 @@ void FileManager::loadReceipts(array<Receipt, 100> &saleList)
             // Track the highest ID
             if (sale.getReceiptId() > maxId)
                 maxId = sale.getReceiptId();
-            
+
             i++; // Increment i
         }
     }
@@ -153,6 +156,7 @@ void FileManager::loadReceipts(array<Receipt, 100> &saleList)
     return;
 }
 
+// Function to save receipts to a file
 bool FileManager::saveReceipts(const array<Receipt, 100> &saleList)
 {
     ofstream file("receiptList.csv");
@@ -163,7 +167,7 @@ bool FileManager::saveReceipts(const array<Receipt, 100> &saleList)
     }
 
     file << "ReceiptId,ClientId,PaymentAmount,Date,Items" << endl;
-    
+
     for (int i = 0; i < 100; i++)
     {
         if (saleList.at(i).getReceiptId() > 0) // Only save valid receipts

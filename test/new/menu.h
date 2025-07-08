@@ -45,7 +45,7 @@ private:
     // void clearCart(vector<Stock> *shelf = nullptr); //(partially UI : prints messages and pauses)
     //  SubMenus - logins:
     void printClients(const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
-    Client *handleClientSelection(); 
+    Client *handleClientSelection();
     Client *registerClient();
     void killClient();
     void reviveClient();

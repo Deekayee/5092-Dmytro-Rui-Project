@@ -11,7 +11,7 @@
 using namespace std;
 
 // Forward declaration to minimize dependencies
-//class CartItem;
+// class CartItem;
 
 class Receipt
 {

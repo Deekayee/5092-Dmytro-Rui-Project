@@ -50,6 +50,7 @@ string CartItem::toString() const
     return ss.str();
 }
 
+// Method for displaing data
 string CartItem::toDisplay() const
 {
     stringstream ss;
@@ -61,6 +62,8 @@ string CartItem::toDisplay() const
 
     return ss.str();
 }
+
+// Method for displaing data overload
 string CartItem::toDisplay(int receiptOrder) const
 {
     stringstream ss;
@@ -72,6 +75,8 @@ string CartItem::toDisplay(int receiptOrder) const
 
     return ss.str();
 }
+
+// Method for reading data
 void CartItem::fromString(const string &line)
 {
     stringstream ss(line);

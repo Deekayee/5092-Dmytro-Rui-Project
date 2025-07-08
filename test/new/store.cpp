@@ -1,20 +1,19 @@
 #include "store.h"
 #include <climits>
 
-// private
+// store initialization
 bool Store::dataInit()
 {
-    
-     FileManager::loadStock(this->stockList);
-     FileManager::loadClients(this->clientList);
-     FileManager::loadReceipts(this->salesList);
-     Store::shelfInit();
 
-    
-    
+    FileManager::loadStock(this->stockList);
+    FileManager::loadClients(this->clientList);
+    FileManager::loadReceipts(this->salesList);
+    Store::shelfInit();
+
     return true;
 }
 
+// store update
 bool Store::dataUpdate()
 {
     int errorCheck = 0;
@@ -27,6 +26,7 @@ bool Store::dataUpdate()
     return true;
 }
 
+// shelf initialization
 void Store::shelfInit()
 {
     // only allow client to view and select available stock through shelf
@@ -38,7 +38,7 @@ void Store::shelfInit()
 
         shelf.push_back(stock_item); // all items in shelf will be of quantity > 0
     }
-    //once shelf is filled up, compare with cart, if its not empty
+    // once shelf is filled up, compare with cart, if its not empty
     if (!cart.empty())
     {
         for (CartItem &cart_item : cart)
@@ -50,6 +50,7 @@ void Store::shelfInit()
     }
 }
 
+// update stock shelf
 void Store::updateStockFromShelf()
 {
     for (Stock &shelf_item : shelf)
@@ -61,7 +62,7 @@ void Store::updateStockFromShelf()
     cout << "Stock Updated!" << endl;
 }
 
-// public
+// store error check
 Store::Store() : menu(*this)
 {
     if (Store::dataInit() == false)
@@ -95,6 +96,7 @@ array<Receipt, 100> &Store::getSalesList()
     return salesList;
 }
 
+// find stock by id
 Stock *Store::findStockById(int stockId)
 {
     for (Stock &stock : stockList)
@@ -105,6 +107,7 @@ Stock *Store::findStockById(int stockId)
     return nullptr;
 }
 
+// find stock by name
 Stock *Store::findStockByName(const string &name)
 {
     string lowerName = stringToLower(name);
@@ -116,6 +119,7 @@ Stock *Store::findStockByName(const string &name)
     return nullptr;
 }
 
+// search stock
 vector<Stock> Store::searchPurchaseStock(const string &name)
 {
     vector<Stock> items;
@@ -131,12 +135,14 @@ vector<Stock> Store::searchPurchaseStock(const string &name)
     return items;
 }
 
+// remove stock
 void Store::removePurchaseStock(Stock *item)
 {
     item->setQuantity(0);
     FileManager::saveStock(stockList);
 }
 
+// add stock
 void Store::addPurchaseStock(Stock *item)
 {
     stockList.push_back(*item);
@@ -146,12 +152,14 @@ void Store::addPurchaseStock(Stock *item)
          << "Item ID: " << item->getStockId() << " added in stockpile!" << endl;
 }
 
+// change stock quantity
 void Store::changeQuantityStock(Stock *item, int quantity)
 {
     item->setQuantity(quantity);
     FileManager::saveStock(stockList);
 }
 
+// change stock
 void Store::changePurchaseStock(Stock *olditem, Stock newitem)
 {
     olditem->setProductName(newitem.getProductName());
@@ -162,6 +170,7 @@ void Store::changePurchaseStock(Stock *olditem, Stock newitem)
 }
 
 // Client Management
+// add client
 void Store::addClient(Client &newClient)
 {
     clientList.push_back(newClient);
@@ -169,18 +178,7 @@ void Store::addClient(Client &newClient)
     return;
 }
 
-bool Store::removeClient(int id)
-{
-    Client *killClient = findClientById(id);
-    if (killClient != nullptr)
-    {
-        killClient->switchActive();
-        return true;
-    }
-    else
-        return false;
-}
-
+// find client by id
 CartItem *Store::findItemCart(int id, int *index)
 {
     for (int i = 0; i < cart.size(); i++)
@@ -195,6 +193,7 @@ CartItem *Store::findItemCart(int id, int *index)
     return nullptr;
 }
 
+// find stock on shelf by id
 Stock *Store::findShelf(int stockId)
 {
     for (Stock &stock : shelf)
@@ -205,6 +204,7 @@ Stock *Store::findShelf(int stockId)
     return nullptr;
 }
 
+// clear cart
 void Store::clearCart(vector<Stock> *shelf)
 {
     if (cart.empty())
@@ -232,6 +232,7 @@ void Store::clearCart(vector<Stock> *shelf)
     cout << "Cart cleared." << endl;
 }
 
+// find client by id
 Client *Store::findClientById(int clientId)
 {
     for (Client &client : clientList)
@@ -242,6 +243,7 @@ Client *Store::findClientById(int clientId)
     return nullptr;
 }
 
+// find client by name
 Client *Store::findClientByName(const string &name)
 {
     string lowerName = stringToLower(name);
@@ -254,7 +256,7 @@ Client *Store::findClientByName(const string &name)
 }
 
 // Sales Management
-
+// calculate cart total
 double Store::calculateCartTotal()
 {
     double total = 0;
@@ -265,8 +267,9 @@ double Store::calculateCartTotal()
     return round(total * 100) / 100;
 }
 
+// add receipt
 void Store::addReceipt(const Receipt &receipt)
-{    
+{
     // Find the first empty slot in the array
     int oldestId = INT_MAX;
     int oldestIndex;
