@@ -165,6 +165,7 @@ void Store::changePurchaseStock(Stock *olditem, Stock newitem)
 void Store::addClient(Client &newClient)
 {
     clientList.push_back(newClient);
+    Client::incrementId();
     return;
 }
 

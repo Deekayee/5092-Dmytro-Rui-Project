@@ -1,4 +1,4 @@
-ClientId,Name,Contact,Address,isActive
+ClientId,Name,Contact,Address
 1,Maria Silva,912345678,Rua das Flores 123 Porto,1
 2,Joao Santos,923456789,Avenida da Liberdade 45 Lisboa,1
 3,Ana Costa,934567890,Rua do Comercio 78 Braga,1
@@ -9,3 +9,4 @@ ClientId,Name,Contact,Address,isActive
 8,Bruno Almeida,989012345,Largo do Municipio 15 Setubal,1
 9,Rita Gomes,910123456,Rua dos Pinheiros 56 Leiria,0
 10,Carlos Martins,921234567,Avenida do Mar 101 Viana do Castelo,1
+11,Danna Rose,921032024,Jiron de la Union 2 Lima,1
