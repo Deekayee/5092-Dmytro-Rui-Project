@@ -103,7 +103,7 @@ bool FileManager::saveClients(const vector<Client> &clientList)
         return false;
     }
 
-    file << "ClientId,Name,Contact,Address" << endl;
+    file << "ClientId,Name,Contact,Address,IsActive" << endl;
     for (const Client &client : clientList)
     {
         file << client.toString() << endl;
