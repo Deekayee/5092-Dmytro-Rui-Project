@@ -37,5 +37,6 @@ public:
     // Methods
     string toString() const;
     string toDisplay() const;
+    string toDisplay(int receiptOrder) const;
     void fromString(const string &line);
 };

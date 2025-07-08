@@ -90,6 +90,7 @@ double Receipt::getChange() const
 string Receipt::toDisplay() const
 {
     stringstream ss;
+    int receiptOrder = 1;
     // Totals with left alignment and consistent spacing
     const int labelWidth = 20; // Width for the label column
     
@@ -132,7 +133,7 @@ string Receipt::toDisplay() const
 
     // Table header
     stringstream headerSS;
-    headerSS << setw(2) << " ID" << " | "
+    headerSS << setw(2) << " No." << " | "
              << setw(22) << left << "Product Name" << " | "
              << setw(5) << right << "Qtty" << " | "
              << setw(12) << right << "Price" << " | "
@@ -144,7 +145,7 @@ string Receipt::toDisplay() const
     // Items
     for (const auto &item : items)
     {
-        ss << padLine(" " + item.toDisplay(), DISPLAY_WIDTH) << '\n';
+        ss << padLine(" " + item.toDisplay(receiptOrder++), DISPLAY_WIDTH) << '\n';
     }
 
     ss << padLine(string(DISPLAY_WIDTH, '-'), DISPLAY_WIDTH) << '\n';

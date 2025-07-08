@@ -61,6 +61,17 @@ string CartItem::toDisplay() const
 
     return ss.str();
 }
+string CartItem::toDisplay(int receiptOrder) const
+{
+    stringstream ss;
+    ss << setw(2) << receiptOrder << " | "
+       << setw(22) << left << productName << " | "
+       << setw(5) << right << quantity << " | "
+       << setw(8) << right << fixed << setprecision(2) << getSaleWithTax() << " eur | "
+       << setw(9) << right << fixed << setprecision(2) << getTotalItemSellValue() << " eur";
+
+    return ss.str();
+}
 void CartItem::fromString(const string &line)
 {
     stringstream ss(line);
