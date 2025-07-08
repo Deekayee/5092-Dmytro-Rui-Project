@@ -931,8 +931,6 @@ void Menu::main()
     bool run = true;
     int opt;
     string input;
-    vector<CartItem> cart;
-    vector<Stock> shelf;
     // adding copy of stockList to shelf
     // this will display items to user in specified order:
     while (run)
@@ -967,7 +965,7 @@ void Menu::main()
         case 2:
             // show stock, give an option to add or remove and cancel, among some other bonus features
             // bar access to stock if a sale is in process, in order to prevent mismanagement of stock and shelf items
-            if (!cart.empty())
+            if (!store.getCart().empty())
             {
                 cout << "You have products in cart! Clear the cart or finish checking out to proceed" << endl
                      << "Unable to access stock menu" << endl;

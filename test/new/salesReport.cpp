@@ -29,7 +29,7 @@ int SalesReport::getTopClientByValue() const
     
     // Check each receipt to find unique clients
     for (int i = 0; i < receiptCount; i++) {
-        if (receipts[i].getReceiptId() > 0) {
+        if (receipts[i].getReceiptId() > 0 && receipts[i].getClientId() > 0) {
             int currentClient = receipts[i].getClientId();
             double clientTotal = getClientTotalPurchases(currentClient);
             
