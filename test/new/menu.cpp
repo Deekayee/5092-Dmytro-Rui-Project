@@ -783,7 +783,6 @@ void Menu::gambling(vector<CartItem> &sale, int chance)
 
     if (badLuck < chance) // if the "bad luck" is less than the chance, win
     {
-        // vector<CartItem> roster = sale;
 
         srand(time(0));                         // reinitializing seed
         int sortedIndex = rand() % sale.size(); // randomizing index
@@ -793,7 +792,6 @@ void Menu::gambling(vector<CartItem> &sale, int chance)
         jackpot.setQuantity(1); // client only gets one, >:(
 
         double fullPrice = jackpot.getSaleWithoutTax();
-        // jackpot.setTaxRatePercent(0);        // Disable tax (don't apply again)
         jackpot.setSaleWithoutTax(-fullPrice); // Negate full price (as base)
 
         sale.push_back(jackpot); // item gets added at end of receipt for display
