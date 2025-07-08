@@ -33,6 +33,7 @@ using namespace std;
 // HORIZONTAL LIMITERS SIZES
 #define STOCK_DASH 53
 #define CLIENT_DASH 87
+#define REPORTS_DASH 44
 #define PRODUCTS_DASH 59
 #define CART_DASH 66
 

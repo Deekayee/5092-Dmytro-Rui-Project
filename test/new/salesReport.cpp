@@ -113,47 +113,79 @@ void SalesReport::generateStockReport() const
 
 void SalesReport::generateSalesReportByProduct(const string& productName) const
 {
-    cout << "Report for product: " << productName << endl;
-    
-    //HACK: this is AI shenenigans, needs to be redone as we have a method for this in store
+    clearConsole();
+    string title = "Sales Report for: " + productName;
+    int titleDASH = REPORTS_DASH - title.length();
+
+    setColor(YELLOW);
+    cout << title;
+    setColor(RESET);
+    limh(titleDASH);
+
     // Find product ID by name
     int productId = -1;
     for (const auto& stock : stockList) {
-        if (stock.getProductName() == productName) {
+        if (stringToLower(stock.getProductName()) == stringToLower(productName)) {
             productId = stock.getStockId();
             break;
         }
     }
     
     if (productId == -1) {
+        setColor(RED);
         cout << "Product not found!" << endl;
+        setColor(RESET);
+        limh();
         return;
     }
     
     int totalQuantitySold = getProductTotalQuantitySold(productId);
     double totalSalesValue = getProductTotalSales(productId);
     
+    // Product summary section
+    setColor(CYAN);
+    cout << "Product Summary:" << endl;
+    setColor(RESET);
     cout << "Product ID: " << productId << endl;
     cout << "Product Name: " << productName << endl;
     cout << "Total Quantity Sold: " << totalQuantitySold << endl;
     cout << "Total Sales Value: " << fixed << setprecision(2) << totalSalesValue << " eur." << endl;
     
-    // Show individual sales
-    cout << "\nIndividual Sales:" << endl;
-    cout << "Receipt ID | Quantity | Sale Value" << endl;
-    cout << "----------------------------------" << endl;
+    limh(REPORTS_DASH);
     
+    // Individual sales section
+    setColor(CYAN);
+    cout << "Individual Sales:" << endl;
+    setColor(RESET);
+    
+    setColor(CYAN);
+    cout << "Receipt ID | Quantity | Sale Value" << endl;
+    setColor(RESET);
+    limh(REPORTS_DASH);
+    
+    bool foundSales = false;
     for (int i = 0; i < receiptCount; i++) {
         if (receipts[i].getReceiptId() > 0) {
             for (const auto& item : receipts[i].getItems()) {
                 if (item.getStockId() == productId) {
-                    cout << receipts[i].getReceiptId() << " | " 
-                         << item.getQuantity() << " | " 
-                         << fixed << setprecision(2) << item.getTotalItemSellValue() << endl;
+                    foundSales = true;
+                    stringstream ss;
+                    ss << setw(10) << right << receipts[i].getReceiptId() << " | "
+                       << setw(8) << right << item.getQuantity() << " | "
+                       << setw(8) << right << fixed << setprecision(2) << item.getTotalItemSellValue() << " eur.";
+                    cout << ss.str() << endl;
                 }
             }
         }
     }
+    
+    if (!foundSales) {
+        setColor(RED);
+        cout << "No sales found for this product." << endl;
+        setColor(RESET);
+    }
+    
+    limh(REPORTS_DASH);
 }
 
 // Helper methods
