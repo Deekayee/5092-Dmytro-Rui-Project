@@ -979,8 +979,6 @@ Client *Menu::handleClientSelection()
 
 Client *Menu::registerClient()
 {
-    clearConsole();
-
     string clientName = getValidatedName();
     string clientAddress = getValidatedAddress();
     int clientContact = getValidatedContact();
