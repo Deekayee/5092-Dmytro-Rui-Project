@@ -44,5 +44,6 @@ public:
 
     // String methods
     string toString() const;
+    string toDisplay() const;
     void fromString(const string &line);
 };

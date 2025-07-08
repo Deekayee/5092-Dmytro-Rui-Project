@@ -44,9 +44,11 @@ private:
     void gambling(vector<CartItem> &sale, int chance = 50);              //(prints win message)
     // void clearCart(vector<Stock> *shelf = nullptr); //(partially UI : prints messages and pauses)
     //  SubMenus - logins:
-    void printClients();
+    void printClients(const string &title, vector<int> *idColor = nullptr, const string colorCode = "");
     Client *handleClientSelection(); 
-    Client *registerClient();       
+    Client *registerClient();
+    void killClient();
+    void changeClientName();
 
 public:
     Menu(Store &storeReference);

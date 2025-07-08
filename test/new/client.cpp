@@ -1,6 +1,7 @@
 #include "client.h"
 
 #include <sstream>
+#include <iomanip>
 
 // Static Member Initialization
 int Client::nextId = 1;
@@ -49,6 +50,20 @@ void Client::setNextId(int Id) { nextId = Id; }
 string Client::toString() const
 {
     return to_string(clientId) + ',' + name + ',' + to_string(contact) + ',' + address + ',' + to_string(isActive);
+}
+
+// Returns a string representation of the Client object in a table-friendly format
+string Client::toDisplay() const
+{
+    stringstream ss;
+
+    ss << setw(2) << right << clientId << " | "
+       << setw(18) << left << name << " | "
+       << setw(35) << left << address << " | "
+       << setw(12) << left << contact << " | "
+       << setw(8) << left << (getActivity() ? "Active" : "Inactive");
+    
+    return ss.str();
 }
 
 // Parses a comma-separated string to initialize Client attributes: clientId,

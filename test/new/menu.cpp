@@ -798,31 +798,45 @@ void Menu::gambling(vector<CartItem> &sale, int chance)
 }
 
 //  SubMenus - logins:
-void Menu::printClients()
+void Menu::printClients(const string &title, vector<int> *idColor, const string colorCode)
 {
     clearConsole();
-    int titleDASH = STOCK_DASH - 12; // to make sure it fits the rest of the horizontal lims
+    int titleDASH = CLIENT_DASH - title.length(); // to make sure it fits the rest of the horizontal lims
 
     setColor(YELLOW);
-    cout << "Clients View";
+    cout << title;
     setColor(RESET);
     limh(titleDASH);
 
     setColor(CYAN);
-    cout << "ID | Clients Name           | Address | Phone " << endl;
+    cout << "ID | Client Name        | Address                             | Phone        | Status" << endl;
     setColor(RESET);
-    limh();
+    limh(CLIENT_DASH);
 
     for (const Client &client : store.getClientList())
     {
+        // Color inactive clients red
+        if (!client.getActivity())
+            setColor(RED);
         
+        if (idColor != nullptr)
+            for (int id : *idColor)
+            {
+                if (client.getClientId() == id)
+                    setColor(colorCode); // <color> for when client matches vector idColor
+            }
 
-        cout << client.toString() << endl;
+        cout << client.toDisplay() << endl;
 
         setColor(RESET); // resets color
     }
 
-    limh();
+    limh(CLIENT_DASH);
+}
+
+void Menu::killClient()
+{
+    
 }
 
 Client *Menu::handleClientSelection()
@@ -1186,25 +1200,25 @@ void Menu::logins()
     {
         string input;
         int opt;
-        // display here
-
+        
         do
         {
             clearConsole();
+            printClients("Clients View");
             setColor(Cyan);
             cout << "Clients menu" << endl;
             setColor(RESET);
-            limh(STOCK_DASH);
-            cout << "1. " << endl;
-            limh(STOCK_DASH);
+            limh(CLIENT_DASH);
+            cout << "1. Print clients (this getting whacked, need to finish my food first)" << endl;
+            limh(CLIENT_DASH);
             cout << "2. Register new client" << endl;
-            limh(STOCK_DASH);
-            cout << "3. " << endl;
-            limh(STOCK_DASH);
-            cout << "4. " << endl;
-            limh(STOCK_DASH);
+            limh(CLIENT_DASH);
+            cout << "3. Kill client" << endl;
+            limh(CLIENT_DASH);
+            cout << "4. Change client name" << endl;
+            limh(CLIENT_DASH);
             cout << "5. Exit" << endl;
-            limh(STOCK_DASH);
+            limh(CLIENT_DASH);
             cout << "Option: ";
             getline(cin, input);
         } while (!validateMenuInput(input, opt));
@@ -1212,17 +1226,18 @@ void Menu::logins()
         switch (opt)
         {
         case 1:
-            printClients();
+            printClients("Clients View");
             pause();
             break;
         case 2:
             registerClient();
             break;
         case 3:
-            // killClient();
-            break;
+            //killClient();
+            //break;
         case 4:
-            // editClient() break;
+            // editClient() 
+            // break;
         case 5:
             return;
 
