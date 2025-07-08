@@ -134,7 +134,7 @@ string Receipt::toDisplay() const
 
     // Table header
     stringstream headerSS;
-    headerSS << setw(2) << " No." << " | "
+    headerSS << setw(2) << " No" << " | "
              << setw(22) << left << "Product Name" << " | "
              << setw(5) << right << "Qtty" << " | "
              << setw(12) << right << "Price" << " | "
