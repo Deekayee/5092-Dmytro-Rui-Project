@@ -839,7 +839,56 @@ void Menu::printClients(const string &title, vector<int> *idColor, const string 
 
 void Menu::killClient()
 {
-    
+    vector<int> idColor; // saves ids for marking when changed
+    while (true)
+    {
+        string prompt;
+        int id;
+        do
+        {
+            printClients("Kill Client Menu", &idColor, YELLOW);
+
+            limh(CLIENT_DASH);
+
+            cout << "Please enter the ID of the client you wish to deactivate (Enter 0 to return)" << endl;
+            cout << "ID: ";
+            getline(cin, prompt);
+
+        } while (!validateMenuInput(prompt, id));
+        if (id <= 0) // go back in menu
+            return;
+
+        Client *client = store.findClientById(id);
+        if (client == nullptr)
+        {
+            cout << "Client not found" << endl;
+            pause();
+            continue;
+        }
+        if (!client->getActivity())
+        {
+            cout << "Client is already dead bro" << endl;
+            pause();
+            continue;
+        }
+
+        setColor(CYAN);
+        cout << "Killing client: " << client->getClientId() << "-" << client->getName() << endl;
+        setColor(RESET);
+        if (!promptYESOrNo())
+        {
+            continue;
+        }
+        limh(CLIENT_DASH);
+
+        client->setActivity(false);
+        idColor.push_back(client->getClientId()); // mark this client as changed
+        cout << "Client killed!" << endl;
+        FileManager::saveClients(store.getClientList());
+
+        if (!promptyesOrNO("Do you wish to keep killing clients?"))
+            return;
+    }
 }
 
 Client *Menu::handleClientSelection()
@@ -1234,8 +1283,8 @@ void Menu::logins()
             registerClient();
             break;
         case 3:
-            //killClient();
-            //break;
+            killClient();
+            break;
         case 4:
             // editClient() 
             // break;
