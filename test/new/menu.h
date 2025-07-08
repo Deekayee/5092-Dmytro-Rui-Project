@@ -48,6 +48,7 @@ private:
     Client *handleClientSelection(); 
     Client *registerClient();
     void killClient();
+    void reviveClient();
     void changeClientName();
 
 public:

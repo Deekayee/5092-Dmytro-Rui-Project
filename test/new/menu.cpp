@@ -891,6 +891,60 @@ void Menu::killClient()
     }
 }
 
+void Menu::reviveClient()
+{
+    vector<int> idColor; // saves ids for marking when changed
+    while (true)
+    {
+        string prompt;
+        int id;
+        do
+        {
+            printClients("Revive Client Menu", &idColor, GREEN);
+
+            limh(CLIENT_DASH);
+
+            cout << "Please enter the ID of the client you wish to reactivate (Enter 0 to return)" << endl;
+            cout << "ID: ";
+            getline(cin, prompt);
+
+        } while (!validateMenuInput(prompt, id));
+        if (id <= 0) // go back in menu
+            return;
+
+        Client *client = store.findClientById(id);
+        if (client == nullptr)
+        {
+            cout << "Client not found" << endl;
+            pause();
+            continue;
+        }
+        if (client->getActivity())
+        {
+            cout << "Client is already alive and well" << endl;
+            pause();
+            continue;
+        }
+
+        setColor(CYAN);
+        cout << "Reviving client: " << client->getClientId() << "-" << client->getName() << endl;
+        setColor(RESET);
+        if (!promptYESOrNo())
+        {
+            continue;
+        }
+        limh(CLIENT_DASH);
+
+        client->setActivity(true);
+        idColor.push_back(client->getClientId()); // mark this client as changed
+        cout << "Client revived!" << endl;
+        FileManager::saveClients(store.getClientList());
+
+        if (!promptyesOrNO("Do you wish to keep reviving clients?"))
+            return;
+    }
+}
+
 Client *Menu::handleClientSelection()
 {
     if (promptyesOrNO("Are you part of our extremely cool clientele?"))
@@ -1259,11 +1313,11 @@ void Menu::logins()
             cout << "Clients menu" << endl;
             setColor(RESET);
             limh(CLIENT_DASH);
-            cout << "1. Print clients (this getting whacked, need to finish my food first)" << endl;
+            cout << "1. Register new client" << endl;
             limh(CLIENT_DASH);
-            cout << "2. Register new client" << endl;
+            cout << "2. Kill client" << endl;
             limh(CLIENT_DASH);
-            cout << "3. Kill client" << endl;
+            cout << "3. Revive client" << endl;
             limh(CLIENT_DASH);
             cout << "4. Change client name" << endl;
             limh(CLIENT_DASH);
@@ -1276,17 +1330,16 @@ void Menu::logins()
         switch (opt)
         {
         case 1:
-            printClients("Clients View");
-            pause();
-            break;
-        case 2:
             registerClient();
             break;
-        case 3:
+        case 2:
             killClient();
             break;
+        case 3:
+            reviveClient();
+            break;
         case 4:
-            // editClient() 
+            // editClientName(); 
             // break;
         case 5:
             return;
