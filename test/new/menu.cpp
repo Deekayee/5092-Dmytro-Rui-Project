@@ -819,7 +819,7 @@ void Menu::printClients(const string &title, vector<int> *idColor, const string 
         // Color inactive clients red
         if (!client.getActivity())
             setColor(RED);
-        
+
         if (idColor != nullptr)
             for (int id : *idColor)
             {
@@ -940,6 +940,60 @@ void Menu::reviveClient()
 
         if (!promptyesOrNO("Do you wish to keep reviving clients?"))
             return;
+    }
+}
+
+void Menu::changeClientName()
+{
+    vector<int> idColor; // saves ids for marking when changed
+    while (true)
+    {
+        clearConsole();
+        printClients("Change Client Name Menu", &idColor, GREEN);
+
+        string prompt;
+        int id;
+        cout << "Please enter the ID of the client whose name you wish to change (Enter 0 to return)" << endl;
+        cout << "ID: ";
+        getline(cin, prompt);
+
+        if (!validateMenuInput(prompt, id))
+            continue;
+
+        if (id <= 0) // go back in menu
+            return;
+
+        Client *client = store.findClientById(id);
+        if (client == nullptr)
+        {
+            cout << "Client not found" << endl;
+            pause();
+            continue;
+        }
+        clearConsole();
+        printClients("Client View");
+
+        setColor(CYAN);
+        cout << "Changing client name: " << client->getClientId() << "-" << client->getName() << endl;
+        setColor(RESET);
+        limh();
+
+        if (!promptYESOrNo("Do you wish to proceed?"))
+        {
+            continue;
+        }
+        limh(CLIENT_DASH);
+
+        cout << "Enter new client name" << endl;
+        string clientName = getValidatedName();
+
+        client->setName(clientName);
+        cout << "Client name updated!" << endl;
+
+        idColor.push_back(client->getClientId());
+        FileManager::saveClients(store.getClientList());
+
+        return;
     }
 }
 
@@ -1300,7 +1354,7 @@ void Menu::logins()
     {
         string input;
         int opt;
-        
+
         do
         {
             clearConsole();
@@ -1335,8 +1389,8 @@ void Menu::logins()
             reviveClient();
             break;
         case 4:
-            // editClientName(); 
-            // break;
+            changeClientName();
+            break;
         case 5:
             return;
 
