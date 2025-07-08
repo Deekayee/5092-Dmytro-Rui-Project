@@ -109,6 +109,7 @@ void SalesReport::generateStockReport() const
         totalStockValue += productTotal;
     }
     cout << "Total stock value: " << fixed << setprecision(2) << totalStockValue  << " eur." << endl;
+    limh(REPORTS_DASH);
 }
 
 void SalesReport::generateSalesReportByProduct(const string& productName) const

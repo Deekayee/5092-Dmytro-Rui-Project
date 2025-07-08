@@ -7,12 +7,12 @@
 // Individual report methods
 void Menu::generateStockReport(SalesReport &report)
 {
-    int titleLength = 15;
+    int titleLength = 12;
     clearConsole();
     setColor(YELLOW);
     cout << "Stock report";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(REPORTS_DASH - titleLength);
 
     report.generateStockReport();
 
@@ -21,7 +21,7 @@ void Menu::generateStockReport(SalesReport &report)
 
 void Menu::generateSalesReportByProduct(SalesReport &report)
 {
-    int titleLength = 27;
+    int titleLength = 26;
     clearConsole();
     setColor(YELLOW);
     cout << "Sales Report by Product";
@@ -51,7 +51,7 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
     setColor(YELLOW);
     cout << "Complete Sales Report";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(REPORTS_DASH - titleLength);
 
     int mostSold = report.getMostSoldProductByQuantity();
     int leastSold = report.getLeastSoldProductByQuantity();
@@ -105,7 +105,7 @@ void Menu::generateCompleteSalesReport(SalesReport &report)
     {
         cout << "Unknown (ID: " << topClient << ")" << endl;
     }
-
+    limh(REPORTS_DASH);
     pause();
 }
 
@@ -116,7 +116,7 @@ void Menu::showMostSoldProduct(SalesReport &report)
     setColor(YELLOW);
     cout << "Most sold product";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(REPORTS_DASH - titleLength);
 
     int mostSold = report.getMostSoldProductByQuantity();
     int quantity = report.getProductTotalQuantitySold(mostSold);
@@ -136,6 +136,7 @@ void Menu::showMostSoldProduct(SalesReport &report)
     cout << "Total quantity sold: " << quantity << endl;
     cout << "Total sales value: " << fixed << setprecision(2) << sales << " eur." << endl;
 
+    limh(REPORTS_DASH);
     pause();
 }
 
@@ -146,7 +147,7 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     setColor(YELLOW);
     cout << "Least sold product";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(REPORTS_DASH - titleLength);
 
     int leastSold = report.getLeastSoldProductByQuantity();
     int quantity = report.getProductTotalQuantitySold(leastSold);
@@ -165,17 +166,18 @@ void Menu::showLeastSoldProduct(SalesReport &report)
     cout << "Total quantity sold: " << quantity << endl;
     cout << "Total sales value: " << fixed << setprecision(2) << sales << " eur." << endl;
 
+    limh(REPORTS_DASH);
     pause();
 }
 
 void Menu::showTopClient(SalesReport &report)
 {
-    int titleLength = 19;
+    int titleLength = 24;
     clearConsole();
     setColor(YELLOW);
     cout << "Top client by value sold";
     setColor(RESET);
-    limh(STOCK_DASH - titleLength);
+    limh(REPORTS_DASH - titleLength);
 
     int topClient = report.getTopClientByValue();
     double totalPurchases = report.getClientTotalPurchases(topClient);
@@ -191,6 +193,8 @@ void Menu::showTopClient(SalesReport &report)
     cout << "Client ID: " << topClient << endl;
     cout << "Client Name: " << topClientObj->getName() << endl;
     cout << "Total purchases: " << fixed << setprecision(2) << totalPurchases << " eur." << endl;
+
+    limh(REPORTS_DASH);
 
     pause();
 }
