@@ -1,5 +1,5 @@
-#include "salesReport.h"
-#include "cartItem.h"
+#include "../include/salesReport.h"
+#include "../include/cartItem.h"
 
 #include <climits>
 

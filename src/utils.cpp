@@ -1,10 +1,10 @@
-#include "utils.h"
+#include "../include/utils.h"
 
-#include "stock.h"
-#include "cartItem.h"
-#include "client.h"
-#include "receipt.h"
-#include "fileManager.h"
+#include "../include/stock.h"
+#include "../include/cartItem.h"
+#include "../include/client.h"
+#include "../include/receipt.h"
+#include "../include/fileManager.h"
 
 #include <iostream>  // will need this for cin and cout
 #include <iomanip>   // will need this for setw

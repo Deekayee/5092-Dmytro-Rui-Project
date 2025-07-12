@@ -1,6 +1,6 @@
-#include "fileManager.h"
+#include "../include/fileManager.h"
 
-#include "receipt.h"
+#include "../include/receipt.h"
 
 #include <iostream>
 #include <fstream>
@@ -9,10 +9,10 @@
 // Function to load stock from a file
 void FileManager::loadStock(vector<Stock> &stockList)
 {
-    fstream file("stockList.csv", ios::in);
+    fstream file("../data/stockList.csv", ios::in);
     if (!file.is_open())
     {
-        fstream file("stockList.csv", ios::app);
+        fstream file("../data/stockList.csv", ios::app);
 
         // gives the file a header
         cout << "Creating file - stockList.csv..." << endl;
@@ -43,10 +43,10 @@ void FileManager::loadStock(vector<Stock> &stockList)
 // Function to save stock to a file
 bool FileManager::saveStock(const vector<Stock> &stockList)
 {
-    ofstream file("stockList.csv");
+    ofstream file("../data/stockList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << "stockList.csv" << endl;
+        cout << "Error opening file: " << "../data/stockList.csv" << endl;
         return false;
     }
 
@@ -63,10 +63,10 @@ bool FileManager::saveStock(const vector<Stock> &stockList)
 // Function to load clients from a file
 void FileManager::loadClients(vector<Client> &clientList)
 {
-    fstream file("clientList.csv", ios::in);
+    fstream file("../data/clientList.csv", ios::in);
     if (!file.is_open())
     {
-        fstream file("clientList.csv", ios::app);
+        fstream file("../data/clientList.csv", ios::app);
 
         // gives the file a header
         cout << "Creating file - receiptList.csv..." << endl;
@@ -98,10 +98,10 @@ void FileManager::loadClients(vector<Client> &clientList)
 // Function to save clients to a file
 bool FileManager::saveClients(const vector<Client> &clientList)
 {
-    ofstream file("clientList.csv");
+    ofstream file("../data/clientList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << "clientList.csv" << endl;
+        cout << "Error opening file: " << "../data/clientList.csv" << endl;
         return false;
     }
 
@@ -118,10 +118,10 @@ bool FileManager::saveClients(const vector<Client> &clientList)
 // Function to load receipts from a file
 void FileManager::loadReceipts(array<Receipt, 100> &saleList)
 {
-    fstream file("receiptList.csv", ios::in);
+    fstream file("../data/receiptList.csv", ios::in);
     if (!file.is_open())
     {
-        fstream file("receiptList.csv", ios::app);
+        fstream file("../data/receiptList.csv", ios::app);
 
         // gives the file a header
         cout << "Creating file - receiptList.csv..." << endl;
@@ -159,10 +159,10 @@ void FileManager::loadReceipts(array<Receipt, 100> &saleList)
 // Function to save receipts to a file
 bool FileManager::saveReceipts(const array<Receipt, 100> &saleList)
 {
-    ofstream file("receiptList.csv");
+    ofstream file("../data/receiptList.csv");
     if (!file.is_open())
     {
-        cout << "Error opening file: " << "receiptList.csv" << endl;
+        cout << "Error opening file: " << "../data/receiptList.csv" << endl;
         return false;
     }
 

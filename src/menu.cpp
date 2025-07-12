@@ -1,6 +1,6 @@
-#include "menu.h"
-#include "store.h"
-#include "utils.h"
+#include "../include/menu.h"
+#include "../include/store.h"
+#include "../include/utils.h"
 
 // private:
 

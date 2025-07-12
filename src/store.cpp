@@ -1,4 +1,4 @@
-#include "store.h"
+#include "../include/store.h"
 #include <climits>
 
 // store initialization
