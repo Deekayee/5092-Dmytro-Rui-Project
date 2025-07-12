@@ -1,11 +1,8 @@
-#include "./include/store.h"
-
-
-using namespace std;
+#include "store.h"
 
 int main()
 {
-    Store CameraShop;
-
-    CameraShop.start()
+    Store myStore;
+    myStore.menu.main();
+    return 0;
 }
